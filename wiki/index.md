@@ -1,3 +1,100 @@
 # Wiki Index
 
 _This catalog is updated by /lumi-ingest and /lumi-init._
+
+<!-- lumina:index -->
+- [[concepts/backup-and-recovery]]
+- [[concepts/blast-extreme]]
+- [[concepts/capacity-management]]
+- [[concepts/certificate-management]]
+- [[concepts/change-management]]
+- [[concepts/citrix-virtual-apps-and-desktops]]
+- [[concepts/cloud-cache]]
+- [[concepts/cloud-pod-architecture]]
+- [[concepts/connection-server]]
+- [[concepts/daily-operations]]
+- [[concepts/datastore]]
+- [[concepts/delivery-controller]]
+- [[concepts/delivery-group]]
+- [[concepts/display-protocol]]
+- [[concepts/dns-and-time-sync]]
+- [[concepts/enhanced-linked-mode]]
+- [[concepts/esxi]]
+- [[concepts/firewall-ports]]
+- [[concepts/fslogix]]
+- [[concepts/guest-operating-system-support]]
+- [[concepts/hdx]]
+- [[concepts/high-availability]]
+- [[concepts/hypervisor-pool]]
+- [[concepts/ica-virtual-channel]]
+- [[concepts/identity-and-access-management]]
+- [[concepts/incident-management]]
+- [[concepts/lifecycle-management]]
+- [[concepts/load-balancing]]
+- [[concepts/machine-identity]]
+- [[concepts/monitoring-and-logs]]
+- [[concepts/odfc-container]]
+- [[concepts/omnissa-horizon]]
+- [[concepts/pod-and-block]]
+- [[concepts/primary-and-secondary-protocols]]
+- [[concepts/profile-container]]
+- [[concepts/snapshot]]
+- [[concepts/storage-permissions]]
+- [[concepts/storage-repository]]
+- [[concepts/storefront]]
+- [[concepts/true-sso]]
+- [[concepts/unified-access-gateway]]
+- [[concepts/user-profile-management]]
+- [[concepts/vcenter-server-appliance]]
+- [[concepts/vcenter-server]]
+- [[concepts/vdi-connection-flow]]
+- [[concepts/vdi-documentation-architecture]]
+- [[concepts/vdi-operational-readiness]]
+- [[concepts/vdi-training-program]]
+- [[concepts/virtual-delivery-agent]]
+- [[concepts/virtual-machine]]
+- [[concepts/virtual-networking]]
+- [[concepts/vmware-vsphere]]
+- [[concepts/xenserver]]
+- [[sources/citrix-virtual-apps-and-desktops-7-2603]]
+- [[sources/fslogix-documentation]]
+- [[sources/horizon-8-architecture]]
+- [[sources/understand-and-troubleshoot-horizon-connections]]
+- [[sources/vcenter-server-installation-and-setup]]
+- [[sources/vdi-documentation-list-context]]
+- [[sources/vdi-training-idea]]
+- [[sources/vmware-vsphere-8-0]]
+- [[sources/xenserver-8-4]]
+<!-- /lumina:index -->
+
+## VDI Training Topics
+
+- [[topics/README]]
+- [[topics/1_VDI_Foundation_Overview]] - VDI Foundation Overview
+- [[topics/2_Customer_VDI_Landscape_Overview]] - Customer VDI Landscape Overview
+- [[topics/3_Omnissa_Horizon_Architecture_Overview]] - Omnissa Horizon Architecture Overview
+- [[topics/4_Citrix_CVAD_Architecture_Overview]] - Citrix CVAD Architecture Overview
+- [[topics/5_VDI_Access_Flow_Design]] - VDI Access Flow Design
+- [[topics/6_Identity_and_Domain_Integration_Guide]] - Identity and Domain Integration Guide
+- [[topics/7_Hypervisor_and_HCI_Operations_Guide]] - Hypervisor and HCI Operations Guide
+- [[topics/8_Storage_Operations_for_VDI]] - Storage Operations for VDI
+- [[topics/9_Network_Operations_for_VDI]] - Network Operations for VDI
+- [[topics/10_VDI_Security_and_Policy_Management_Guide]] - VDI Security and Policy Management Guide
+- [[topics/11_VDI_Provisioning_and_Allocation_Guide]] - VDI Provisioning and Allocation Guide
+- [[topics/12_Master_Image_Management_Guide]] - Master Image Management Guide
+- [[topics/13_Citrix_Machine_Catalog_and_Delivery_Group_Guide]] - Citrix Machine Catalog and Delivery Group Guide
+- [[topics/14_Omnissa_Desktop_Pool_and_Entitlement_Guide]] - Omnissa Desktop Pool and Entitlement Guide
+- [[topics/15_VDI_Monitoring_and_Alerting_Guide]] - VDI Monitoring and Alerting Guide
+- [[topics/16_Daily_Operations_Checklist]] - Daily Operations Checklist
+- [[topics/17_VDI_Incident_Classification_Guide]] - VDI Incident Classification Guide
+- [[topics/18_VDI_Troubleshooting_Playbook]] - VDI Troubleshooting Playbook
+- [[topics/19_VDI_Performance_and_Capacity_Guide]] - VDI Performance and Capacity Guide
+- [[topics/20_VDI_Change_Management_Guide]] - VDI Change Management Guide
+- [[topics/21_VDI_Patch_and_Upgrade_Guide]] - VDI Patch and Upgrade Guide
+- [[topics/22_VDI_Backup_and_Recovery_Guide]] - VDI Backup and Recovery Guide
+- [[topics/23_VDI_High_Availability_and_Disaster_Recovery_Guide]] - VDI High Availability and Disaster Recovery Guide
+- [[topics/24_VDI_Access_Control_and_RBAC_Guide]] - VDI Access Control and RBAC Guide
+- [[topics/25_VDI_Support_and_Escalation_Guide]] - VDI Support and Escalation Guide
+- [[topics/26_VDI_Operational_Knowledge_Base]] - VDI Operational Knowledge Base
+- [[topics/27_VDI_Glossary_and_Concept_Dictionary]] - VDI Glossary and Concept Dictionary
+- [[topics/28_VDI_Engineer_Onboarding_Guide]] - VDI Engineer Onboarding Guide
