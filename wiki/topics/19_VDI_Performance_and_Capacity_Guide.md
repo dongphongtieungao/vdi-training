@@ -2,350 +2,667 @@
 
 ## 0. Document Control
 
-### 0.1 Metadata
-
 | Trường | Giá trị |
 |---|---|
 | Thứ tự | 19 |
 | Tên tài liệu | VDI Performance and Capacity Guide |
 | Tên file | 19_VDI_Performance_and_Capacity_Guide.md |
 | Mục đích tài liệu | Giúp engineer đánh giá hiệu năng và năng lực hệ thống qua CPU, memory, storage latency, IOPS, concurrent session, login duration, boot storm, logon storm và capacity trend. |
-| Nguồn điều khiển | training_idea.md; list_context.txt |
-| Trạng thái | Full training document; customer-specific values remain Unknown until confirmed |
+| Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
+| Trạng thái | Bản đào tạo vận hành. Baseline, threshold, capacity target, oversubscription policy, SLA, dashboard, workload profile và growth forecast thật là Need Customer Confirmation. |
 
-### 0.2 Source Grounding
-
-Tài liệu này dùng `training_idea.md`, `list_context.txt`, Document Research Pack từ `/lumi-ask` riêng cho chính tài liệu này, các trang `wiki/sources` và concept liên quan trong `wiki/concepts`.
+### 0.1 Source Grounding
 
 | Nội dung | Nguồn sử dụng | Mức độ tin cậy | Ghi chú |
 |---|---|---|---|
-| Bối cảnh và mục tiêu | [[sources/vdi-training-idea]] | Medium | Giữ đúng bối cảnh hai hệ thống VDI và định hướng vận hành. |
-| Tên, thứ tự, file, mục đích | [[sources/vdi-documentation-list-context]] | Medium | Source of truth cho danh mục. |
-| Document Research Pack | /lumi-ask riêng cho tài liệu này | Grounded Ask | Tổng hợp scope, model, component, task, troubleshooting, knowledge check. |
-| Bối cảnh hai hệ thống VDI, mục tiêu đào tạo, vận hành theo lớp, lỗi thường gặp và câu hỏi cần xác nhận. | [[sources/vdi-training-idea]] | High | Trang source summary trong wiki/sources. |
-| Danh mục chính thức: thứ tự, tên tài liệu, tên file, mục đích và phạm vi trọng tâm. | [[sources/vdi-documentation-list-context]] | High | Trang source summary trong wiki/sources. |
-| ESXi, vCenter, VM operations, datastore, networking, snapshot, lifecycle, logs. | [[sources/vmware-vsphere-8-0]] | High | Trang source summary trong wiki/sources. |
-| vCenter appliance, DNS/NTP, ports, Enhanced Linked Mode và chuẩn bị tích hợp. | [[sources/vcenter-server-installation-and-setup]] | High | Trang source summary trong wiki/sources. |
-| Host/pool, storage repository, networking, HA, licensing, update, guest OS support. | [[sources/xenserver-8-4]] | High | Trang source summary trong wiki/sources. |
+| Bối cảnh hai hệ thống VDI quy mô 1500 đến hơn 2000 máy, cần vận hành theo lớp broker, hypervisor, storage, network, profile, monitoring và change | [[sources/vdi-training-idea]] | High | Dùng làm khung phân tích hiệu năng theo lớp. |
+| Tên tài liệu, tên file và mục đích | [[sources/vdi-documentation-list-context]] | High | Source of truth cho scope. |
+| Monitoring metric, alert triage, evidence và baseline theo lớp | [[topics/15_VDI_Monitoring_and_Alerting_Guide]], [[concepts/monitoring-and-logs]], [[concepts/capacity-management]] | Medium | Dùng để nối performance/capacity với dashboard và trend. |
+| vSphere/vCenter/ESXi, VM, datastore, snapshot và host metrics | [[sources/vmware-vsphere-8-0]], [[sources/vcenter-server-installation-and-setup]], [[concepts/vmware-vsphere]], [[concepts/vcenter-server]], [[concepts/esxi]], [[concepts/datastore]], [[concepts/snapshot]] | Medium | Dùng cho phân tích host, datastore, VM và snapshot/capacity. |
+| XenServer, host/pool, storage repository và VM dependency | [[sources/xenserver-8-4]], [[concepts/xenserver]], [[concepts/storage-repository]] | Medium | Dùng cho hệ thống Citrix nếu chạy trên XenServer. |
+| Profile storage, profile container, Cloud Cache và profile load | [[sources/fslogix-documentation]], [[concepts/profile-container]], [[concepts/cloud-cache]], [[concepts/user-profile-management]] | Medium | Dùng cho login duration, profile load và storage impact. |
 
-### Document Research Pack từ /lumi-ask
+### 0.2 In Scope
 
-**Q1 - Scope và learning objective:** /lumi-ask riêng cho VDI Performance and Capacity Guide đã được dùng để tổng hợp phần này.
+- Cách đánh giá hiệu năng qua CPU, memory, storage latency, IOPS, throughput, network latency, packet loss, login duration và profile loading time.
+- Cách đánh giá capacity qua concurrent session, desktop availability, host/cluster headroom, datastore capacity, profile storage growth, license usage và capacity trend.
+- Cách nhận diện boot storm, logon storm, bottleneck và trend xấu.
+- Checklist phân tích performance incident và capacity review.
+- Scenario, bài tập tư duy, knowledge check và câu hỏi Need Customer Confirmation.
 
-**Synthesis:** Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.; Xác định được thành phần, dependency và evidence cần kiểm tra.; Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.; Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
+### 0.3 Out of Scope
 
-**Q2 - Architecture hoặc operational model:** /lumi-ask riêng cho VDI Performance and Capacity Guide đã được dùng để tổng hợp phần này.
+- Không đưa threshold cố định nếu khách hàng chưa có baseline chính thức.
+- Không thay thế thiết kế sizing ban đầu, HCI design, storage design hoặc network design.
+- Không thay thế tài liệu monitoring; xem [[topics/15_VDI_Monitoring_and_Alerting_Guide]].
+- Không thay thế tài liệu change; mở rộng capacity cần đi qua [[topics/20_VDI_Change_Management_Guide]].
+- Không đưa lệnh tối ưu, disable service, thay policy hoặc chỉnh resource production khi chưa có approval.
 
-**Synthesis:** Mô hình cần đặt trong bối cảnh hai nền tảng VDI và các lớp dependency.
+## 1. Tài liệu này giúp engineer làm được gì
 
-**Q3 - Component deep dive và operational tasks:** /lumi-ask riêng cho VDI Performance and Capacity Guide đã được dùng để tổng hợp phần này.
+Performance là câu hỏi "hệ thống đang chạy nhanh hay chậm, nghẽn ở đâu?". Capacity là câu hỏi "hệ thống còn đủ năng lực phục vụ hôm nay, tuần tới và tháng tới không?". Trong VDI quy mô lớn, hai câu hỏi này luôn đi cùng nhau.
 
-**Synthesis:** Mỗi component/task phải có role, dependency, dấu hiệu lỗi, kiểm tra vận hành, evidence, risk và escalation.
+Sau khi học xong, engineer cần làm được:
 
-**Q4 - Troubleshooting và scenario:** /lumi-ask riêng cho VDI Performance and Capacity Guide đã được dùng để tổng hợp phần này.
+- Đọc CPU, memory, storage latency, IOPS, network latency, concurrent session và login duration theo ngữ cảnh VDI.
+- Phân biệt spike bình thường, trend xấu và bottleneck thật.
+- Hiểu boot storm, logon storm và vì sao chúng làm metric tăng theo cụm thời gian.
+- Biết khi nào một vấn đề performance là sự cố tức thời và khi nào là capacity risk.
+- Biết evidence cần lưu để escalation hoặc đề xuất capacity change.
+- Không kết luận "thiếu CPU" hay "do storage" nếu chưa có correlation.
 
-**Synthesis:** Troubleshooting đi theo symptom -> scope -> recent change -> layer check -> evidence -> mitigation/escalation.
+## 2. Performance và capacity khác nhau thế nào
 
-**Q5 - Knowledge check, misconception và confirmation:** /lumi-ask riêng cho VDI Performance and Capacity Guide đã được dùng để tổng hợp phần này.
+| Khái niệm | Câu hỏi chính | Ví dụ trong VDI |
+|---|---|---|
+| Performance | User/session có chạy tốt không? | Login chậm, app lag, black screen, session disconnect. |
+| Capacity | Hệ thống còn đủ tài nguyên không? | Host gần đầy CPU/memory, datastore sắp đầy, license gần hết, pool thiếu available desktops. |
+| Baseline | Bình thường là gì? | Login duration trung bình giờ cao điểm, storage latency thường ngày. |
+| Headroom | Còn dư bao nhiêu trước khi rủi ro? | Cluster còn bao nhiêu CPU/memory, datastore còn bao nhiêu capacity. |
+| Trend | Hướng thay đổi theo thời gian | Session peak tăng 15% mỗi tháng, profile storage tăng nhanh. |
+| Bottleneck | Lớp đang giới hạn trải nghiệm | Storage latency cao làm login chậm dù CPU còn dư. |
 
-**Synthesis:** Knowledge check kiểm tra khả năng phân biệt layer, nhận diện misconception và nêu Need Customer Confirmation.
+Điểm đào tạo quan trọng: capacity còn dư không đảm bảo performance tốt. Ví dụ datastore còn nhiều dung lượng nhưng latency cao vẫn làm login chậm.
 
-**Nguồn wiki chính:** [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]], [[sources/vmware-vsphere-8-0]], [[sources/vcenter-server-installation-and-setup]], [[sources/xenserver-8-4]].
+## 3. Mô hình phân tích performance theo lớp
 
-**Concept liên quan:** [[concepts/vdi-connection-flow]], [[concepts/omnissa-horizon]], [[concepts/connection-server]], [[concepts/unified-access-gateway]], [[concepts/citrix-virtual-apps-and-desktops]], [[concepts/delivery-controller]], [[concepts/storefront]], [[concepts/virtual-delivery-agent]], [[concepts/delivery-group]], [[concepts/vmware-vsphere]], [[concepts/esxi]], [[concepts/vcenter-server]].
+```mermaid
+flowchart TB
+  User["User Experience: login / launch / session / app"] --> Session["Session Metrics"]
+  Session --> Broker["Broker / Gateway"]
+  Session --> VM["VDI VM / Agent / VDA"]
+  VM --> Host["Host / HCI / Hypervisor"]
+  Host --> Storage["Datastore / Storage / Profile Store"]
+  VM --> Network["Network / DNS / Firewall / LB"]
+  Session --> Identity["AD / GPO / Profile / Policy"]
+  Monitor["Monitoring Trend"] --> User
+  Monitor --> Host
+  Monitor --> Storage
+  Monitor --> Network
+```
 
-### 0.3 Scope
+Khi user nói "VDI chậm", không nên hỏi ngay "CPU bao nhiêu?". Hãy xác định chậm ở đâu:
 
-**In Scope**
+- Login trước khi thấy resource.
+- Resource enumeration.
+- Launch desktop/app.
+- Profile loading.
+- Desktop interactive.
+- App startup.
+- In-session latency.
+- Disconnect/reconnect.
 
-- Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.
-- Xác định được thành phần, dependency và evidence cần kiểm tra.
-- Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.
-- Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
-- Scenario, troubleshooting, checklist, lab thinking và knowledge check cho system engineer.
+Mỗi đoạn chậm có lớp kiểm tra khác nhau.
 
-**Out of Scope**
+## 4. Metric cốt lõi cần hiểu
 
-- Không thay thế SOP chi tiết theo topology thật.
-- Không đưa version, IP, hostname, SLA, owner hoặc escalation path khi chưa xác nhận.
-- Không yêu cầu secret, password, token hoặc credential.
+| Metric | Ý nghĩa | Dấu hiệu cần chú ý | Không nên hiểu nhầm |
+|---|---|---|---|
+| CPU usage | Mức sử dụng compute | Cao kéo dài theo host/pool, ready/queue nếu có | CPU cao ngắn lúc logon chưa chắc là lỗi. |
+| Memory usage | Nhu cầu RAM của host/VM | Ballooning/swapping nếu có, memory pressure | Memory còn dư không loại trừ storage bottleneck. |
+| Storage latency | Độ trễ I/O | Tăng cùng login chậm/profile/app lag | Dung lượng còn nhiều không nghĩa latency tốt. |
+| IOPS | Số thao tác I/O | Spike lúc boot/logon, saturation | IOPS cao chưa xấu nếu latency vẫn ổn. |
+| Throughput | Lưu lượng đọc/ghi | Tăng khi image/profile/app tải nhiều | Throughput thấp có thể do nghẽn ở nơi khác. |
+| Concurrent sessions | Số session đồng thời | Peak gần capacity, tăng theo tháng | Session count thấp không đảm bảo performance nếu storm xảy ra. |
+| Login duration | Thời gian user vào desktop/app | Tăng theo group/site/pool/time | Cần tách profile/GPO/auth/storage. |
+| Profile load time | Thời gian attach/load profile | Tăng cùng storage/profile errors | Không giả định FSLogix nếu chưa xác nhận. |
+| Network latency/loss | Độ trễ/mất gói | Disconnect, black screen, lag input | Chỉ đo ping không đủ nếu path/protocol khác. |
+| License usage | Mức dùng license | Gần limit gây launch fail | License là capacity control, không chỉ compliance. |
 
-## 1. Learning Objectives
+## 5. CPU và memory analysis
 
-- Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.
-- Xác định được thành phần, dependency và evidence cần kiểm tra.
-- Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.
-- Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
-- Thu thập evidence và quyết định escalation phù hợp.
-- Phân biệt tri thức đã có nguồn với Need Customer Confirmation.
+### 5.1 Cần xem ở đâu
 
-## 2. Prerequisites
+- Host/cluster CPU và memory.
+- VM CPU/memory usage.
+- Resource pool nếu có.
+- Peak theo giờ cao điểm.
+- Correlation với session count.
+- Placement của các VDI chậm trên cùng host.
 
-- Biết cơ bản về Windows user, domain account, VM, network connection, ticket và alert.
-- Nên đọc trước `VDI Foundation Overview` và `Customer VDI Landscape Overview`.
-- Với tài liệu theo sản phẩm, đọc kiến trúc nền tảng trước khi thực hiện task.
+### 5.2 Dấu hiệu bottleneck
 
-## 3. Why This Topic Matters in Large Scale VDI
+- Nhiều user trên cùng host báo chậm.
+- CPU/memory host cao kéo dài trong giờ không bình thường.
+- VM ready/queue/co-stop hoặc ballooning/swapping nếu monitoring có.
+- Login duration tăng cùng host contention.
+- App lag trên nhiều desktop nằm cùng host/cluster.
 
-Storage, performance, backup và HA ảnh hưởng trực tiếp login, boot storm, logon storm, profile, image và khả năng phục hồi. Trong môi trường 1500 đến hơn 2000 VDI, một lỗi ở broker, gateway, image, storage, profile, identity hoặc network có thể tạo impact rộng. Engineer cần hiểu dependency, kiểm tra theo lớp và lưu evidence.
+### 5.3 Evidence cần lưu
 
-## 4. Core Concepts
+- Host/cluster metric timeline.
+- Affected VM list.
+- Session count cùng thời điểm.
+- User symptom sample.
+- Recent host maintenance/vMotion/placement change.
 
-- Datastore chứa VM disk, snapshot và template.
-- Profile storage chứa dữ liệu user hoặc container.
-- Latency, capacity và IOPS phải được đọc theo trend và impact.
+Không kết luận thiếu CPU chỉ vì CPU cao trong vài phút boot/logon storm. Cần xem duration, impact và correlation.
 
-Ví dụ: khi user không mở được desktop, không nên chỉ reboot VM. Cần xác định lỗi ở login hay launch, internal hay external, broker có failed session không, agent có registered không, VM powered on không và gần đây có change gì không.
+## 6. Storage latency, IOPS và datastore capacity
 
-## 5. Architecture or Operational Model
+### 6.1 Vì sao storage là điểm nhạy trong VDI
+
+VDI tạo I/O theo cụm:
+
+- Boot storm: nhiều desktop khởi động cùng lúc.
+- Logon storm: nhiều user login đầu giờ.
+- Profile attach/load.
+- Application startup.
+- Snapshot/image publish.
+- Antivirus/security scan.
+
+Do đó storage metric phải xem theo thời gian và theo workload, không chỉ nhìn một giá trị hiện tại.
+
+### 6.2 Metric cần xem
+
+- Datastore/SR capacity.
+- Read/write latency.
+- IOPS read/write.
+- Throughput.
+- Queue/degradation nếu tool hiển thị.
+- Snapshot growth.
+- Profile storage capacity.
+- Profile attach/load failures.
+
+### 6.3 Dấu hiệu storage bottleneck
+
+- Login duration tăng cùng storage latency.
+- Profile errors tăng cùng profile store latency/capacity.
+- App startup chậm trên nhiều pool cùng datastore.
+- Boot storm làm nhiều desktop boot chậm.
+- Datastore capacity tăng nhanh sau snapshot/image change.
+
+### 6.4 Evidence cần lưu
+
+- Datastore/SR name.
+- Capacity/latency/IOPS timeline.
+- Affected pool/catalog/desktop list.
+- Login duration/profile metric.
+- Snapshot list nếu liên quan.
+- Recent image/provisioning/backup/scan change.
+
+## 7. Network performance
+
+### 7.1 Metric cần xem
+
+- Latency.
+- Packet loss.
+- Jitter nếu có.
+- Bandwidth saturation.
+- DNS response/failure.
+- Load balancer member health.
+- Firewall deny/drop nếu có quyền.
+- Internal vs external path.
+
+### 7.2 Dấu hiệu network bottleneck
+
+- Disconnect tăng theo site/location.
+- External user lag, internal user ổn.
+- Black screen sau authentication.
+- Session input lag nhưng host/storage bình thường.
+- Packet loss hoặc latency spike cùng thời điểm user ticket.
+
+### 7.3 Evidence cần lưu
+
+- User location.
+- Internal/external comparison.
+- Gateway/LB/firewall evidence.
+- Network metric timeline.
+- Affected protocol/path nếu biết.
+- Broker/gateway session event.
+
+Không dùng một lần ping thành kết luận cuối. VDI có nhiều protocol path và load balancer/firewall có thể xử lý khác nhau.
+
+## 8. Concurrent session và pool capacity
+
+### 8.1 Chỉ số cần xem
+
+- Concurrent sessions peak.
+- Active/disconnected sessions.
+- Failed sessions.
+- Pool/catalog total machines.
+- Available/registered machines.
+- Machines in maintenance.
+- Powered off/unknown machines.
+- License usage.
+
+### 8.2 Dấu hiệu thiếu capacity
+
+- User launch fail vì không có available desktop.
+- Pool available giảm đều theo giờ cao điểm.
+- Disconnected/stale sessions giữ tài nguyên.
+- License usage gần limit.
+- Host/cluster headroom giảm theo trend.
+- New user onboarding làm peak tăng nhưng capacity không đổi.
+
+### 8.3 Capacity không chỉ là số máy
+
+Một pool có 500 desktop nhưng chỉ 300 registered, 100 in use, 80 maintenance và 50 assigned/unavailable thì available thực tế rất khác total. Capacity report phải dùng số usable capacity, không chỉ inventory.
+
+## 9. Login duration, boot storm và logon storm
+
+### 9.1 Login duration cần tách pha
+
+| Pha | Lớp liên quan |
+|---|---|
+| Authentication | AD/DC/DNS/MFA/gateway |
+| Resource enumeration | Broker/entitlement/StoreFront/Connection Server |
+| Session launch | Broker/Agent/VDA/protocol |
+| Profile load | Profile store, storage, permission, lock |
+| GPO/app initialization | AD/GPO, app, security tool |
+| Desktop ready | VM/host/storage/network |
+
+### 9.2 Boot storm
+
+Boot storm là khi nhiều desktop boot cùng lúc, thường sau maintenance, power policy, host recovery hoặc image rollout. Dấu hiệu:
+
+- Nhiều VM power on task cùng thời điểm.
+- Storage read I/O và latency tăng.
+- Host CPU/memory tăng.
+- Registration chậm.
+- Pool available phục hồi chậm.
+
+### 9.3 Logon storm
+
+Logon storm là khi nhiều user login trong thời gian ngắn, thường đầu giờ làm việc. Dấu hiệu:
+
+- Login duration tăng theo giờ.
+- Profile load/storage latency tăng.
+- DC/GPO/auth load tăng.
+- Security scan/process spike.
+- App backend bị tải cao.
+
+### 9.4 Evidence cần lưu
+
+- Time window.
+- Concurrent login/session count.
+- Login duration chart.
+- Storage latency/IOPS.
+- Profile logs.
+- DC/GPO metric nếu có.
+- Host CPU/memory.
+- Recent change hoặc schedule.
+
+## 10. Capacity trend và forecast
+
+Capacity management cần trend, không chỉ ảnh chụp hiện tại.
+
+### 10.1 Trend cần theo dõi
+
+| Trend | Vì sao quan trọng |
+|---|---|
+| Concurrent session peak theo ngày/tuần/tháng | Dự báo số user đồng thời. |
+| Pool/catalog availability | Phát hiện thiếu usable desktops. |
+| Host CPU/memory peak | Dự báo compute expansion. |
+| Datastore capacity growth | Tránh full datastore. |
+| Storage latency trend | Phát hiện degradation trước outage. |
+| Profile storage growth | Tránh login/profile incident. |
+| License usage | Tránh launch fail do license. |
+| Failed session trend | Dấu hiệu capacity hoặc quality xấu. |
+
+### 10.2 Headroom cần báo cáo
+
+- Compute headroom.
+- Memory headroom.
+- Storage capacity headroom.
+- Storage performance headroom nếu có baseline.
+- License headroom.
+- Pool/catalog usable desktop headroom.
+- Profile storage headroom.
+- Network path headroom nếu có dashboard.
+
+### 10.3 Khi nào mở capacity request
+
+- Trend cho thấy chạm ngưỡng trong thời gian ngắn.
+- Peak concurrent sessions tăng đều.
+- Pool critical thường xuyên thiếu available desktop.
+- Datastore/profile storage tăng nhanh.
+- License usage gần limit.
+- Host/cluster resource không còn đủ headroom cho maintenance/failover.
+- Performance degradation lặp lại trong giờ cao điểm.
+
+## 11. Performance troubleshooting workflow
 
 ```mermaid
 flowchart LR
-  U[User / Endpoint] --> G[Gateway or Portal]
-  G --> B[Broker / Control Plane]
-  B --> A[Agent / VDA / Desktop]
-  B --> I[Identity: AD DNS GPO]
-  A --> H[Hypervisor / HCI]
-  H --> S[Storage]
-  A --> N[Network / Backend]
-  M[Monitoring] --> G
-  M --> B
-  M --> H
-  M --> S
+  Symptom["Slow / Lag / Capacity Alert"] --> Scope["Scope: user / pool / site / platform"]
+  Scope --> Phase["Phase: login / launch / session / app"]
+  Phase --> Metrics["Collect CPU memory storage network profile session metrics"]
+  Metrics --> Correlate["Correlate with time and change"]
+  Correlate --> Bottleneck["Identify likely bottleneck"]
+  Bottleneck --> Action["Mitigate / Escalate / Capacity Change"]
+  Action --> Validate["Validate trend and user experience"]
 ```
 
-Đây là mô hình đào tạo. Topology thật, VIP, VLAN, firewall path, số lượng node và owner từng lớp là Need Customer Confirmation.
+### 11.1 Các bước thực hiện
 
-## 6. Component Deep Dive
+1. Xác định triệu chứng performance cụ thể.
+2. Xác định scope.
+3. Xác định thời điểm bắt đầu và peak.
+4. Kiểm tra recent change.
+5. Thu metric theo lớp: session, CPU, memory, storage, network, profile, identity.
+6. Correlate metric với user impact.
+7. Xác định bottleneck có bằng chứng.
+8. Mitigate trong phạm vi SOP hoặc escalation.
+9. Theo dõi sau action.
+10. Ghi lại capacity/performance lesson learned.
 
-| Thành phần | Vai trò | Phụ thuộc vào | Ảnh hưởng khi lỗi | Engineer cần kiểm tra | Evidence cần lưu |
-|---|---|---|---|---|---|
-| Endpoint/Client | Điểm user bắt đầu truy cập | Client version, DNS, network, certificate trust | Login hoặc launch fail | Client type, version, location, error | Screenshot lỗi, timestamp, endpoint |
-| Gateway/Portal | Entry point và truy cập ngoài nếu có | VIP, certificate, firewall, load balancer | External issue, timeout, TLS warning | Gateway health, cert, LB member, log | Gateway/LB status, cert info |
-| Broker/Control Plane | Authentication, entitlement, resource selection | AD, database, hypervisor manager, agent | Không thấy resource, failed session | Service health, entitlement, failed session | Broker log, user mapping |
-| Agent/VDA/Desktop | Nhận session và chạy workload | DNS, domain, broker list, image, firewall | Unregistered, unreachable, black screen | Agent service, registration, VM state | Agent log, VM state |
-| Identity/Policy | User, group, GPO, authentication | AD, DC, DNS, time sync, Entra if any | Login fail, policy sai, access denied | Account, group, GPO, DC health | AD/GPO evidence |
-| Hypervisor/Storage/Network | Chạy VM, lưu dữ liệu, nối các lớp | vCenter/ESXi/XenServer/HCI/datastore/VLAN | Latency, datastore full, packet loss | Host, datastore, path, latency | Dashboard, metrics, task log |
+## 12. Operational tasks
 
-## 7. End to End Flow or Operational Workflow
+### 12.1 Weekly performance review
 
-1. Detect hoặc nhận request/ticket.
-2. Xác định scope: một user, nhiều user, pool/catalog, gateway, cluster hay toàn nền tảng.
-3. Kiểm tra recent change.
-4. Kiểm tra theo lớp liên quan tới chủ đề.
-5. Thu thập evidence trước khi thay đổi hoặc escalation.
-6. Thực hiện action trong phạm vi quyền hoặc chuyển đúng owner.
-7. Validate bằng login/launch/session test và monitoring.
-8. Close ticket, handover hoặc cập nhật KB.
+**Mục đích:** Phát hiện trend xấu trước khi thành incident.
 
-## 8. Operational Tasks
+**Kiểm tra:**
 
-| Task | Mục đích | Khi nào thực hiện | Precheck | Các bước kiểm tra high level | Expected evidence | Rủi ro | Escalation condition |
-|---|---|---|---|---|---|---|---|
-| Health check | Xác nhận trạng thái nền | Đầu ca/sau alert/trước change | Có dashboard và baseline | Xem broker, gateway, session, agent, host, storage, network | Screenshot dashboard | Bỏ sót nếu chỉ xem một lớp | Nhiều alert hoặc impact rộng |
-| Ticket triage | Khoanh vùng symptom | Khi có ticket user | Có user, resource, timestamp | Xác định scope, access path, recent change | Ticket + error + log | Kết luận vội thiếu evidence | Không xác định được scope |
-| Dependency check | Tìm lớp gây lỗi | Khi root cause chưa rõ | Biết dependency chính | Kiểm tra identity, broker, agent, storage, network | Kết quả từng lớp | Mất thời gian nếu không theo thứ tự | Cần quyền/owner nhóm khác |
-| Handover/KB update | Giữ tri thức vận hành | Sau incident/change | Không chứa secret | Ghi symptom, evidence, resolution, caveat | KB/ticket entry | KB lỗi thời | Cần review bởi owner |
+- Concurrent session peak.
+- Failed sessions.
+- Login duration.
+- Host CPU/memory peak.
+- Datastore latency/capacity.
+- Profile load time.
+- License usage.
+- Top pool/catalog có ticket performance.
 
-## 9. Common Issues and Troubleshooting
+**Output:** Risk list, owner, action, cần change/capacity request hay chỉ theo dõi.
 
-| Triệu chứng | Nguyên nhân có thể | Lớp cần kiểm tra | Evidence cần thu thập | Cách kiểm tra | Hướng xử lý | Khi nào cần escalation |
+### 12.2 Capacity review trước onboarding user mới
+
+**Mục đích:** Đảm bảo hệ thống đủ năng lực khi tăng user.
+
+**Precheck:**
+
+- Số user mới và expected concurrency.
+- Pool/catalog cần mở rộng.
+- Host/storage/license/profile capacity.
+- Network/access path.
+- Support window và rollback nếu onboarding gây tải.
+
+**Evidence:** Current capacity, projected usage, gap, recommendation.
+
+### 12.3 Post-change performance validation
+
+**Mục đích:** Xác nhận change không làm xấu performance.
+
+**Theo dõi:**
+
+- Login duration.
+- Failed session.
+- Registration.
+- Host/storage/network metrics.
+- Profile logs.
+- Ticket trend.
+
+**Stop condition:** Metric xấu rõ rệt, user impact, failed session tăng hoặc rollback condition được chạm.
+
+## 13. Common issues and diagnosis
+
+| Triệu chứng | Nguyên nhân có thể | Lớp cần kiểm tra | Evidence | Cách chẩn đoán | Hướng xử lý | Khi nào escalation |
 |---|---|---|---|---|---|---|
-| Login fail | Account, MFA, DC/DNS, certificate, broker auth | Identity/Gateway/Broker | Timestamp, user, auth log, broker/gateway log | Kiểm tra account, group, DC/DNS, cert, broker service | Xử lý theo evidence hoặc chuyển owner | Nhiều user hoặc broker/DC/gateway lỗi |
-| Không thấy resource | Thiếu entitlement, pool/catalog disabled, thiếu machine, license | Broker/Entitlement/Capacity | User group, entitlement, resource state, license alert | Kiểm tra mapping, pool/catalog, machine availability | Cập nhật qua quy trình phê duyệt | Ảnh hưởng nhóm user hoặc nghi license/broker |
-| Launch fail | Agent/VDA unregistered, VM off, protocol path lỗi | Broker/Agent/Hypervisor/Network | Failed session, registration, VM state, protocol log | Kiểm tra agent, VM power, firewall/protocol path | Mitigate theo lớp, rollback nếu sau change | Nhiều machine hoặc sau image/network change |
-| Login chậm | GPO, profile, storage latency, DC latency, AV/logon script | Identity/Profile/Storage/Performance | Login duration, GPO time, profile log, storage/DC metrics | Correlate metric theo timestamp | Escalate owner của bottleneck | Vượt SLA hoặc nhiều user |
-| Black screen/disconnect | Packet loss, gateway, display protocol, driver/tools/agent, resource contention | Network/Gateway/Protocol/Hypervisor | Latency, packet loss, protocol log, VM metrics | Khoanh vùng internal/external và lớp protocol | Sửa theo evidence hoặc rollback change | External-only hoặc diện rộng |
+| Login chậm đầu giờ | Logon storm, profile storage, GPO/DC, security scan, storage latency | Profile/Storage/Identity/Security | Login duration, profile log, storage latency | Correlate theo time window | Tối ưu theo bottleneck hoặc escalation | Nhiều user/vượt SLA |
+| Desktop/app lag | Host contention, storage latency, network loss, app backend | Host/Storage/Network/App | User samples, host/storage/network metric | So sánh pool/host/site | Escalate owner phù hợp | Nhiều user hoặc app critical |
+| Pool thiếu available desktops | Concurrent peak, stale sessions, unregistered machines, license | Pool/Session/Agent/License | Pool count, session count, registration | Tính usable capacity | Mở rộng/clear theo SOP | Business impact |
+| Datastore gần đầy | Snapshot growth, profile growth, provisioning, logs | Storage/Snapshot/Profile | Capacity trend, snapshot list | Xem growth source | Dọn/mở rộng qua change | Gần full hoặc tăng nhanh |
+| Storage latency cao | I/O storm, storage degradation, snapshot chain, profile load | Storage/HCI/Profile | Latency/IOPS chart, login duration | Correlate I/O and user impact | Escalate storage/HCI | Diện rộng |
+| License gần hết | Concurrency tăng, license sizing thiếu | License/Capacity | Usage trend, failed launch | So sánh peak and limit | Capacity/license request | Launch fail hoặc nearing limit |
+| Host CPU/memory cao | Workload spike, imbalance, insufficient cluster headroom | Host/Cluster | Host metric, affected VM list | So sánh host/pool placement | Rebalance/expand qua SOP/change | Nhiều VDI chậm |
+| Disconnect do network | Packet loss, latency, gateway/LB issue | Network/Gateway | Session trend, path, network metric | So sánh site/internal/external | Escalate network | Disconnect storm |
 
-## 10. Scenario Based Learning
+## 14. Scenario Based Learning
 
-### Scenario 1. User bên ngoài launch bị timeout
+### Scenario 1: Login chậm đầu giờ nhưng CPU host không cao
 
-**Bối cảnh:** Một nhóm user external login portal được nhưng không vào desktop.
+**Bối cảnh:** 200 user login lúc 8:00, login duration tăng lên 5 phút. Host CPU chỉ 55%.
 
-**Câu hỏi cho học viên:** Kiểm tra đoạn nào trước?
+**Câu hỏi cho học viên:** Có thể kết luận CPU không phải vấn đề không? Cần xem gì tiếp?
 
-**Gợi ý phân tích:** So sánh internal/external; ưu tiên gateway, LB, certificate, firewall, secondary protocol.
+**Gợi ý phân tích:** CPU host không cao chưa đủ. Cần xem profile load time, storage latency, GPO/DC, security scan và logon storm.
 
-**Hướng xử lý đề xuất:** Kiểm tra gateway health, certificate, firewall, failed session; escalation network/platform nếu nhiều user.
+**Hướng xử lý đề xuất:** Correlate login duration với profile/storage/GPO metric. Escalate theo bottleneck có evidence.
 
-**Evidence cần lưu:** Timestamp, user, external path, gateway log, broker failed session.
+**Evidence cần lưu:** Login chart, profile log, storage latency, DC/GPO evidence.
 
-### Scenario 2. Sau image update nhiều VDI unregistered
+### Scenario 2: Datastore còn 40% dung lượng nhưng user vẫn chậm
 
-**Bối cảnh:** Sau maintenance window, nhiều desktop trong cùng pool/catalog không nhận session.
+**Bối cảnh:** Datastore không đầy nhưng latency tăng cao trong giờ login.
 
-**Câu hỏi cho học viên:** Làm sao phân biệt image, broker hay network?
+**Câu hỏi cho học viên:** Vì sao capacity còn dư không đảm bảo performance?
 
-**Gợi ý phân tích:** Kiểm tra recent change, agent service/version, DNS/time sync, VM power, registration trend.
+**Gợi ý phân tích:** Dung lượng và latency là hai câu chuyện khác nhau. I/O path có thể nghẽn dù còn nhiều dung lượng.
 
-**Hướng xử lý đề xuất:** Dừng rollout và rollback nếu liên quan image mới; giữ evidence cho RCA.
+**Hướng xử lý đề xuất:** Thu latency/IOPS/throughput timeline, affected pool, login duration và profile logs. Escalate storage/HCI owner.
 
-**Evidence cần lưu:** Change ID, image version, registration dashboard, agent log.
+**Evidence cần lưu:** Datastore metric, user impact, time window, affected resource.
 
-### Scenario 3. Login chậm đầu giờ sáng
+### Scenario 3: Pool critical thiếu available desktops
 
-**Bối cảnh:** User mất nhiều phút ở loading profile/preparing desktop.
+**Bối cảnh:** Một Delivery Group critical có 600 machines total nhưng chỉ 20 available trong giờ cao điểm.
 
-**Câu hỏi cho học viên:** Metric nào cần thu thập?
+**Câu hỏi cho học viên:** Total machines có đủ để kết luận capacity không?
 
-**Gợi ý phân tích:** Correlate login duration, GPO, profile storage, storage latency, DC latency, host contention, logon storm.
+**Gợi ý phân tích:** Cần tính usable capacity: registered, in use, disconnected, maintenance, powered off, license.
 
-**Hướng xử lý đề xuất:** Khoanh vùng bottleneck và escalation đúng owner.
+**Hướng xử lý đề xuất:** Lập capacity snapshot, xác định lý do unavailable, mở capacity/change nếu trend lặp lại.
 
-**Evidence cần lưu:** Login sample, GPO report, profile log, storage/DC metrics.
+**Evidence cần lưu:** Machine state breakdown, concurrent session peak, failed session, license status.
 
-## 11. Hands On or Lab Thinking Exercises
+### Scenario 4: Concurrent session tăng theo tháng
 
-1. Vẽ lại luồng liên quan tới tài liệu này và đánh dấu ít nhất 5 điểm có thể gây lỗi.
-2. Chọn một symptom trong bảng troubleshooting và lập evidence package trước escalation.
-3. Thiết kế checklist 10 dòng cho ca trực đầu ngày liên quan tới chủ đề này.
-4. Đọc một change giả định và chỉ ra precheck, rollback point, postcheck còn thiếu.
+**Bối cảnh:** Peak concurrent sessions tăng 12% mỗi tháng, license usage đạt 85%, datastore profile tăng đều.
 
-## 12. Knowledge Check
+**Câu hỏi cho học viên:** Đây là incident hay capacity risk?
 
-**Câu 1. Vì sao không nên chỉ reboot VM khi user báo lỗi VDI?**
+**Gợi ý phân tích:** Chưa phải incident nếu chưa impact, nhưng là capacity risk cần forecast và request.
 
-Đáp án: Vì lỗi có thể nằm ở identity, broker, gateway, storage, network, profile hoặc recent change.
+**Hướng xử lý đề xuất:** Tạo trend report, forecast time-to-threshold, đề xuất capacity/license/storage review.
 
-**Câu 2. User login portal được nhưng launch fail, cần nghĩ tới lớp nào?**
+**Evidence cần lưu:** 3 tháng trend, forecast, threshold/customer target nếu có.
 
-Đáp án: Broker/resource selection, Agent/VDA, VM state và session protocol path.
+## 15. Bài tập tư duy
 
-**Câu 3. Evidence tối thiểu khi escalation login fail là gì?**
+### Bài tập 1: Bottleneck mapping
 
-Đáp án: Timestamp, user, endpoint/location, resource, error, auth/broker/gateway log và recent change.
+Với các symptom sau, liệt kê metric cần xem:
 
-**Câu 4. HA khác backup thế nào?**
+- Login chậm.
+- App lag trong session.
+- Black screen.
+- Pool thiếu desktop available.
+- Datastore latency cao.
+- Disconnect theo site.
 
-Đáp án: HA giữ dịch vụ khi lỗi cục bộ; backup phục hồi dữ liệu/cấu hình khi mất hoặc sai change.
+### Bài tập 2: Capacity report
 
-**Câu 5. Vì sao image update cần pilot?**
+Tạo báo cáo capacity một trang cho một pool 500 desktop, gồm total, available, registered, in use, maintenance, failed sessions, concurrent peak và recommendation.
 
-Đáp án: Vì lỗi image có thể lan tới hàng trăm hoặc hàng nghìn VDI.
+### Bài tập 3: Storm timeline
 
-**Câu 6. External lỗi nhưng internal bình thường gợi ý gì?**
+Vẽ timeline 7:30-9:30 cho logon storm, gồm concurrent login, storage latency, profile load, CPU, failed session và ticket user.
 
-Đáp án: Gateway, load balancer, certificate, firewall/NAT hoặc external protocol path.
+### Bài tập 4: Trend forecast
 
-**Câu 7. Profile storage có thể gây login chậm vì sao?**
+Dựa trên 6 tháng license usage tăng đều, dự báo khi nào chạm 90% và đề xuất mốc mở capacity request.
 
-Đáp án: Vì profile/container cần attach và đọc/ghi qua storage; latency, permission hoặc lock làm chậm.
+## 16. Knowledge Check
 
-**Câu 8. Khi nào cần escalation?**
+### Câu 1
 
-Đáp án: Khi ảnh hưởng nhiều user, vượt quyền, cần change, rủi ro dữ liệu/downtime hoặc thuộc owner khác.
+**Performance khác capacity thế nào?**
 
-## 13. Common Misconceptions
+**Đáp án:** Performance nói về trải nghiệm/độ nhanh chậm hiện tại; capacity nói về năng lực còn đủ để phục vụ workload hiện tại và tương lai không.
 
-- “VDI lỗi nghĩa là VM lỗi” - sai, vì broker, gateway, identity, storage, network hoặc policy đều có thể gây triệu chứng giống VM lỗi.
-- “Login portal được nghĩa là session path ổn” - sai, session/display protocol có thể lỗi sau authentication.
-- “Snapshot là backup dài hạn” - sai, snapshot là mốc ngắn hạn và có thể ảnh hưởng datastore.
-- “Mở policy rộng sẽ giải quyết nhanh” - rủi ro bảo mật; policy change cần approval và rollback.
+### Câu 2
 
-## 14. Field Checklist
+**Vì sao datastore còn dung lượng không đảm bảo login nhanh?**
 
-- [ ] Xác định user, resource, time, endpoint, internal/external path.
-- [ ] Xác định impact và urgency.
-- [ ] Kiểm tra recent change.
-- [ ] Kiểm tra entitlement/resource availability.
-- [ ] Kiểm tra broker/gateway/agent state theo scope.
-- [ ] Kiểm tra identity, DNS, time sync nếu liên quan login/registration.
-- [ ] Kiểm tra hypervisor, storage, network metrics nếu có dấu hiệu performance hoặc diện rộng.
-- [ ] Lưu evidence trước khi escalation hoặc thay đổi.
+**Đáp án:** Vì latency, IOPS và queue có thể nghẽn dù capacity còn dư.
 
-## 15. Monitoring and Evidence
+### Câu 3
 
-- Session count, failed session, active/disconnected session.
-- VDI registered/unregistered, Agent/VDA status, VM power state.
-- Broker service health, gateway health, load balancer member state.
-- Host CPU/memory, datastore capacity, storage latency, IOPS nếu liên quan hạ tầng.
-- Network latency, packet loss, DNS lookup, certificate status nếu liên quan access.
-- Login duration, profile loading time, GPO processing time nếu liên quan user experience.
-- Ticket ID, timestamp, user/resource, screenshot, log excerpt, alert ID, change ID.
+**Concurrent session dùng để đánh giá gì?**
 
-## 16. Change, Risk and Rollback Considerations
+**Đáp án:** Đánh giá peak workload, license usage, pool capacity và trend tăng trưởng user đồng thời.
 
-Nếu chủ đề liên quan đến thay đổi, cần có change record, approval, precheck, impact assessment, rollback point, maintenance window, postcheck và evidence. Dừng change nếu precheck fail, rollback không rõ, impact vượt phạm vi phê duyệt hoặc phát sinh lỗi diện rộng. Nếu chủ đề không trực tiếp là change, rủi ro chính là hiểu sai lớp lỗi, escalation sai owner hoặc thiếu evidence.
+### Câu 4
 
-## 17. Security and Access Control Considerations
+**Boot storm khác logon storm thế nào?**
 
-- Áp dụng least privilege.
-- Helpdesk chỉ thực hiện thao tác hỗ trợ được phê duyệt.
-- System engineer không tự thay đổi image, policy, gateway, firewall, certificate hoặc entitlement diện rộng nếu chưa có change approval.
-- Platform admin thao tác thay đổi phải có audit log và evidence.
-- Không ghi secret, password, token hoặc credential vào tài liệu/ticket/KB.
+**Đáp án:** Boot storm là nhiều desktop boot cùng lúc; logon storm là nhiều user login cùng lúc. Cả hai đều có thể tạo tải CPU/storage/network/profile.
 
-## 18. Need Customer Confirmation
+### Câu 5
 
-- Version cụ thể của Horizon, CVAD, vCenter/ESXi, XenServer, gateway, Agent/VDA.
-- Topology thật: site, pod, Connection Server, Delivery Controller, StoreFront, UAG/Gateway, load balancer, pool, catalog, delivery group.
-- Access flow thật cho user nội bộ và bên ngoài.
-- HA/DR design, failover/failback, RPO/RTO, DR drill evidence.
-- Monitoring tool, dashboard chính thức, alert threshold, ticket integration.
-- Storage design: datastore, profile share, image repository, latency/capacity threshold, backup/replication.
-- Network path: VLAN, routing, firewall, DNS, NAT/proxy, certificate, load balancer owner.
-- Profile solution: FSLogix, Citrix Profile Management, roaming profile hoặc giải pháp khác.
-- Change process, SLA, escalation path và ownership giữa VDI, identity, network, storage, hypervisor, security, application.
+**Login duration cần tách những pha nào?**
 
-## 19. Related Wiki Links
+**Đáp án:** Authentication, resource enumeration, session launch, profile load, GPO/app initialization và desktop ready.
 
-### Concepts
+### Câu 6
 
-- [[concepts/vdi-connection-flow]]
-- [[concepts/omnissa-horizon]]
-- [[concepts/connection-server]]
-- [[concepts/unified-access-gateway]]
-- [[concepts/citrix-virtual-apps-and-desktops]]
-- [[concepts/delivery-controller]]
-- [[concepts/storefront]]
-- [[concepts/virtual-delivery-agent]]
-- [[concepts/delivery-group]]
-- [[concepts/vmware-vsphere]]
-- [[concepts/esxi]]
-- [[concepts/vcenter-server]]
-- [[concepts/xenserver]]
+**Pool total machines cao nhưng available thấp thì cần xem gì?**
+
+**Đáp án:** Registered/unregistered, in use, disconnected/stale sessions, maintenance, powered off, assigned, license và failed sessions.
+
+### Câu 7
+
+**Khi nào mở capacity request?**
+
+**Đáp án:** Khi trend cho thấy sắp chạm threshold, headroom giảm, pool thiếu capacity lặp lại, license/storage/profile tăng nhanh hoặc performance degradation lặp lại.
+
+### Câu 8
+
+**Metric nào cần correlation khi app lag?**
+
+**Đáp án:** User/session scope, host CPU/memory, storage latency, network latency/loss, app backend, profile and recent change.
+
+### Câu 9
+
+**Vì sao baseline khách hàng quan trọng?**
+
+**Đáp án:** Vì workload VDI khác nhau; baseline giúp phân biệt bình thường, spike hợp lệ và bất thường thật.
+
+### Câu 10
+
+**Nếu chưa có threshold chính thức, nên ghi gì?**
+
+**Đáp án:** Ghi Unknown hoặc Need Customer Confirmation, và không dùng ngưỡng tự bịa làm quyết định chính thức.
+
+## 17. Hiểu nhầm thường gặp
+
+| Hiểu nhầm | Vì sao sai | Cách nghĩ đúng |
+|---|---|---|
+| CPU cao nghĩa là thiếu CPU | Cần xem duration, user impact, ready/queue và correlation. | CPU chỉ là một lớp. |
+| Storage còn dung lượng là storage ổn | Latency/IOPS có thể nghẽn. | Xem capacity và performance cùng lúc. |
+| IOPS cao luôn xấu | IOPS cao có thể bình thường nếu latency ổn và trong baseline. | Xem IOPS cùng latency và workload. |
+| Login chậm luôn do profile | Có thể do GPO, DC, storage, security, broker, app init. | Tách pha login. |
+| Capacity review chỉ làm khi đầy | Capacity phải dự báo trước khi chạm ngưỡng. | Theo dõi trend/headroom. |
+| Một dashboard tổng là đủ | Lỗi có thể cục bộ theo pool/site/host/datastore. | Xem theo scope và grouping. |
+
+## 18. Field Checklist
+
+### 18.1 Performance incident checklist
+
+- [ ] Symptom cụ thể: login, launch, session, app, disconnect.
+- [ ] Scope: user, pool/catalog, site, platform.
+- [ ] Time window.
+- [ ] Recent change.
+- [ ] User samples.
+- [ ] CPU/memory metric.
+- [ ] Storage latency/IOPS/capacity.
+- [ ] Network latency/loss.
+- [ ] Login duration/profile/GPO if relevant.
+- [ ] Broker/Agent/session metric.
+- [ ] Evidence package.
+- [ ] Owner/escalation.
+
+### 18.2 Capacity review checklist
+
+- [ ] Concurrent session peak and trend.
+- [ ] Pool/catalog usable capacity.
+- [ ] Host/cluster CPU and memory headroom.
+- [ ] Datastore/profile storage capacity trend.
+- [ ] Storage latency trend.
+- [ ] License usage trend.
+- [ ] Growth forecast.
+- [ ] Risk date or time-to-threshold.
+- [ ] Recommendation and owner.
+
+## 19. Need Customer Confirmation
+
+| Nhóm | Câu hỏi cần xác nhận | Vì sao cần |
+|---|---|---|
+| Baseline | Baseline CPU, memory, latency, IOPS, login duration, concurrent session là gì? | Phân biệt bình thường và bất thường. |
+| Threshold | Ngưỡng cảnh báo/warning/critical cho từng metric là gì? | Không dùng ngưỡng giả định. |
+| Dashboard | Tool/dashboard chính thức cho performance/capacity là gì? | Nguồn số liệu thống nhất. |
+| Workload profile | Nhóm user/app nào là heavy user, normal user, kiosk/task worker? | Capacity theo workload khác nhau. |
+| Concurrency target | Tỷ lệ concurrent session dự kiến là bao nhiêu? | Forecast capacity. |
+| Growth forecast | Dự báo tăng user/VDI trong 3-6-12 tháng là gì? | Lập kế hoạch mở rộng. |
+| Host/cluster policy | Oversubscription, HA headroom và maintenance headroom là gì? | Đánh giá compute capacity đúng. |
+| Storage design | Datastore/profile/image storage design, latency target, IOPS target là gì? | Đánh giá storage bottleneck. |
+| Profile solution | Profile solution và profile storage path là gì? | Phân tích login/profile. |
+| License | License model, limit và purchase/expansion process là gì? | Tránh capacity block. |
+| SLA | SLA cho login duration, launch time, session performance là gì? | Ưu tiên performance incident. |
+| Capacity process | Khi nào mở capacity request và ai phê duyệt? | Chuyển trend thành action. |
+
+## 20. Related Wiki Links
+
+### Source pages
+
+- [[sources/vdi-training-idea]]
+- [[sources/vdi-documentation-list-context]]
+- [[sources/vmware-vsphere-8-0]]
+- [[sources/vcenter-server-installation-and-setup]]
+- [[sources/xenserver-8-4]]
+- [[sources/fslogix-documentation]]
+- [[sources/horizon-8-architecture]]
+- [[sources/citrix-virtual-apps-and-desktops-7-2603]]
+
+### Concept pages
+
+- [[concepts/capacity-management]]
+- [[concepts/monitoring-and-logs]]
 - [[concepts/datastore]]
 - [[concepts/storage-repository]]
 - [[concepts/profile-container]]
 - [[concepts/cloud-cache]]
-- [[concepts/identity-and-access-management]]
+- [[concepts/user-profile-management]]
+- [[concepts/vmware-vsphere]]
+- [[concepts/vcenter-server]]
+- [[concepts/esxi]]
+- [[concepts/xenserver]]
+- [[concepts/virtual-machine]]
+- [[concepts/snapshot]]
+- [[concepts/vdi-connection-flow]]
+- [[concepts/omnissa-horizon]]
+- [[concepts/citrix-virtual-apps-and-desktops]]
+- [[concepts/incident-management]]
+- [[concepts/change-management]]
 
-### Topic Documents
+### Topic pages nên đọc tiếp
 
-- [[topics/1_VDI_Foundation_Overview]] - VDI Foundation Overview
-- [[topics/2_Customer_VDI_Landscape_Overview]] - Customer VDI Landscape Overview
-- [[topics/3_Omnissa_Horizon_Architecture_Overview]] - Omnissa Horizon Architecture Overview
-- [[topics/4_Citrix_CVAD_Architecture_Overview]] - Citrix CVAD Architecture Overview
-- [[topics/5_VDI_Access_Flow_Design]] - VDI Access Flow Design
-- [[topics/6_Identity_and_Domain_Integration_Guide]] - Identity and Domain Integration Guide
+- [[topics/7_Hypervisor_and_HCI_Operations_Guide]]: hiểu host, cluster, VM và HCI dependency.
+- [[topics/8_Storage_Operations_for_VDI]]: hiểu datastore, latency, IOPS, boot/logon storm.
+- [[topics/9_Network_Operations_for_VDI]]: hiểu network latency, packet loss và path.
+- [[topics/12_Master_Image_Management_Guide]]: hiểu image rollout tác động performance.
+- [[topics/15_VDI_Monitoring_and_Alerting_Guide]]: metric và alert theo lớp.
+- [[topics/16_Daily_Operations_Checklist]]: daily capacity/performance check.
+- [[topics/18_VDI_Troubleshooting_Playbook]]: xử lý symptom cụ thể.
+- [[topics/20_VDI_Change_Management_Guide]]: mở rộng capacity qua change.
 
-### Source Summaries
+## 21. Summary for Learners
 
-- [[sources/vdi-training-idea]] - training_idea.md
-- [[sources/vdi-documentation-list-context]] - list_context.txt
-- [[sources/vmware-vsphere-8-0]] - VMware vSphere 8.0
-- [[sources/vcenter-server-installation-and-setup]] - vCenter Server Installation and Setup
-- [[sources/xenserver-8-4]] - XenServer 8.4
+Performance và capacity trong VDI phải được đọc theo trend, baseline và impact. CPU, memory, storage latency, IOPS, concurrent session, login duration, boot storm, logon storm và capacity trend chỉ có ý nghĩa khi nối với user experience và scope.
 
-## 20. Summary for Learners
+Thứ tự phân tích khuyến nghị:
 
-Điều cần nhớ: Storage, performance, backup và HA ảnh hưởng trực tiếp login, boot storm, logon storm, profile, image và khả năng phục hồi. Khi có sự cố, hãy kiểm tra theo thứ tự: scope -> recent change -> access flow -> entitlement/resource -> broker/gateway -> agent/desktop -> identity -> hypervisor/storage/network -> monitoring trend -> escalation với evidence.
+1. Xác định symptom và time window.
+2. Xác định scope: user, pool/catalog, site, platform.
+3. Kiểm tra recent change.
+4. Tách pha: login, launch, session, app.
+5. Thu metric CPU, memory, storage, network, profile, session.
+6. Correlate metric với user impact.
+7. Xác định bottleneck có bằng chứng.
+8. Nếu là incident, escalation đúng owner.
+9. Nếu là trend, tạo capacity recommendation.
+10. Lưu evidence và cập nhật KB/report.
 
-## 21. Self Review
+Điều cần nhớ nhất: trong VDI lớn, performance không phải một con số. Nó là câu chuyện giữa workload, thời điểm, hạ tầng và trải nghiệm user.
 
-- [x] Đã đúng tên tài liệu trong list_context.txt.
-- [x] Đã đúng tên file trong cột Name File.
-- [x] Đã lưu đúng wiki/topics.
-- [x] Đã đúng mục đích tài liệu.
-- [x] Đã dùng training_idea.md.
-- [x] Đã dùng tri thức từ raw/sources hoặc wiki/sources.
-- [x] Đã dùng Document Research Pack từ /lumi-ask riêng cho tài liệu này.
-- [x] Không bịa thông tin khách hàng.
-- [x] Có phân biệt Unknown.
-- [x] Có đủ nội dung đào tạo.
-- [x] Có Scenario Based Learning.
-- [x] Có Knowledge Check.
-- [x] Có Field Checklist.
-- [x] Có Source Grounding.
-- [x] Có phù hợp cho system engineer.
