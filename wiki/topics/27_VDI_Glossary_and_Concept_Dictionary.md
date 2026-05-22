@@ -2,297 +2,544 @@
 
 ## 0. Document Control
 
-### 0.1 Metadata
-
 | Trường | Giá trị |
 |---|---|
 | Thứ tự | 27 |
 | Tên tài liệu | VDI Glossary and Concept Dictionary |
 | Tên file | 27_VDI_Glossary_and_Concept_Dictionary.md |
 | Mục đích tài liệu | Giải thích thuật ngữ quan trọng như broker, VDA, Horizon Agent, pool, catalog, delivery group, entitlement, profile, gateway, datastore, session và image. |
-| Nguồn điều khiển | training_idea.md; list_context.txt |
-| Trạng thái | Full training document; customer-specific values remain Unknown until confirmed |
+| Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
+| Trạng thái | Tài liệu đào tạo thuật ngữ; tên gọi nội bộ, product version, console label và cách khách hàng đặt tên object là Need Customer Confirmation |
 
-### 0.2 Source Grounding
-
-Tài liệu này dùng `training_idea.md`, `list_context.txt`, Document Research Pack từ `/lumi-ask` riêng cho chính tài liệu này, các trang `wiki/sources` và concept liên quan trong `wiki/concepts`.
+### Source Grounding
 
 | Nội dung | Nguồn sử dụng | Mức độ tin cậy | Ghi chú |
 |---|---|---|---|
-| Bối cảnh và mục tiêu | [[sources/vdi-training-idea]] | Medium | Giữ đúng bối cảnh hai hệ thống VDI và định hướng vận hành. |
-| Tên, thứ tự, file, mục đích | [[sources/vdi-documentation-list-context]] | Medium | Source of truth cho danh mục. |
-| Document Research Pack | /lumi-ask riêng cho tài liệu này | Grounded Ask | Tổng hợp scope, model, component, task, troubleshooting, knowledge check. |
-| Bối cảnh hai hệ thống VDI, mục tiêu đào tạo, vận hành theo lớp, lỗi thường gặp và câu hỏi cần xác nhận. | [[sources/vdi-training-idea]] | High | Trang source summary trong wiki/sources. |
-| Danh mục chính thức: thứ tự, tên tài liệu, tên file, mục đích và phạm vi trọng tâm. | [[sources/vdi-documentation-list-context]] | High | Trang source summary trong wiki/sources. |
-| Connection Server, UAG, pod/block, hypervisor manager, display protocol, authentication, True SSO. | [[sources/horizon-8-architecture]] | High | Trang source summary trong wiki/sources. |
-| Primary/secondary protocol, internal/external flow, UAG, firewall, load balancing, certificate. | [[sources/understand-and-troubleshoot-horizon-connections]] | High | Trang source summary trong wiki/sources. |
-| Delivery Controller, StoreFront, Site Database, VDA, HDX, ICA channels, machine identity. | [[sources/citrix-virtual-apps-and-desktops-7-2603]] | High | Trang source summary trong wiki/sources. |
-| Profile container, ODFC, Cloud Cache, storage permission, HA và profile troubleshooting. | [[sources/fslogix-documentation]] | High | Trang source summary trong wiki/sources. |
-| ESXi, vCenter, VM operations, datastore, networking, snapshot, lifecycle, logs. | [[sources/vmware-vsphere-8-0]] | High | Trang source summary trong wiki/sources. |
-| vCenter appliance, DNS/NTP, ports, Enhanced Linked Mode và chuẩn bị tích hợp. | [[sources/vcenter-server-installation-and-setup]] | High | Trang source summary trong wiki/sources. |
-| Host/pool, storage repository, networking, HA, licensing, update, guest OS support. | [[sources/xenserver-8-4]] | High | Trang source summary trong wiki/sources. |
+| Bối cảnh hai hệ thống VDI, quy mô 1500-2000+ VDI và yêu cầu đào tạo engineer mới | [[sources/vdi-training-idea]] | High | Dùng làm bối cảnh diễn giải thuật ngữ. |
+| Tên tài liệu, tên file và mục đích tài liệu | [[sources/vdi-documentation-list-context]] | High | Source of truth cho scope file 27. |
+| Thuật ngữ Horizon: Connection Server, UAG, Horizon Agent, pool, entitlement, protocol | [[sources/horizon-8-architecture]], [[sources/understand-and-troubleshoot-horizon-connections]], [[concepts/omnissa-horizon]], [[concepts/connection-server]], [[concepts/unified-access-gateway]], [[concepts/display-protocol]] | High | Dùng cho nhóm thuật ngữ Horizon. |
+| Thuật ngữ Citrix: Delivery Controller, StoreFront, VDA, Machine Catalog, Delivery Group, HDX/ICA | [[sources/citrix-virtual-apps-and-desktops-7-2603]], [[concepts/citrix-virtual-apps-and-desktops]], [[concepts/delivery-controller]], [[concepts/storefront]], [[concepts/virtual-delivery-agent]], [[concepts/delivery-group]], [[concepts/hdx]], [[concepts/ica-virtual-channel]] | High | Dùng cho nhóm thuật ngữ Citrix. |
+| Thuật ngữ hạ tầng: vCenter, ESXi, XenServer, datastore, storage repository, VM, snapshot, virtual networking | [[sources/vmware-vsphere-8-0]], [[sources/vcenter-server-installation-and-setup]], [[sources/xenserver-8-4]], [[concepts/vcenter-server]], [[concepts/esxi]], [[concepts/xenserver]], [[concepts/datastore]], [[concepts/storage-repository]], [[concepts/virtual-machine]], [[concepts/snapshot]], [[concepts/virtual-networking]] | High | Dùng cho nhóm hạ tầng. |
+| Thuật ngữ profile, identity, monitoring, change, incident, backup, HA | [[sources/fslogix-documentation]], [[concepts/profile-container]], [[concepts/fslogix]], [[concepts/cloud-cache]], [[concepts/identity-and-access-management]], [[concepts/monitoring-and-logs]], [[concepts/change-management]], [[concepts/incident-management]], [[concepts/backup-and-recovery]], [[concepts/high-availability]] | Medium | Dùng cho nhóm vận hành. |
 
-### Document Research Pack từ /lumi-ask
+## 1. Cách dùng glossary này
 
-**Q1 - Scope và learning objective:** /lumi-ask riêng cho VDI Glossary and Concept Dictionary đã được dùng để tổng hợp phần này.
+Glossary này không chỉ là bảng dịch thuật ngữ. Mục tiêu là giúp system engineer mới đọc tài liệu VDI và hiểu ngay:
 
-**Synthesis:** Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.; Xác định được thành phần, dependency và evidence cần kiểm tra.; Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.; Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
+- Thuật ngữ đó nghĩa là gì.
+- Nó nằm ở lớp nào trong kiến trúc VDI.
+- Nó liên quan thế nào tới Omnissa Horizon hoặc Citrix CVAD.
+- Khi nó lỗi, user thường thấy triệu chứng gì.
+- Engineer nên kiểm tra gì đầu tiên.
+- Nên đọc tài liệu nào tiếp.
 
-**Q2 - Architecture hoặc operational model:** /lumi-ask riêng cho VDI Glossary and Concept Dictionary đã được dùng để tổng hợp phần này.
+Với môi trường thật của khách hàng, tên object có thể khác: pool name, catalog name, Delivery Group, AD group, datastore, gateway VIP, monitoring dashboard. Những tên thật đó chưa có trong nguồn và phải ghi Need Customer Confirmation.
 
-**Synthesis:** Mô hình cần đặt trong bối cảnh hai nền tảng VDI và các lớp dependency.
+## 2. Bản đồ thuật ngữ theo lớp
 
-**Q3 - Component deep dive và operational tasks:** /lumi-ask riêng cho VDI Glossary and Concept Dictionary đã được dùng để tổng hợp phần này.
+| Lớp | Thuật ngữ thường gặp | Tài liệu nên đọc |
+|---|---|---|
+| User Access | Client, endpoint, session, display protocol, HDX, Blast/primary-secondary protocol | [[topics/5_VDI_Access_Flow_Design]] |
+| Gateway | Citrix Gateway, Unified Access Gateway, load balancer, certificate, firewall | [[topics/9_Network_Operations_for_VDI]] |
+| Broker/Control Plane | Broker, Delivery Controller, Connection Server, StoreFront, Site Database | [[topics/3_Omnissa_Horizon_Architecture_Overview]], [[topics/4_Citrix_CVAD_Architecture_Overview]] |
+| Desktop/App Session | VDA, Horizon Agent, desktop, published app, session, app backend | [[topics/18_VDI_Troubleshooting_Playbook]] |
+| Identity | AD, Domain Controller, DNS, GPO, entitlement, AD group, machine identity | [[topics/6_Identity_and_Domain_Integration_Guide]] |
+| Provisioning | Pool, Machine Catalog, Delivery Group, image, snapshot, persistent/non-persistent | [[topics/11_VDI_Provisioning_and_Allocation_Guide]], [[topics/12_Master_Image_Management_Guide]] |
+| Hypervisor/HCI | VM, ESXi, vCenter, XenServer, host, cluster, HCI, datastore, storage repository | [[topics/7_Hypervisor_and_HCI_Operations_Guide]] |
+| Storage/Profile | Profile, FSLogix, profile container, Cloud Cache, datastore, latency, IOPS | [[topics/8_Storage_Operations_for_VDI]] |
+| Operations | Monitoring, alert, incident, change, backup, HA/DR, RBAC, support | [[topics/15_VDI_Monitoring_and_Alerting_Guide]], [[topics/17_VDI_Incident_Classification_Guide]] |
 
-**Synthesis:** Mỗi component/task phải có role, dependency, dấu hiệu lỗi, kiểm tra vận hành, evidence, risk và escalation.
+## 3. Core VDI Terms
 
-**Q4 - Troubleshooting và scenario:** /lumi-ask riêng cho VDI Glossary and Concept Dictionary đã được dùng để tổng hợp phần này.
+### VDI
 
-**Synthesis:** Troubleshooting đi theo symptom -> scope -> recent change -> layer check -> evidence -> mitigation/escalation.
+VDI, Virtual Desktop Infrastructure, là mô hình cung cấp desktop hoặc application từ hạ tầng trung tâm cho user. User không làm việc trực tiếp trên một PC vật lý cố định, mà truy cập vào desktop/session chạy trên datacenter hoặc private cloud.
 
-**Q5 - Knowledge check, misconception và confirmation:** /lumi-ask riêng cho VDI Glossary and Concept Dictionary đã được dùng để tổng hợp phần này.
+Trong môi trường khách hàng, VDI gồm hai nền tảng: Omnissa Horizon trên HCI và Citrix CVAD trên XenServer hoặc VMware ESXi. Với quy mô 1500-2000+ VDI, engineer phải nhìn VDI như một dịch vụ nhiều lớp, không phải một tập VM rời rạc.
 
-**Synthesis:** Knowledge check kiểm tra khả năng phân biệt layer, nhận diện misconception và nêu Need Customer Confirmation.
+**Khi lỗi thường thấy:** login fail, không thấy desktop, launch fail, session disconnect, profile issue, chậm.  
+**Cần nhớ:** user symptom có thể đến từ broker, gateway, identity, storage, network hoặc hypervisor.
 
-**Nguồn wiki chính:** [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]], [[sources/horizon-8-architecture]], [[sources/understand-and-troubleshoot-horizon-connections]], [[sources/citrix-virtual-apps-and-desktops-7-2603]], [[sources/fslogix-documentation]], [[sources/vmware-vsphere-8-0]], [[sources/vcenter-server-installation-and-setup]], [[sources/xenserver-8-4]].
+### Virtual Desktop
 
-**Concept liên quan:** [[concepts/vdi-connection-flow]], [[concepts/omnissa-horizon]], [[concepts/connection-server]], [[concepts/unified-access-gateway]], [[concepts/citrix-virtual-apps-and-desktops]], [[concepts/delivery-controller]], [[concepts/storefront]], [[concepts/virtual-delivery-agent]], [[concepts/delivery-group]], [[concepts/vmware-vsphere]], [[concepts/esxi]], [[concepts/vcenter-server]].
+Virtual desktop là desktop Windows/Linux chạy như VM hoặc session được broker cấp cho user. Nó có thể persistent hoặc non-persistent.
 
-### 0.3 Scope
+**Persistent desktop:** user có desktop gắn lâu dài, thay đổi có thể được giữ lại.  
+**Non-persistent desktop:** desktop có thể được refresh/recreate từ image, dữ liệu user thường nằm ở profile/container hoặc storage riêng.
 
-**In Scope**
+**Khi lỗi thường thấy:** VM powered off, Agent/VDA unregistered, user được gán sai desktop, profile mất sau reset.  
+**Cần kiểm tra:** power state, assignment, registration, profile policy, image version.
 
-- Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.
-- Xác định được thành phần, dependency và evidence cần kiểm tra.
-- Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.
-- Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
-- Scenario, troubleshooting, checklist, lab thinking và knowledge check cho system engineer.
+### Published Application
 
-**Out of Scope**
+Published application là ứng dụng được xuất bản cho user dùng từ xa mà không nhất thiết cấp full desktop. User thấy ứng dụng trên portal/client và mở app trong session từ hạ tầng VDI.
 
-- Không thay thế SOP chi tiết theo topology thật.
-- Không đưa version, IP, hostname, SLA, owner hoặc escalation path khi chưa xác nhận.
-- Không yêu cầu secret, password, token hoặc credential.
+Trong Citrix, published app thường liên quan Delivery Group/Application Group và VDA. Trong Horizon, application pool có thể cung cấp ứng dụng cho user.
 
-## 1. Learning Objectives
+**Khi lỗi thường thấy:** app không hiện, app launch fail, app mở nhưng backend lỗi.  
+**Cần kiểm tra:** entitlement, Delivery Group/Application Group hoặc application pool, VDA/Agent, app backend, profile.
 
-- Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.
-- Xác định được thành phần, dependency và evidence cần kiểm tra.
-- Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.
-- Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
-- Thu thập evidence và quyết định escalation phù hợp.
-- Phân biệt tri thức đã có nguồn với Need Customer Confirmation.
+### Session
 
-## 2. Prerequisites
+Session là phiên làm việc của user với desktop hoặc application. Session có thể active, disconnected, reconnecting hoặc failed.
 
-- Biết cơ bản về Windows user, domain account, VM, network connection, ticket và alert.
-- Nên đọc trước `VDI Foundation Overview` và `Customer VDI Landscape Overview`.
-- Với tài liệu theo sản phẩm, đọc kiến trúc nền tảng trước khi thực hiện task.
+Session không giống VM. Một VM có thể chạy nhưng user session fail. Một user có thể có disconnected session gây lock profile hoặc app issue.
 
-## 3. Why This Topic Matters in Large Scale VDI
+**Khi lỗi thường thấy:** disconnect, frozen session, black screen, không reconnect được.  
+**Cần kiểm tra:** session state, client path, gateway, protocol, profile, host resource.
 
-Trong VDI quy mô 1500-2000+ máy, chủ đề này giúp engineer tránh xử lý theo cảm tính và biết kiểm tra theo lớp. Trong môi trường 1500 đến hơn 2000 VDI, một lỗi ở broker, gateway, image, storage, profile, identity hoặc network có thể tạo impact rộng. Engineer cần hiểu dependency, kiểm tra theo lớp và lưu evidence.
+### Broker
 
-## 4. Core Concepts
+Broker là thành phần điều phối user tới resource phù hợp. Broker xác thực hoặc phối hợp xác thực, kiểm tra entitlement, chọn desktop/app và điều phối launch.
 
-- VDI là dịch vụ nhiều lớp: user access, gateway, broker, session, identity, hypervisor, storage, network, monitoring.
-- Một triệu chứng có thể có nhiều nguyên nhân, vì vậy phải đi từ scope và evidence.
-- Không thao tác thay đổi rủi ro cao nếu chưa có precheck, impact, rollback và postcheck.
+Trong Citrix, broker logic nằm ở Delivery Controller. Trong Horizon, broker chính là Connection Server. StoreFront là portal Citrix, còn Gateway/UAG là access edge chứ không phải broker chính.
 
-Ví dụ: khi user không mở được desktop, không nên chỉ reboot VM. Cần xác định lỗi ở login hay launch, internal hay external, broker có failed session không, agent có registered không, VM powered on không và gần đây có change gì không.
+**Khi lỗi thường thấy:** không thấy resource, launch fail diện rộng, failed session tăng.  
+**Cần kiểm tra:** broker service, database/connectivity nếu có, entitlement, machine registration, recent change.
 
-## 5. Architecture or Operational Model
+## 4. Citrix CVAD Terms
 
-```mermaid
-flowchart LR
-  U[User / Endpoint] --> G[Gateway or Portal]
-  G --> B[Broker / Control Plane]
-  B --> A[Agent / VDA / Desktop]
-  B --> I[Identity: AD DNS GPO]
-  A --> H[Hypervisor / HCI]
-  H --> S[Storage]
-  A --> N[Network / Backend]
-  M[Monitoring] --> G
-  M --> B
-  M --> H
-  M --> S
-```
+### Citrix CVAD
 
-Đây là mô hình đào tạo. Topology thật, VIP, VLAN, firewall path, số lượng node và owner từng lớp là Need Customer Confirmation.
+Citrix Virtual Apps and Desktops, CVAD, là nền tảng cung cấp virtual desktop và published application. Các thành phần quan trọng gồm Delivery Controller, StoreFront, Citrix Gateway, VDA, Machine Catalog, Delivery Group, Site Database và License Server nếu có.
 
-## 6. Component Deep Dive
+**Cần nhớ:** CVAD không chỉ là VDA. Lỗi user có thể nằm ở StoreFront, Gateway, Delivery Controller, Site Database, VDA, policy, profile, hypervisor hoặc AD.
 
-| Thành phần | Vai trò | Phụ thuộc vào | Ảnh hưởng khi lỗi | Engineer cần kiểm tra | Evidence cần lưu |
-|---|---|---|---|---|---|
-| Endpoint/Client | Điểm user bắt đầu truy cập | Client version, DNS, network, certificate trust | Login hoặc launch fail | Client type, version, location, error | Screenshot lỗi, timestamp, endpoint |
-| Gateway/Portal | Entry point và truy cập ngoài nếu có | VIP, certificate, firewall, load balancer | External issue, timeout, TLS warning | Gateway health, cert, LB member, log | Gateway/LB status, cert info |
-| Broker/Control Plane | Authentication, entitlement, resource selection | AD, database, hypervisor manager, agent | Không thấy resource, failed session | Service health, entitlement, failed session | Broker log, user mapping |
-| Agent/VDA/Desktop | Nhận session và chạy workload | DNS, domain, broker list, image, firewall | Unregistered, unreachable, black screen | Agent service, registration, VM state | Agent log, VM state |
-| Identity/Policy | User, group, GPO, authentication | AD, DC, DNS, time sync, Entra if any | Login fail, policy sai, access denied | Account, group, GPO, DC health | AD/GPO evidence |
-| Hypervisor/Storage/Network | Chạy VM, lưu dữ liệu, nối các lớp | vCenter/ESXi/XenServer/HCI/datastore/VLAN | Latency, datastore full, packet loss | Host, datastore, path, latency | Dashboard, metrics, task log |
+### Delivery Controller
 
-## 7. End to End Flow or Operational Workflow
+Delivery Controller là control plane/broker của Citrix Site. Nó điều phối access, resource selection, VDA registration và session brokering.
 
-1. Detect hoặc nhận request/ticket.
-2. Xác định scope: một user, nhiều user, pool/catalog, gateway, cluster hay toàn nền tảng.
-3. Kiểm tra recent change.
-4. Kiểm tra theo lớp liên quan tới chủ đề.
-5. Thu thập evidence trước khi thay đổi hoặc escalation.
-6. Thực hiện action trong phạm vi quyền hoặc chuyển đúng owner.
-7. Validate bằng login/launch/session test và monitoring.
-8. Close ticket, handover hoặc cập nhật KB.
+**Khi lỗi thường thấy:** VDA không registered, user không thấy app/desktop, launch fail, Studio/Director báo lỗi.  
+**Cần kiểm tra:** Controller service, Site Database connectivity, VDA registration, Delivery Group, license/status nếu có cảnh báo.
 
-## 8. Operational Tasks
+### StoreFront
 
-| Task | Mục đích | Khi nào thực hiện | Precheck | Các bước kiểm tra high level | Expected evidence | Rủi ro | Escalation condition |
-|---|---|---|---|---|---|---|---|
-| Health check | Xác nhận trạng thái nền | Đầu ca/sau alert/trước change | Có dashboard và baseline | Xem broker, gateway, session, agent, host, storage, network | Screenshot dashboard | Bỏ sót nếu chỉ xem một lớp | Nhiều alert hoặc impact rộng |
-| Ticket triage | Khoanh vùng symptom | Khi có ticket user | Có user, resource, timestamp | Xác định scope, access path, recent change | Ticket + error + log | Kết luận vội thiếu evidence | Không xác định được scope |
-| Dependency check | Tìm lớp gây lỗi | Khi root cause chưa rõ | Biết dependency chính | Kiểm tra identity, broker, agent, storage, network | Kết quả từng lớp | Mất thời gian nếu không theo thứ tự | Cần quyền/owner nhóm khác |
-| Handover/KB update | Giữ tri thức vận hành | Sau incident/change | Không chứa secret | Ghi symptom, evidence, resolution, caveat | KB/ticket entry | KB lỗi thời | Cần review bởi owner |
+StoreFront là portal nơi user đăng nhập và thấy desktop/application được cấp. StoreFront làm việc với Delivery Controller để enumerate resource.
 
-## 9. Common Issues and Troubleshooting
+**Khi lỗi thường thấy:** user login portal lỗi, không thấy resource, external integration với Gateway lỗi.  
+**Cần kiểm tra:** Store health, authentication method, Gateway integration, certificate, resource enumeration.
 
-| Triệu chứng | Nguyên nhân có thể | Lớp cần kiểm tra | Evidence cần thu thập | Cách kiểm tra | Hướng xử lý | Khi nào cần escalation |
-|---|---|---|---|---|---|---|
-| Login fail | Account, MFA, DC/DNS, certificate, broker auth | Identity/Gateway/Broker | Timestamp, user, auth log, broker/gateway log | Kiểm tra account, group, DC/DNS, cert, broker service | Xử lý theo evidence hoặc chuyển owner | Nhiều user hoặc broker/DC/gateway lỗi |
-| Không thấy resource | Thiếu entitlement, pool/catalog disabled, thiếu machine, license | Broker/Entitlement/Capacity | User group, entitlement, resource state, license alert | Kiểm tra mapping, pool/catalog, machine availability | Cập nhật qua quy trình phê duyệt | Ảnh hưởng nhóm user hoặc nghi license/broker |
-| Launch fail | Agent/VDA unregistered, VM off, protocol path lỗi | Broker/Agent/Hypervisor/Network | Failed session, registration, VM state, protocol log | Kiểm tra agent, VM power, firewall/protocol path | Mitigate theo lớp, rollback nếu sau change | Nhiều machine hoặc sau image/network change |
-| Login chậm | GPO, profile, storage latency, DC latency, AV/logon script | Identity/Profile/Storage/Performance | Login duration, GPO time, profile log, storage/DC metrics | Correlate metric theo timestamp | Escalate owner của bottleneck | Vượt SLA hoặc nhiều user |
-| Black screen/disconnect | Packet loss, gateway, display protocol, driver/tools/agent, resource contention | Network/Gateway/Protocol/Hypervisor | Latency, packet loss, protocol log, VM metrics | Khoanh vùng internal/external và lớp protocol | Sửa theo evidence hoặc rollback change | External-only hoặc diện rộng |
+### Citrix Gateway
 
-## 10. Scenario Based Learning
+Citrix Gateway là lớp truy cập từ ngoài mạng hoặc access edge cho Citrix. Nó thường đứng trước StoreFront/VDI path và liên quan TLS, certificate, firewall, load balancer và ICA/HDX traffic.
 
-### Scenario 1. User bên ngoài launch bị timeout
+**Khi lỗi thường thấy:** external user không login/launch được, TLS warning, disconnect.  
+**Cần kiểm tra:** gateway health, certificate chain, LB member, STA/StoreFront integration, firewall path.
 
-**Bối cảnh:** Một nhóm user external login portal được nhưng không vào desktop.
+### VDA
 
-**Câu hỏi cho học viên:** Kiểm tra đoạn nào trước?
+VDA, Virtual Delivery Agent, là agent cài trên desktop hoặc server cung cấp session cho user trong Citrix. VDA phải đăng ký với Delivery Controller để sẵn sàng nhận session.
 
-**Gợi ý phân tích:** So sánh internal/external; ưu tiên gateway, LB, certificate, firewall, secondary protocol.
+**Khi lỗi thường thấy:** VDA unregistered, launch fail, black screen, session disconnect.  
+**Cần kiểm tra:** VDA service, registration, DNS, domain join, Controller list, firewall, image/VDA version.
 
-**Hướng xử lý đề xuất:** Kiểm tra gateway health, certificate, firewall, failed session; escalation network/platform nếu nhiều user.
+### Machine Catalog
 
-**Evidence cần lưu:** Timestamp, user, external path, gateway log, broker failed session.
+Machine Catalog là nhóm machine trong Citrix được quản lý theo cùng loại workload, OS, provisioning method hoặc image. Delivery Group sử dụng machine từ catalog để cấp cho user.
 
-### Scenario 2. Sau image update nhiều VDI unregistered
+**Khi lỗi thường thấy:** không có machine available, provisioning task fail, catalog dùng image sai.  
+**Cần kiểm tra:** catalog type, machine count, provisioning status, image version, hypervisor connection.
 
-**Bối cảnh:** Sau maintenance window, nhiều desktop trong cùng pool/catalog không nhận session.
+### Delivery Group
 
-**Câu hỏi cho học viên:** Làm sao phân biệt image, broker hay network?
+Delivery Group xác định machine nào được cung cấp cho user/group nào và desktop/app nào user có thể dùng. Đây là nơi entitlement vận hành trong Citrix thường được nhìn thấy rõ.
 
-**Gợi ý phân tích:** Kiểm tra recent change, agent service/version, DNS/time sync, VM power, registration trend.
+**Khi lỗi thường thấy:** user không thấy resource, resource hiện sai nhóm, launch fail do thiếu available VDA.  
+**Cần kiểm tra:** user/group assignment, machine availability, access policy, application assignment.
 
-**Hướng xử lý đề xuất:** Dừng rollout và rollback nếu liên quan image mới; giữ evidence cho RCA.
+### Application Group
 
-**Evidence cần lưu:** Change ID, image version, registration dashboard, agent log.
+Application Group là cách gom ứng dụng published trong Citrix để quản lý access, visibility và phân tách workload/policy chi tiết hơn.
 
-### Scenario 3. Login chậm đầu giờ sáng
+**Khi lỗi thường thấy:** app không hiện, app hiện sai nhóm, app launch vào sai workload.  
+**Cần kiểm tra:** linked Delivery Group, user/group assignment, application properties, policy.
 
-**Bối cảnh:** User mất nhiều phút ở loading profile/preparing desktop.
+### Site Database
 
-**Câu hỏi cho học viên:** Metric nào cần thu thập?
+Site Database là database lưu cấu hình và trạng thái quan trọng của Citrix Site. Delivery Controller phụ thuộc vào database cho nhiều hoạt động quản trị và broker.
 
-**Gợi ý phân tích:** Correlate login duration, GPO, profile storage, storage latency, DC latency, host contention, logon storm.
+**Khi lỗi thường thấy:** Studio lỗi, Controller service degraded, config không đọc/ghi được.  
+**Cần kiểm tra:** DB connectivity, SQL health, backup/HA, recent DB change.
 
-**Hướng xử lý đề xuất:** Khoanh vùng bottleneck và escalation đúng owner.
+### HDX và ICA
 
-**Evidence cần lưu:** Login sample, GPO report, profile log, storage/DC metrics.
+HDX là tập công nghệ trải nghiệm người dùng của Citrix. ICA là protocol/luồng kết nối session truyền display, input và virtual channels. Engineer không cần nhớ mọi chi tiết protocol lúc đầu, nhưng cần biết launch/session issue có thể khác với login issue.
 
-## 11. Hands On or Lab Thinking Exercises
+**Khi lỗi thường thấy:** lag, disconnect, printer/clipboard/USB issue, display issue.  
+**Cần kiểm tra:** session policy, network latency/loss, gateway, client version, virtual channel.
 
-1. Vẽ lại luồng liên quan tới tài liệu này và đánh dấu ít nhất 5 điểm có thể gây lỗi.
-2. Chọn một symptom trong bảng troubleshooting và lập evidence package trước escalation.
-3. Thiết kế checklist 10 dòng cho ca trực đầu ngày liên quan tới chủ đề này.
-4. Đọc một change giả định và chỉ ra precheck, rollback point, postcheck còn thiếu.
+## 5. Omnissa Horizon Terms
+
+### Omnissa Horizon
+
+Omnissa Horizon, trước đây là VMware Horizon, là nền tảng VDI/application virtualization. Trong bối cảnh khách hàng, Horizon chạy trên HCI và phục vụ quy mô 1500-2000+ VDI.
+
+**Cần nhớ:** Horizon gồm Client, UAG nếu external, Connection Server, desktop/application pool, entitlement, Horizon Agent, vCenter/HCI, storage và network.
+
+### Horizon Client
+
+Horizon Client là phần mềm hoặc client path để user đăng nhập và mở desktop/app. Một số môi trường cũng có access qua browser nếu cấu hình.
+
+**Khi lỗi thường thấy:** client version cũ, certificate warning, launch protocol lỗi.  
+**Cần kiểm tra:** client version, internal/external path, error screenshot, DNS/certificate.
+
+### Connection Server
+
+Connection Server là broker/control plane của Horizon. Nó xử lý authentication flow, entitlement, desktop pool và session brokering.
+
+**Khi lỗi thường thấy:** user không thấy pool, launch fail, broker service issue, external integration với UAG lỗi.  
+**Cần kiểm tra:** service health, entitlement, pool status, UAG integration, vCenter connectivity nếu liên quan.
+
+### Unified Access Gateway
+
+Unified Access Gateway, UAG, là gateway/edge component cho truy cập an toàn từ ngoài mạng vào Horizon. UAG giúp tránh expose trực tiếp Connection Server và desktop nội bộ.
+
+**Khi lỗi thường thấy:** external user không login/launch được, certificate/TLS issue, tunnel/protocol timeout.  
+**Cần kiểm tra:** UAG health, certificate, network path, backend Connection Server, firewall/LB.
+
+### Horizon Agent
+
+Horizon Agent là agent cài trên desktop/RDSH/physical host để Horizon có thể quản lý và cung cấp session.
+
+**Khi lỗi thường thấy:** Agent unreachable, desktop unavailable, launch fail, black screen.  
+**Cần kiểm tra:** Agent service, registration, DNS/domain, firewall, image/Agent version.
+
+### Desktop Pool
+
+Desktop Pool là nhóm desktop Horizon được cấp cho user. Pool có thể là dedicated, floating, persistent, non-persistent hoặc theo thiết kế cụ thể.
+
+**Khi lỗi thường thấy:** pool không có available machine, user không thấy pool, desktop không registered.  
+**Cần kiểm tra:** pool enabled, entitlement, machine state, image/snapshot, vCenter/HCI capacity.
+
+### Application Pool
+
+Application Pool trong Horizon cung cấp published application hoặc application resource cho user.
+
+**Khi lỗi thường thấy:** app không hiện, launch fail, app backend lỗi.  
+**Cần kiểm tra:** entitlement, application pool status, hosting desktop/RDSH, Agent state, backend dependency.
+
+## 6. Access and Identity Terms
+
+### Gateway
+
+Gateway là lớp entry point, thường dùng cho user từ ngoài mạng hoặc để proxy session traffic. Trong Citrix là Citrix Gateway; trong Horizon là UAG.
+
+**Khi lỗi thường thấy:** external-only issue, TLS warning, timeout, disconnect.  
+**Cần nhớ:** gateway lỗi có thể làm user login/launch fail dù broker và desktop bên trong vẫn khỏe.
+
+### Load Balancer
+
+Load Balancer phân phối traffic tới nhiều gateway, broker hoặc portal node. Nó dùng VIP, health probe và member pool.
+
+**Khi lỗi thường thấy:** một node down nhưng user vẫn bị đưa vào node lỗi, external/internal access không ổn định.  
+**Cần kiểm tra:** VIP, member state, health probe, certificate binding, recent network change.
+
+### Certificate
+
+Certificate xác nhận danh tính dịch vụ và bảo vệ TLS. Nó thường liên quan portal, gateway, broker, load balancer và client trust.
+
+**Khi lỗi thường thấy:** browser/client warning, login fail, gateway integration fail.  
+**Cần kiểm tra:** expiry, CN/SAN, chain, binding target, trust.
+
+### Active Directory
+
+Active Directory là nền tảng identity cho user, group, computer account và policy trong môi trường Windows enterprise.
+
+**Khi lỗi thường thấy:** login fail, user không thấy resource do group sai, VDA/Agent registration lỗi do domain/computer account.  
+**Cần kiểm tra:** account state, group membership, OU/GPO, computer account, DC health.
+
+### Domain Controller
+
+Domain Controller cung cấp authentication, directory và domain services cho AD.
+
+**Khi lỗi thường thấy:** nhiều user login fail, GPO chậm, domain join issue, time/auth errors.  
+**Cần kiểm tra:** DC availability, DNS, replication, time sync, site/subnet mapping.
+
+### DNS
+
+DNS chuyển tên thành địa chỉ. Trong VDI, DNS lỗi có thể phá authentication, broker lookup, gateway access, Agent/VDA registration và profile/backend access.
+
+**Khi lỗi thường thấy:** client không tới portal, Agent/VDA không đăng ký, profile/app path không resolve.  
+**Cần kiểm tra:** forward lookup, reverse lookup nếu cần, split DNS, DNS server used.
+
+### Group Policy
+
+Group Policy, GPO, áp cấu hình Windows/user/computer theo AD. Nó có thể ảnh hưởng login, printer, drive mapping, security, scripts và user experience.
+
+**Khi lỗi thường thấy:** login chậm, printer/drive mapping lỗi, policy không đúng nhóm.  
+**Cần kiểm tra:** GPO processing, OU, security filtering, loopback processing nếu có.
+
+### Entitlement
+
+Entitlement là quyền user/group được truy cập resource VDI. Trong Horizon, entitlement gắn với pool. Trong Citrix, access thường gắn với Delivery Group/Application Group và AD group.
+
+**Khi lỗi thường thấy:** user không thấy desktop/app hoặc thấy resource không nên thấy.  
+**Cần kiểm tra:** AD group, assignment, effective access, recent entitlement change.
+
+### Machine Identity
+
+Machine identity là danh tính máy VDI trong domain hoặc hệ thống quản trị, gồm hostname, computer account, domain trust và đôi khi machine ID trong platform.
+
+**Khi lỗi thường thấy:** Agent/VDA unregistered, GPO không apply, duplicate computer account.  
+**Cần kiểm tra:** computer account, DNS, domain trust, naming convention.
+
+## 7. Image, Provisioning and Allocation Terms
+
+### Master Image hoặc Golden Image
+
+Master image/golden image là image chuẩn dùng để tạo hoặc cập nhật nhiều VDI. Nó chứa OS, application, security tool, VDA/Horizon Agent và cấu hình cơ bản.
+
+**Khi lỗi thường thấy:** sau publish image, nhiều VDI unregistered, app lỗi, black screen, login chậm.  
+**Cần nhớ:** image change luôn cần pilot, rollback và postcheck.
+
+### Snapshot
+
+Snapshot là mốc trạng thái của VM/image tại một thời điểm. Nó thường dùng trước change hoặc làm mốc image deployment.
+
+**Khi lỗi thường thấy:** snapshot tồn đọng làm datastore tăng, chọn nhầm snapshot khi publish image.  
+**Cần nhớ:** snapshot không phải backup dài hạn.
+
+### Provisioning
+
+Provisioning là quá trình tạo hoặc chuẩn bị desktop/application resource: tạo VM, mở rộng pool/catalog, dùng image, gán vào delivery group/pool.
+
+**Khi lỗi thường thấy:** machine tạo thất bại, không join domain, không registered, thiếu available machine.  
+**Cần kiểm tra:** image, hypervisor task, datastore, naming, AD computer account, broker registration.
+
+### Allocation
+
+Allocation là cấp phát resource cho user hoặc group. Nó khác provisioning: resource có thể tồn tại nhưng chưa được cấp cho user.
+
+**Khi lỗi thường thấy:** user không thấy desktop/app dù machine đang healthy.  
+**Cần kiểm tra:** AD group, entitlement, assignment, approval.
+
+### Persistent Desktop
+
+Persistent desktop là desktop gắn với user và giữ trạng thái lâu dài hơn. Nó thường có rủi ro dữ liệu cao hơn khi thu hồi hoặc rebuild.
+
+**Khi lỗi thường thấy:** mất dữ liệu nếu reclaim sai, profile/disk cần retention.  
+**Cần kiểm tra:** assignment, backup/retention, user data policy.
+
+### Non-persistent Desktop
+
+Non-persistent desktop thường được refresh/recreate từ image, dữ liệu user nên nằm ở profile/container hoặc storage riêng.
+
+**Khi lỗi thường thấy:** user mất setting nếu profile solution lỗi, image lỗi ảnh hưởng nhiều máy.  
+**Cần kiểm tra:** profile path, image version, pool/catalog state.
+
+## 8. Hypervisor and Storage Terms
+
+### Virtual Machine
+
+Virtual Machine, VM, là máy ảo chạy desktop, server hoặc thành phần hạ tầng. VDI desktop thường là VM hoặc session host tùy mô hình.
+
+**Khi lỗi thường thấy:** powered off, stuck, snapshot issue, resource contention.  
+**Cần kiểm tra:** power state, host, datastore, tools, task/event.
+
+### VMware ESXi
+
+ESXi là hypervisor chạy VM trong hệ sinh thái VMware. Với Horizon on HCI hoặc CVAD trên VMware, ESXi là lớp chạy desktop/server VM.
+
+**Khi lỗi thường thấy:** host contention, VM restart, datastore path issue.  
+**Cần kiểm tra:** host health, CPU/memory, datastore, network, VM events.
+
+### vCenter
+
+vCenter quản lý ESXi host, cluster, VM, datastore, network và task. Horizon/Citrix có thể tích hợp với vCenter để provision/quản lý VM.
+
+**Khi lỗi thường thấy:** không power/clone được VM, hypervisor connection fail, inventory mismatch.  
+**Cần kiểm tra:** vCenter service, permissions, cluster/host/datastore visibility, task log.
+
+### XenServer
+
+XenServer là hypervisor có thể dùng cho Citrix CVAD. Nó quản lý host pool, VM, storage repository và networking.
+
+**Khi lỗi thường thấy:** VM provisioning fail, host/pool issue, storage repository unavailable.  
+**Cần kiểm tra:** pool health, host, SR, VM state, network.
+
+### HCI
+
+HCI, Hyperconverged Infrastructure, là mô hình tích hợp compute, storage và networking trong cùng platform/cluster. Horizon system của khách hàng được mô tả chạy trên HCI.
+
+**Khi lỗi thường thấy:** host/storage cùng ảnh hưởng VDI, datastore latency, cluster capacity.  
+**Cần kiểm tra:** cluster health, node health, storage latency, capacity, resync/rebuild nếu có.
+
+### Datastore
+
+Datastore là nơi lưu VM disk, template, snapshot hoặc image trong VMware. Datastore capacity và latency ảnh hưởng trực tiếp VDI.
+
+**Khi lỗi thường thấy:** datastore full, VM slow, provisioning fail, snapshot growth.  
+**Cần kiểm tra:** free capacity, latency, IOPS, snapshot, affected VM/pool.
+
+### Storage Repository
+
+Storage Repository là khái niệm storage chứa VM/disk trong XenServer.
+
+**Khi lỗi thường thấy:** VM không boot, provisioning fail, storage unavailable.  
+**Cần kiểm tra:** SR state, capacity, path, host connectivity.
+
+### IOPS, Latency, Throughput
+
+IOPS là số thao tác I/O mỗi giây. Latency là độ trễ I/O. Throughput là băng thông dữ liệu. Trong VDI, latency thường ảnh hưởng user experience rõ rệt, đặc biệt khi login/boot storm.
+
+**Khi lỗi thường thấy:** login chậm, desktop freeze, provisioning task chậm.  
+**Cần kiểm tra:** trend theo timestamp, không chỉ một điểm đo.
+
+## 9. Profile and User Experience Terms
+
+### Profile
+
+Profile chứa cấu hình và dữ liệu trạng thái của user: desktop settings, app settings, registry/user state và một phần dữ liệu tùy thiết kế.
+
+**Khi lỗi thường thấy:** temporary profile, mất setting, login chậm, app reset.  
+**Cần kiểm tra:** profile path, permission, lock file, profile solution, storage latency.
+
+### FSLogix
+
+FSLogix là giải pháp profile/container phổ biến trong môi trường Windows VDI, thường dùng profile container hoặc ODFC container.
+
+**Khi lỗi thường thấy:** container không attach, profile locked, Cloud Cache issue, login chậm.  
+**Cần kiểm tra:** container path, permission, lock, storage health, logs.
+
+### Profile Container
+
+Profile Container là file/container chứa profile user và được attach khi user login.
+
+**Khi lỗi thường thấy:** attach fail, temporary profile, profile corrupt, storage latency.  
+**Cần kiểm tra:** file path, permission, size, lock, storage metrics.
+
+### Cloud Cache
+
+Cloud Cache là cơ chế FSLogix hỗ trợ nhiều location cho container nhằm tăng khả năng chịu lỗi hoặc phân tán dữ liệu tùy thiết kế.
+
+**Khi lỗi thường thấy:** sync conflict, location unavailable, login delay.  
+**Cần kiểm tra:** location health, logs, replication/sync status.
+
+### Boot Storm và Logon Storm
+
+Boot storm là khi nhiều VDI boot cùng lúc. Logon storm là khi nhiều user login cùng lúc. Cả hai tạo tải lên storage, broker, domain controller, profile storage và network.
+
+**Khi lỗi thường thấy:** đầu giờ sáng chậm, datastore latency, DC/GPO chậm, broker load cao.  
+**Cần kiểm tra:** timeline, concurrent sessions, power schedule, storage/DC metrics.
+
+## 10. Operations Terms
+
+### Monitoring
+
+Monitoring là quan sát trạng thái service, session, broker, gateway, VDI, host, storage, network và identity.
+
+**Khi lỗi thường thấy:** không có alert trước incident, dashboard thiếu lớp.  
+**Cần nhớ:** monitoring phải theo baseline/trend, không chỉ xem trạng thái xanh/đỏ.
+
+### Alert
+
+Alert là cảnh báo khi metric hoặc sự kiện vượt ngưỡng. Alert tốt phải có owner, severity, action và evidence.
+
+**Khi lỗi thường thấy:** alert noise, alert không có owner, alert thiếu runbook.  
+**Cần kiểm tra:** threshold, affected component, trend, duplicate alert.
+
+### Incident
+
+Incident là sự cố làm gián đoạn hoặc suy giảm dịch vụ. Trong VDI, incident cần phân loại theo impact: một user, một VDI, một pool/catalog, gateway, site, storage, network hoặc toàn platform.
+
+**Cần nhớ:** incident classification quyết định priority và escalation.
+
+### Change
+
+Change là thay đổi có kiểm soát như image update, policy change, entitlement change, certificate change, broker patching, host maintenance hoặc storage expansion.
+
+**Cần nhớ:** recent change là một trong những câu hỏi đầu tiên khi xử lý sự cố.
+
+### Backup and Recovery
+
+Backup/recovery bảo vệ khả năng phục hồi cấu hình, database, image, profile, gateway config, vCenter config và tài liệu vận hành.
+
+**Cần nhớ:** backup job success chưa đủ; phải có restore validation.
+
+### High Availability và Disaster Recovery
+
+HA giúp chịu lỗi cục bộ. DR giúp phục hồi khi lỗi phạm vi lớn hơn. Trong VDI, HA/DR phải xét end-to-end: gateway, broker, database, identity, profile, storage, hypervisor và application backend.
+
+### RBAC
+
+RBAC, Role Based Access Control, là phân quyền theo vai trò. Trong VDI, cần phân biệt RBAC quản trị với entitlement user.
+
+**Cần nhớ:** least privilege giảm rủi ro thao tác nhầm và tăng khả năng audit.
+
+### Escalation
+
+Escalation là chuyển ticket/sự cố tới nhóm có ownership hoặc quyền xử lý đúng lớp lỗi. Escalation tốt phải kèm evidence.
+
+**Cần nhớ:** escalation không phải "đẩy việc đi"; nó là handoff có trách nhiệm.
+
+## 11. Thuật ngữ dễ nhầm
+
+| Dễ nhầm | Phân biệt nhanh |
+|---|---|
+| Broker vs Gateway | Broker chọn resource/session; gateway là entry/proxy access, nhất là external. |
+| Entitlement vs RBAC | Entitlement cho user dùng desktop/app; RBAC cho engineer/admin vận hành hệ thống. |
+| Machine Catalog vs Delivery Group | Catalog là nhóm machine; Delivery Group gán machine/app cho user/group. |
+| Desktop Pool vs Delivery Group | Horizon dùng pool; Citrix dùng Delivery Group cho access/workload. |
+| VDA vs Horizon Agent | VDA là agent Citrix; Horizon Agent là agent Horizon. |
+| VM powered on vs desktop available | VM bật chưa đủ; Agent/VDA phải registered và resource phải available. |
+| Snapshot vs Backup | Snapshot là mốc ngắn hạn; backup có retention/recovery purpose. |
+| HA vs DR | HA chịu lỗi cục bộ; DR phục hồi khi sự cố lớn hơn. |
+| Login fail vs Launch fail | Login fail xảy ra trước resource/session; launch fail xảy ra sau khi user thấy resource. |
+| Profile issue vs Desktop issue | Desktop có thể healthy nhưng profile lỗi làm user experience hỏng. |
 
 ## 12. Knowledge Check
 
-**Câu 1. Vì sao không nên chỉ reboot VM khi user báo lỗi VDI?**
+**Câu 1. Broker trong Citrix và Horizon tương ứng với thành phần nào?**  
+Citrix: Delivery Controller. Horizon: Connection Server.
 
-Đáp án: Vì lỗi có thể nằm ở identity, broker, gateway, storage, network, profile hoặc recent change.
+**Câu 2. VDA khác Horizon Agent thế nào?**  
+VDA là agent của Citrix CVAD. Horizon Agent là agent của Omnissa Horizon. Cả hai giúp desktop/session nhận quản lý và kết nối từ broker.
 
-**Câu 2. User login portal được nhưng launch fail, cần nghĩ tới lớp nào?**
+**Câu 3. User login portal được nhưng không thấy desktop, nên nghĩ tới thuật ngữ nào?**  
+Entitlement, AD group, Delivery Group/Desktop Pool, resource availability.
 
-Đáp án: Broker/resource selection, Agent/VDA, VM state và session protocol path.
+**Câu 4. Datastore full có thể gây lỗi gì?**  
+Provisioning fail, VM slow, snapshot growth issue, boot/login chậm hoặc VM không hoạt động ổn định.
 
-**Câu 3. Evidence tối thiểu khi escalation login fail là gì?**
+**Câu 5. Vì sao profile không đồng nghĩa với desktop?**  
+Desktop là workload/session; profile là trạng thái/dữ liệu user. Desktop có thể chạy nhưng profile vẫn lỗi.
 
-Đáp án: Timestamp, user, endpoint/location, resource, error, auth/broker/gateway log và recent change.
+**Câu 6. Gateway lỗi thường biểu hiện thế nào?**  
+External user không login/launch được, TLS warning, timeout, disconnect hoặc chỉ external path lỗi.
 
-**Câu 4. HA khác backup thế nào?**
+**Câu 7. Snapshot có nên xem là backup dài hạn không?**  
+Không. Snapshot dùng ngắn hạn và có thể ảnh hưởng datastore nếu để lâu.
 
-Đáp án: HA giữ dịch vụ khi lỗi cục bộ; backup phục hồi dữ liệu/cấu hình khi mất hoặc sai change.
+**Câu 8. RBAC khác entitlement như thế nào?**  
+RBAC kiểm soát quyền quản trị của engineer/admin. Entitlement kiểm soát user được truy cập desktop/app nào.
 
-**Câu 5. Vì sao image update cần pilot?**
+## 13. Need Customer Confirmation
 
-Đáp án: Vì lỗi image có thể lan tới hàng trăm hoặc hàng nghìn VDI.
+Các thông tin cần hỏi khách hàng:
 
-**Câu 6. External lỗi nhưng internal bình thường gợi ý gì?**
+- Tên gọi nội bộ cho Horizon system và Citrix system là gì?
+- Các pool, catalog, Delivery Group, Application Group chính đang được đặt tên theo chuẩn nào?
+- Khách hàng dùng persistent, non-persistent, dedicated hay pooled desktop cho từng nhóm user?
+- Profile solution thực tế là FSLogix, Citrix Profile Management, roaming profile hay giải pháp khác?
+- Gateway thật là Citrix Gateway, UAG, load balancer nào, có tên VIP nào?
+- Monitoring dashboard nào hiển thị session, registration, failed session, storage latency và profile?
+- Thuật ngữ nào trong đội khách hàng đang dùng khác vendor term?
+- Có glossary nội bộ hoặc naming convention document không?
+- Có thuật ngữ tiếng Việt/tiếng Anh bắt buộc dùng trong tài liệu khách hàng không?
 
-Đáp án: Gateway, load balancer, certificate, firewall/NAT hoặc external protocol path.
+## 14. Related Wiki Links
 
-**Câu 7. Profile storage có thể gây login chậm vì sao?**
+### Source summaries
 
-Đáp án: Vì profile/container cần attach và đọc/ghi qua storage; latency, permission hoặc lock làm chậm.
-
-**Câu 8. Khi nào cần escalation?**
-
-Đáp án: Khi ảnh hưởng nhiều user, vượt quyền, cần change, rủi ro dữ liệu/downtime hoặc thuộc owner khác.
-
-## 13. Common Misconceptions
-
-- “VDI lỗi nghĩa là VM lỗi” - sai, vì broker, gateway, identity, storage, network hoặc policy đều có thể gây triệu chứng giống VM lỗi.
-- “Login portal được nghĩa là session path ổn” - sai, session/display protocol có thể lỗi sau authentication.
-- “Snapshot là backup dài hạn” - sai, snapshot là mốc ngắn hạn và có thể ảnh hưởng datastore.
-- “Mở policy rộng sẽ giải quyết nhanh” - rủi ro bảo mật; policy change cần approval và rollback.
-
-## 14. Field Checklist
-
-- [ ] Xác định user, resource, time, endpoint, internal/external path.
-- [ ] Xác định impact và urgency.
-- [ ] Kiểm tra recent change.
-- [ ] Kiểm tra entitlement/resource availability.
-- [ ] Kiểm tra broker/gateway/agent state theo scope.
-- [ ] Kiểm tra identity, DNS, time sync nếu liên quan login/registration.
-- [ ] Kiểm tra hypervisor, storage, network metrics nếu có dấu hiệu performance hoặc diện rộng.
-- [ ] Lưu evidence trước khi escalation hoặc thay đổi.
-
-## 15. Monitoring and Evidence
-
-- Session count, failed session, active/disconnected session.
-- VDI registered/unregistered, Agent/VDA status, VM power state.
-- Broker service health, gateway health, load balancer member state.
-- Host CPU/memory, datastore capacity, storage latency, IOPS nếu liên quan hạ tầng.
-- Network latency, packet loss, DNS lookup, certificate status nếu liên quan access.
-- Login duration, profile loading time, GPO processing time nếu liên quan user experience.
-- Ticket ID, timestamp, user/resource, screenshot, log excerpt, alert ID, change ID.
-
-## 16. Change, Risk and Rollback Considerations
-
-Nếu chủ đề liên quan đến thay đổi, cần có change record, approval, precheck, impact assessment, rollback point, maintenance window, postcheck và evidence. Dừng change nếu precheck fail, rollback không rõ, impact vượt phạm vi phê duyệt hoặc phát sinh lỗi diện rộng. Nếu chủ đề không trực tiếp là change, rủi ro chính là hiểu sai lớp lỗi, escalation sai owner hoặc thiếu evidence.
-
-## 17. Security and Access Control Considerations
-
-- Áp dụng least privilege.
-- Helpdesk chỉ thực hiện thao tác hỗ trợ được phê duyệt.
-- System engineer không tự thay đổi image, policy, gateway, firewall, certificate hoặc entitlement diện rộng nếu chưa có change approval.
-- Platform admin thao tác thay đổi phải có audit log và evidence.
-- Không ghi secret, password, token hoặc credential vào tài liệu/ticket/KB.
-
-## 18. Need Customer Confirmation
-
-- Version cụ thể của Horizon, CVAD, vCenter/ESXi, XenServer, gateway, Agent/VDA.
-- Topology thật: site, pod, Connection Server, Delivery Controller, StoreFront, UAG/Gateway, load balancer, pool, catalog, delivery group.
-- Access flow thật cho user nội bộ và bên ngoài.
-- HA/DR design, failover/failback, RPO/RTO, DR drill evidence.
-- Monitoring tool, dashboard chính thức, alert threshold, ticket integration.
-- Storage design: datastore, profile share, image repository, latency/capacity threshold, backup/replication.
-- Network path: VLAN, routing, firewall, DNS, NAT/proxy, certificate, load balancer owner.
-- Profile solution: FSLogix, Citrix Profile Management, roaming profile hoặc giải pháp khác.
-- Change process, SLA, escalation path và ownership giữa VDI, identity, network, storage, hypervisor, security, application.
-
-## 19. Related Wiki Links
+- [[sources/vdi-training-idea]]
+- [[sources/vdi-documentation-list-context]]
+- [[sources/horizon-8-architecture]]
+- [[sources/understand-and-troubleshoot-horizon-connections]]
+- [[sources/citrix-virtual-apps-and-desktops-7-2603]]
+- [[sources/fslogix-documentation]]
+- [[sources/vmware-vsphere-8-0]]
+- [[sources/vcenter-server-installation-and-setup]]
+- [[sources/xenserver-8-4]]
 
 ### Concepts
 
@@ -305,55 +552,65 @@ Nếu chủ đề liên quan đến thay đổi, cần có change record, approv
 - [[concepts/storefront]]
 - [[concepts/virtual-delivery-agent]]
 - [[concepts/delivery-group]]
-- [[concepts/vmware-vsphere]]
-- [[concepts/esxi]]
+- [[concepts/hdx]]
+- [[concepts/ica-virtual-channel]]
+- [[concepts/display-protocol]]
+- [[concepts/identity-and-access-management]]
+- [[concepts/machine-identity]]
 - [[concepts/vcenter-server]]
+- [[concepts/esxi]]
 - [[concepts/xenserver]]
 - [[concepts/datastore]]
 - [[concepts/storage-repository]]
+- [[concepts/virtual-machine]]
+- [[concepts/snapshot]]
 - [[concepts/profile-container]]
+- [[concepts/fslogix]]
 - [[concepts/cloud-cache]]
-- [[concepts/identity-and-access-management]]
+- [[concepts/monitoring-and-logs]]
+- [[concepts/change-management]]
+- [[concepts/incident-management]]
+- [[concepts/backup-and-recovery]]
+- [[concepts/high-availability]]
 
-### Topic Documents
+### Topic documents
 
-- [[topics/1_VDI_Foundation_Overview]] - VDI Foundation Overview
-- [[topics/2_Customer_VDI_Landscape_Overview]] - Customer VDI Landscape Overview
-- [[topics/3_Omnissa_Horizon_Architecture_Overview]] - Omnissa Horizon Architecture Overview
-- [[topics/4_Citrix_CVAD_Architecture_Overview]] - Citrix CVAD Architecture Overview
-- [[topics/5_VDI_Access_Flow_Design]] - VDI Access Flow Design
-- [[topics/6_Identity_and_Domain_Integration_Guide]] - Identity and Domain Integration Guide
+- [[topics/1_VDI_Foundation_Overview]]
+- [[topics/3_Omnissa_Horizon_Architecture_Overview]]
+- [[topics/4_Citrix_CVAD_Architecture_Overview]]
+- [[topics/5_VDI_Access_Flow_Design]]
+- [[topics/6_Identity_and_Domain_Integration_Guide]]
+- [[topics/7_Hypervisor_and_HCI_Operations_Guide]]
+- [[topics/8_Storage_Operations_for_VDI]]
+- [[topics/11_VDI_Provisioning_and_Allocation_Guide]]
+- [[topics/12_Master_Image_Management_Guide]]
+- [[topics/13_Citrix_Machine_Catalog_and_Delivery_Group_Guide]]
+- [[topics/14_Omnissa_Desktop_Pool_and_Entitlement_Guide]]
+- [[topics/18_VDI_Troubleshooting_Playbook]]
+- [[topics/26_VDI_Operational_Knowledge_Base]]
 
-### Source Summaries
+## 15. Summary for Learners
 
-- [[sources/vdi-training-idea]] - training_idea.md
-- [[sources/vdi-documentation-list-context]] - list_context.txt
-- [[sources/horizon-8-architecture]] - Horizon 8 architecture
-- [[sources/understand-and-troubleshoot-horizon-connections]] - Understand and Troubleshoot Horizon Connections
-- [[sources/citrix-virtual-apps-and-desktops-7-2603]] - Citrix Virtual Apps and Desktops 7 2603
-- [[sources/fslogix-documentation]] - FSLogix documentation
-- [[sources/vmware-vsphere-8-0]] - VMware vSphere 8.0
-- [[sources/vcenter-server-installation-and-setup]] - vCenter Server Installation and Setup
-- [[sources/xenserver-8-4]] - XenServer 8.4
+Khi gặp thuật ngữ mới trong VDI, engineer nên hỏi:
 
-## 20. Summary for Learners
+1. Thuật ngữ này thuộc lớp nào: user, gateway, broker, desktop, identity, hypervisor, storage, network hay operation?
+2. Nó thuộc Horizon, Citrix hay dùng chung?
+3. Nó ảnh hưởng user experience ở bước nào: login, enumerate, launch, session, profile hay app?
+4. Khi nó lỗi, symptom thường là gì?
+5. Cần kiểm tra console/dashboard/log nào?
+6. Tài liệu nào trong bộ wiki giải thích sâu hơn?
 
-Điều cần nhớ: Trong VDI quy mô 1500-2000+ máy, chủ đề này giúp engineer tránh xử lý theo cảm tính và biết kiểm tra theo lớp. Khi có sự cố, hãy kiểm tra theo thứ tự: scope -> recent change -> access flow -> entitlement/resource -> broker/gateway -> agent/desktop -> identity -> hypervisor/storage/network -> monitoring trend -> escalation với evidence.
+Điều cần nhớ nhất: hiểu thuật ngữ không phải để nói cho đúng tên sản phẩm, mà để khoanh vùng lỗi nhanh hơn. Một từ như "broker", "gateway", "profile" hay "datastore" đại diện cho cả một lớp dependency trong vận hành VDI.
 
-## 21. Self Review
+## 16. Self Review
 
-- [x] Đã đúng tên tài liệu trong list_context.txt.
-- [x] Đã đúng tên file trong cột Name File.
-- [x] Đã lưu đúng wiki/topics.
-- [x] Đã đúng mục đích tài liệu.
-- [x] Đã dùng training_idea.md.
-- [x] Đã dùng tri thức từ raw/sources hoặc wiki/sources.
-- [x] Đã dùng Document Research Pack từ /lumi-ask riêng cho tài liệu này.
-- [x] Không bịa thông tin khách hàng.
-- [x] Có phân biệt Unknown.
-- [x] Có đủ nội dung đào tạo.
-- [x] Có Scenario Based Learning.
-- [x] Có Knowledge Check.
-- [x] Có Field Checklist.
-- [x] Có Source Grounding.
-- [x] Có phù hợp cho system engineer.
+- [x] Đúng tên tài liệu trong list_context.txt.
+- [x] Đúng tên file trong cột Name File.
+- [x] Đúng mục đích: giải thích broker, VDA, Horizon Agent, pool, catalog, delivery group, entitlement, profile, gateway, datastore, session và image.
+- [x] Bám bối cảnh training_idea.md: Horizon on HCI, Citrix CVAD trên XenServer/ESXi, quy mô 1500-2000+ VDI.
+- [x] Không bịa tên object, version, naming convention hoặc thuật ngữ nội bộ khách hàng.
+- [x] Có phân biệt Need Customer Confirmation.
+- [x] Có giải thích theo hướng đào tạo vận hành, không chỉ dịch thuật ngữ.
+- [x] Có chỉ ra lỗi liên quan và điểm cần kiểm tra.
+- [x] Có knowledge check, thuật ngữ dễ nhầm và related links.
+- [x] Phù hợp cho system engineer mới tiếp cận VDI.

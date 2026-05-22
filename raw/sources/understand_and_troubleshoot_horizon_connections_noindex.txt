@@ -1,0 +1,993 @@
+﻿----------------------- Page 1-----------------------
+
+This PDF was generated on April 2025 and was current at the time of download. To check for the latest 
+                                      version please visit 
+        https://techzone.omnissa.com/resource/understand-and-troubleshoot-horizon-connections 
+
+                               Understand and Troubleshoot 
+                               Horizon Connections 
+
+                               Omnissa Horizon 
+
+             ©️ Omnissa LLC. 
+
+----------------------- Page 2-----------------------
+
+ Understand and Troubleshoot Horizon Connections 
+
+Table of contents 
+
+Understand and Troubleshoot Horizon Connections   .......................................................................................  4 
+
+Understanding Horizon connections   .............................................................................................................  4 
+
+    Purpose of this guide   ..............................................................................................................................  4 
+
+    Components   ..........................................................................................................................................  4 
+
+Primary and secondary protocols  .................................................................................................................  5 
+
+    Internal connections   ...............................................................................................................................  5 
+
+     Communication ﬂow   ..............................................................................................................................  6 
+
+     Load balancing  ......................................................................................................................................  6 
+
+     Network ports   .......................................................................................................................................  6 
+
+    External connections   ..............................................................................................................................  8 
+
+     Communication ﬂow   ..............................................................................................................................  8 
+
+     Load balancing  ......................................................................................................................................  9 
+
+       Network ports  ...................................................................................................................................... 9 
+
+     Architecture   ........................................................................................................................................  11 
+
+Troubleshooting connections   .....................................................................................................................  12 
+
+Horizon Client to Uniﬁed Access Gateway   ...................................................................................................  14 
+
+    External ﬁrewall  ....................................................................................................................................  14 
+
+    Load balancer aﬃnity  ............................................................................................................................  14 
+
+    Load balancer websockets  .....................................................................................................................  14 
+
+    Blast external URL   ................................................................................................................................  14 
+
+    Certiﬁcates  ........................................................................................................................................... 14 
+
+    Testing connectivity  ..............................................................................................................................  15 
+
+    Install tcpdump on Uniﬁed Access Gateway  .............................................................................................  15 
+
+Uniﬁed Access Gateway to third-party identity provider  ................................................................................ 16 
+
+    RADIUS  ................................................................................................................................................  16 
+
+    Trace Packets with tcpdump   ..................................................................................................................  16 
+
+    RDS SecurID  .........................................................................................................................................  16 
+
+    Firewall  ................................................................................................................................................  16 
+
+    RSA Authentication Manager hostname resolution  .................................................................................... 16 
+
+    Clear node secret  ..................................................................................................................................  16 
+
+    Trace packets with tcpdump   ..................................................................................................................  16 
+
+Uniﬁed Access Gateway to Connection Server  .............................................................................................  18 
+
+    Testing connectivity  ..............................................................................................................................  18 
+
+    DNS issues  ...........................................................................................................................................  19 
+
+Uniﬁed Access Gateway to Horizon Agent   ...................................................................................................  21 
+
+                         ©️ Omnissa LLC. 
+
+----------------------- Page 3-----------------------
+
+ Understand and Troubleshoot Horizon Connections 
+
+    Connection Server misconﬁguration   .......................................................................................................  21 
+
+   Testing connectivity  ..............................................................................................................................  21 
+
+Horizon Web Client connections  .................................................................................................................  22 
+
+    Conﬁguration   .......................................................................................................................................  22 
+
+    Horizon Web Client failure   .....................................................................................................................  23 
+
+Summary and additional resources   ............................................................................................................  24 
+
+   Additional resources  .............................................................................................................................. 24 
+
+    Changelog  ............................................................................................................................................ 24 
+
+   About the author and contributors  ..........................................................................................................  24 
+
+    Feedback  .............................................................................................................................................  24 
+
+                        ©️ Omnissa LLC. 
+
+----------------------- Page 4-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Understand and Troubleshoot Horizon Connections 
+
+Understanding Horizon connections 
+
+Before starting to plan or trying to troubleshoot Omnissa Horizon and Blast connections, it is important to understand how a 
+Horizon Client connects to a resource. This can help determine the best architecture, understand the traﬃc ﬂow, and network 
+ports, and help in troubleshooting. 
+
+Although Omnissa Horizon 8 is used here, including its Horizon Connection Server, most of what is described here is applicable to 
+Omnissa Horizon Cloud Service as well. This guide is focused on Blast Extreme connections but most of the content, especially 
+around understanding connections, applies to PCoIP connections. 
+
+Purpose of this guide 
+
+This guide focuses on the connections between Horizon Client and a resource, and how this understanding can be applied to 
+troubleshooting connection issues in both Horizon 8 and Horizon Cloud Services.  
+
+Components 
+
+The core components of Omnissa Horizon that are used in a Horizon connection are described in the following table. 
+
+Table 1: Horizon components 
+
+  Component                    Description 
+
+                               The Horizon Client is installed on a client device to access a Horizon-managed system that has the 
+                               Horizon Agent installed. 
+  Horizon Client 
+                               You can optionally use a web browser as a Horizon Web Client (HTML Access) for devices on which 
+                               installing client software is not possible. 
+
+                               The Horizon Agent is installed on the guest OS of target VM or system. This agent allows the 
+                               machine to be managed by Connection Servers and allows a Horizon Client to form a protocol 
+  Horizon Agent                session to the machine. 
+                               Machines can be virtual desktops, Remote Desktop Session Hosts (RDS Host), physical desktops 
+                               PCs, or blade PCs. 
+
+                               The Horizon Connection Server securely brokers and connects users to the Horizon Agent that has 
+  Horizon Connection           been installed in the desktops and RDS Hosts. 
+  Server                       The Connection Server authenticates users through Active Directory and directs the request to the 
+                               appropriate and entitled resource. 
+
+                               The Omnissa Uniﬁed Access Gateway is a virtual appliance that enables secure remote access from 
+                               an external network to a variety of internal resources, including Horizon-managed resources. 
+                               When providing access to internal resources, Uniﬁed Access Gateway can be deployed within the 
+  Uniﬁed Access 
+                               corporate DMZ or internal network, and acts as a proxy host for connections to your company’s 
+  Gateway 
+                               resources. Uniﬁed Access Gateway directs authenticated requests to the appropriate resource and 
+                               discards any unauthenticated requests. It also can perform the authentication itself, leveraging an 
+                               additional layer of authentication when enabled. 
+
+                       ©️ Omnissa LLC.                                                                                    Document | 4 
+
+----------------------- Page 5-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Primary and secondary protocols 
+
+First, it is important to understand that when an Omnissa Horizon Client connects to an Omnissa Horizon environment, several 
+diﬀerent protocols are used, and a successful connection consists of two phases. 
+
+The ﬁrst phase of a connection is always the primary XML-API protocol over HTTPS, which provides authentication, authorization, 
+and session management. Following successful authentication, a connection using one or more secondary protocols is then made 
+to the resource. 
+
+Figure 1: Primary and secondary protocols 
+
+To explore the components and architecture of Horizon 8, see the Horizon 8 Architecture chapter of the Workspace ONE and 
+Horizon Reference Architecture. 
+
+Internal connections 
+
+An internal connection is one where the Horizon client connects directly to the Connection Server and then directly to the Horizon 
+agent. Normally, this is for connections that are internal to the corporate network. 
+
+In the initial authentication phase, the connection is from the Horizon Client to the Connection Server. The secondary protocol 
+session then normally connects directly from the Horizon Client to the Horizon Agent. 
+
+Figure 2: Internal connection 
+
+Secondary protocol connections route through the Connection Server only when a gateway or tunnel—the Blast Secure Gateway, 
+the PCoIP Secure Gateway, or the HTTPS Secure Tunnel—is enabled on the Connection Server. This conﬁguration is less common 
+because the protocol session is then tunneled through the Connection Servers, making it part of the ongoing session. 
+
+                      ©️ Omnissa LLC.                                                                               Document | 5 
+
+----------------------- Page 6-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+In most typical deployments, the only gateway service used on a Connection Server is the Blast Secure Gateway, which is only 
+used to handle Horizon Web Client (HTML Access) traﬃc. This is covered as a separate topic later in this guide, in the section 
+Horizon Web Client connections. 
+
+ Communication ﬂow 
+
+Figure 3: Internal connection communication ﬂow 
+
+      1. Horizon Client logs into a Connection Server 
+                  The Connection Server looks up entitlements for user 
+
+                  User selects a desktop or app 
+
+      2. Horizon Client connects to the Horizon Agent running in the desktop/ RDSH 
+Although the above diagram shows three separate network zones, it is also supported to have all internal components on the same 
+network with no ﬁrewalls between components. 
+
+ Load balancing 
+
+When load balancing Connection Servers only the initial XML-API connection (authentication, authorization, and session 
+management) needs to be load balanced. Because the secondary protocol connections go directly from the Horizon Client to the 
+Horizon Agent, they do not need to be load balanced. 
+
+ Network ports 
+
+To ensure successful connections and correct communication between the components, it is important to understand the network 
+port requirements for connectivity in a Horizon deployment. 
+
+The diagrams below show an internal connection using each of the possible display protocols and the destination network ports. 
+
+Notes: 
+
+         The arrows indicate the direction of traffic initiation (source to destination). 
+
+         Horizon UDP protocols are bidirectional, so stateful firewalls should be configured to accept UDP reply datagrams. 
+
+The following diagram shows the ports required to allow an internal Blast Extreme connection. 
+
+                      ©️ Omnissa LLC.                                                                                Document | 6 
+
+----------------------- Page 7-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Figure 4: Blast Extreme network ports for internal connection 
+
+The following diagram shows the ports required to allow an internal PCoIP connection. 
+
+Figure 5: PCoIP network ports for internal connection 
+
+The following diagram shows the ports required to allow an internal RDP. 
+
+                     ©️ Omnissa LLC.                                                                           Document | 7 
+
+----------------------- Page 8-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Figure 6: RDP network ports for internal connection 
+
+The Network Ports in Horizon 8 has more detail, along with diagrams illustrating the traﬃc. It even has speciﬁc sections and 
+diagrams on internal, external, and tunneled connections. To see more detail on the network ports required for an external 
+connection, see Network Ports in Horizon 8: Internal Connection and the Internal Connection diagram. 
+
+External connections 
+
+If the connection is external, communication is typically through a Uniﬁed Access Gateway appliance. The initial authentication 
+phase of a connection is from the Horizon Client to a Uniﬁed Access Gateway appliance and then to a Connection Server. The 
+protocol session connection goes from the Horizon Client to the Uniﬁed Access Gateway and then to the Horizon Agent. 
+
+Figure 7: External connection 
+
+ The Uniﬁed Access Gateway can run the following gateway services: Blast Secure Gateway, PCoIP Secure Gateway, and HTTPS 
+Secure Tunnel. Ensure that the Blast Secure Gateway and PCoIP Secure Gateway are not also enabled on the Connection Server 
+because this would cause a double-hop attempt of the protocol traﬃc, which is not supported and will result in failed connections. 
+
+ Communication ﬂow 
+
+                      ©️ Omnissa LLC.                                                                            Document | 8 
+
+----------------------- Page 9-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Figure 8: External connection communication ﬂow 
+
+The ﬁgure above demonstrates the connection ﬂow: 
+
+      1.  The user uses the Horizon Client to log into a Connection server via a Uniﬁed Access Gateway 
+                  The Connection Server looks up entitlements for user. 
+
+                  The user selects a desktop or application resource to connect to. 
+
+      2.  The Horizon Client connects to the Horizon Agent running in the desktop or RDSH. 
+                  This will be via the Blast Secure Gateway on the same Unified Access Gateway appliance as the one where the 
+                  user authenticated. 
+
+ Load balancing 
+
+When load balancing Horizon traﬃc to multiple Uniﬁed Access Gateway appliances, the initial XML-API connection (authentication, 
+authorization, and session management) needs to be load balanced. The secondary Horizon protocols must be routed to the same 
+Uniﬁed Access Gateway appliance to which the primary Horizon XML-API protocol was routed. This allows the Uniﬁed Access 
+Gateway to authorize the secondary protocols based on the authenticated user session. 
+
+If the secondary protocol session is misrouted to a diﬀerent Uniﬁed Access Gateway appliance from the primary protocol one, the 
+session will not be authorized. The connection would therefore be dropped in the DMZ, and the protocol connection would fail. 
+Misrouting secondary protocol sessions is a common problem if the load balancer is not conﬁgured correctly. 
+
+The load balancer aﬃnity must ensure that XML-API connections made for the whole duration of a session (default maximum 10 
+hours) continue to be routed to the same Uniﬁed Access Gateway appliance. 
+
+Although the secondary protocol session must be routed to the same Uniﬁed Access Gateway appliance as was used for the 
+primary XML-API connection, there is a choice about whether the secondary protocol session is routed through the load balancer or 
+not. This normally depends on the capabilities of the load balancer. 
+
+Routing both the primary and secondary protocol traﬃc goes through the load balancer, using source IP aﬃnity, has the advantage 
+of needing only a single public IP address. Where the load balancer does not have this capability, or where source IP aﬃnity cannot 
+be used, another option is to dedicate additional IP addresses for each Uniﬁed Access Gateway appliance so that the secondary 
+protocol session can bypass the load balancer. This is often referred to as the N+1 VIP method where a load balanced VIP is used 
+for the primary protocol and the secondary protocol is routed directly to one of the N VIPs dedicated to each Uniﬁed Access 
+Gateway appliance. See Load Balancing Uniﬁed Access Gateway for Horizon. 
+
+   Network ports 
+
+To ensure successful external connections, and correct communication between the components, it is important to understand the 
+network port requirements for connectivity in a Horizon deployment. The diagrams below show an external connection using each 
+of the possible display protocols and the destination network ports. 
+
+Notes: 
+
+         The arrows indicate the direction of traffic initiation (source to destination). 
+
+         Horizon UDP protocols are bidirectional, so stateful firewalls should be configured to accept UDP reply datagrams. 
+
+The following diagram shows the ports required to allow an external Blast Extreme connection through Uniﬁed Access Gateway. 
+
+                      ©️ Omnissa LLC.                                                                                Document | 9 
+
+----------------------- Page 10-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Figure 9: Blast Extreme network ports for external connections 
+
+The following diagram shows the ports required to allow an external PCoIP connection through Uniﬁed Access Gateway. 
+
+Figure 10: PCoIP network ports for external connections 
+
+The following diagram shows the ports required to allow an external RDP connection through Uniﬁed Access Gateway. 
+
+Figure 11: RDP network ports for external connections 
+
+The Network Ports in Horizon 8 has more detail, along with diagrams illustrating the traﬃc. It even has speciﬁc sections and 
+diagrams on internal, external, and tunneled connections. To see more detail on the network ports required for an external 
+connection, see Network Ports in Horizon 8: External Connection and the External Connection diagram. 
+
+                     ©️ Omnissa LLC.                                                                           Document | 10 
+
+----------------------- Page 11-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+ Architecture 
+
+When using Uniﬁed Access Gateway to provide external access to Horizon, the same Connection Servers can be used for both 
+external and internal connections. 
+
+Figure 12: Uniﬁed Access Gateway and Connection Server architecture 
+
+With the preferred architecture for traﬃc ﬂow and load balancing of Uniﬁed Access Gateways and Connection Servers, a load 
+balancer is not placed inline between the Uniﬁed Access Gateways and the Connection Servers. The architecture simpliﬁes the 
+design and makes it easier to troubleshoot. 
+
+Note: It is still a valid architecture and supported to have a load balancer inline between the Uniﬁed Access Gateways and the 
+Connection Servers. When a load balancer is placed between the two, the Uniﬁed Access Gateway cannot detect if an individual 
+Connection Server is down. 
+
+For more information, see External Access Architecture. 
+
+                     ©️ Omnissa LLC.                                                                          Document | 11 
+
+----------------------- Page 12-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Troubleshooting connections 
+
+Now that you have an understanding of how a Horizon connection and session is established, you can start to look when things 
+don’t work. Knowing what is meant to happen during a successful connection helps you understand and troubleshoot when things 
+do not work. 
+
+This guide focuses on troubleshooting an external connection, as this shows all possible components and communication ﬂows. 
+The troubleshooting steps can also be applied to internal connections. 
+
+The diagram below illustrates an external connection, and the numbers indicate the communication ﬂow. 
+
+Figure 13: External connection full communication ﬂow 
+
+      1. Horizon Client authentication to the load balancer in front of Uniﬁed Access Gateways 
+      2.  Authentication traﬃc from the load balancer to one of the Uniﬁed Access Gateways 
+      3. (Optional) Authentication traﬃc from the Uniﬁed Access Gateway to a third-party authentication source (for example 
+         RADIUS, RSA SecurID, SAML 2.0 Identity Provider) 
+      4. Authentication traﬃc from the Uniﬁed Access Gateway to one of the Connection Servers (as deﬁned in the Uniﬁed Access 
+         Gateway’s Connection Server URL). 
+      5. Protocol session from the Horizon Client to the same Uniﬁed Access Gateway that was used for authentication. Depending 
+         on the load balancing conﬁguration, this traﬃc may go via the load balancer. 
+      6. Protocol session from the Uniﬁed Access Gateway to the Horizon Agent running in the virtual desktop of Windows Server 
+Note: While not part of the connection communication ﬂow, it is important to note that the Horizon Agent will communicate to the 
+Connection Servers to indicate its state. 
+
+To troubleshoot a Horizon connection, ﬁrst determine which phase is failing (authentication or protocol). Is the user able to 
+authenticate or not? Are they able to log in, select a Horizon resource and launch it? Does the Horizon resource fail to connect for 
+the user? If a user is unable to authenticate, we can limit the initial investigation to the ﬁrst four steps listed above. 
+
+Most problems are not related to the Horizon components themselves. More commonly, they are issues with a misconﬁgured 
+ﬁrewall blocking ports, a misconﬁgured load balancer misrouting connections, or network routing not allowing traﬃc to route to the 
+destination (Connection Server, Agent or authentication server). 
+
+The initial troubleshooting steps should involve: 
+
+         Checking that the required ports are allowed through firewalls. Review the Network Ports information in the Internal 
+         Connections and External Connections sections in this guide. For full detail on the ports required see: Network Ports in 
+         Horizon 8. 
+
+         Ensuring that network routing is configured to allow traffic to flow between all the components illustrated on the 
+         diagram above. 
+
+         Checking common issues such as a misconfiguration on the load balancer or an incorrectly defined Blast External URL. 
+
+The main areas of the communication ﬂow that should be investigated are: 
+
+      1. Horizon Client to Uniﬁed Access Gateway 
+      2. (Optional) Uniﬁed Access Gateway to third-party authentication source 
+      3. Uniﬁed Access Gateway to Connection Server 
+
+                       ©️ Omnissa LLC.                                                                               Document | 12 
+
+----------------------- Page 13-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+     4. Uniﬁed Access Gateway to Horizon Agent 
+     5. Horizon Agent to/from Connection Server 
+
+Figure 14: Main communication points 
+
+                    ©️ Omnissa LLC.                                                                      Document | 13 
+
+----------------------- Page 14-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Horizon Client to Uniﬁed Access Gateway 
+
+On the primary authentication phase, the Horizon Client connects to one of the Uniﬁed Access Gateways. This requires TCP 443 to 
+be able to be routed from the Horizon Client to the Uniﬁed Access Gateway. 
+
+For the secondary protocol phase, the ports required depend on the display protocol being used, and with Blast, which speciﬁc 
+ports have been conﬁgured for use on the Uniﬁed Access Gateway. When the Blast connection fails between the Horizon Client and 
+the Uniﬁed Access Gateway, this displays a timeout log entry in bsg.log on Uniﬁed Access Gateway. 
+
+The main areas to investigate in troubleshooting this are as follows. 
+
+External ﬁrewall 
+
+Ensure that the ﬁrewall between the Horizon Client and the Uniﬁed Access Gateway is not blocking the ports required by the Blast 
+Extreme protocol port from the Horizon client. 
+
+This will be either port TCP 8443 or TCP 443 depending on how the blastExternalUrl setting was conﬁgured on the Uniﬁed Access 
+Gateway. 
+
+Blast can also optionally use UDP 8443 from the Horizon Client to the Uniﬁed Access Gateway but should attempt initial connection 
+over TCP ﬁrst. 
+
+Load balancer aﬃnity 
+
+The secondary Horizon protocol (Blast Extreme, PCoIP) must be routed to the same Uniﬁed Access Gateway appliance to which the 
+primary Horizon authentication was routed. This allows the Uniﬁed Access Gateway to authorize the secondary protocols based on 
+the authenticated user session. 
+
+If the secondary protocol session is misrouted to a diﬀerent Uniﬁed Access Gateway appliance from the primary protocol one, the 
+session will not be authorized. The connection would therefore be dropped in the DMZ, and the Blast connection would fail. 
+
+For Blast connections this will show in the bsg.log on the Uniﬁed Access Gateway, where the Blast session does not arrive at the 
+same Uniﬁed Access Gateway, within the default of 60 seconds. 
+
+[absg-master] – Removing idle route 44271692-*** to target 192.168.2.151|22443, idled for 60.00 seconds, registered 
+for 60.01 seconds 
+
+Misrouting secondary protocol sessions is a common problem if the load balancer is not conﬁgured correctly. The load balancer 
+aﬃnity must ensure that connections made for the whole duration of a session (default maximum 10 hours) continue to be routed 
+to the same Uniﬁed Access Gateway appliance that was used for authentication. 
+
+Check that the aﬃnity and timeout is conﬁgured correctly on the load balancer. See Load Balancing Uniﬁed Access Gateway for 
+Horizon. 
+
+Load balancer websockets 
+
+Blast Extreme uses WebSockets. Some load balancers can block WebSockets and some have WebSockets turned oﬀ by default. 
+This has been seen with both Citrix NetScaler and Microsoft TMG. 
+
+Check the conﬁguration of the load balancer in front of the Uniﬁed Access Gateways to ensure that the use of WebSockets is 
+enabled. 
+
+Blast external URL 
+
+The blastExternalUrl is a conﬁguration on the Uniﬁed Access Gateway that speciﬁes the URL and port that should be used by the 
+Horizon Clients to connect with Blast to the Uniﬁed Access Gateway. 
+
+This should be set to a value usable by the client to connect to the Uniﬁed Access Gateway appliances or to the load balancer 
+name if there is one in front of the Uniﬁed Access Gateways. When this isn't the case, Uniﬁed Access Gateway never receives the 
+Blast connection. 
+
+Check the conﬁguration of blastExternalUrl and change the URL and port if required. Valid ports should be either 8443 or 443. 
+
+Certiﬁcates 
+
+Check the TLS/SSL certiﬁcates used on the Uniﬁed Access Gateway, and on the load balancer if it is handling TLS/SSL oﬄoad or re- 
+encryption. The same certiﬁcate should be used on the load balancer and the Uniﬁed Access Gateway appliances. 
+
+If there is a certiﬁcate mismatch or a bad SSL certiﬁcate on the Uniﬁed Access Gateway, connections fail. If the Blast connection is 
+
+                      ©️ Omnissa LLC.                                                                            Document | 14 
+
+----------------------- Page 15-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+misrouted to the wrong Uniﬁed Access Gateway appliance and that appliance has a diﬀerent certiﬁcate to the correct appliance, 
+this also causes connection failures. 
+
+You can run the curl command to look at the certiﬁcate on the Uniﬁed Access Gateway. For example, from the UAG console run 
+this command to see the certiﬁcate used with the Horizon edge services: 
+
+curl -k -v https://127.0.0.1 >/dev/null 
+
+You can also check the certiﬁcate used with the admin interface on port 9443: 
+
+curl -k -v https://127.0.0.1:9443 >/dev/null 
+
+You can also use a web browser to connect to the UAG on port 433 and 9443 to view the user and admin certiﬁcates respectively. 
+
+Testing connectivity 
+
+From a Windows Client, you can test the connectivity to Uniﬁed Access Gateway. Depending on which gateway services and ports 
+are being used, use the appropriate command from below. 
+
+Open a PowerShell command shell 
+
+Test-NetConnection uag-hostname-or-ip-address -port 443 
+
+Test-NetConnection uag-hostname-or-ip-address -port 8443 
+
+Test-NetConnection uag-hostname-or-ip-address -port 4172 
+
+You can also use curl as a trace equivalent: 
+
+curl --trace <outputfile> https://hostname.domain.com 
+
+This enables a full trace dump of all incoming and outgoing data, including descriptive information, to the given output ﬁle. 
+
+Use "-" as the ﬁlename to have the output sent to the console, using standard output (stdout), instead of directing it to a ﬁle. 
+
+curl --trace - https://uag-hostname.domain.com 
+
+Alternatively, use curl --trace-ascii. This is very similar to --trace, but leaves out the hex part and only shows the ASCII part of 
+the dump. It makes smaller output making it easier to read by the end user. 
+
+curl --trace-ascii <outputfile> https://hostname.domain.com 
+
+Install tcpdump on Uniﬁed Access Gateway 
+
+tcpdump is a useful tool to trace packets in and out of Uniﬁed Access Gateway. To install it, run: 
+
+advancedDebugPackages install 
+
+You can then run the tcpdump command. Examples are: 
+
+tcpdump -i any -n -v port 443 
+
+tcpdump -i any -n -v port 8443 
+
+tcpdump -i eth0 -n -v udp port 8443 
+
+tcpdump -i any -n -v port 4172 
+
+                      ©️ Omnissa LLC.                                                                              Document | 15 
+
+----------------------- Page 16-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Uniﬁed Access Gateway to third-party identity provider 
+
+When Uniﬁed Access Gateway has been conﬁgured to use a third-party identity provider as an authentication source, such as 
+RADIUS or RSA SecurID, ensure that the hostname of the authentication source is resolvable, and that traﬃc can be properly 
+routed to it. 
+
+RADIUS 
+
+Run the following command on the Uniﬁed Access Gateway to verify name resolution and connectivity. ICMP may be blocked by a 
+ﬁrewall so ping will not always work, but name resolution must work. 
+
+nslookup radius-server-hostname 
+
+tracepath radius-server-hostname 
+
+Trace Packets with tcpdump 
+
+tcpdump is a useful tool to trace packets in and out of Uniﬁed Access Gateway. To install it, run: 
+
+advancedDebugPackages install 
+
+You can then run the following tcpdump command. 
+
+tcpdump -i any -n -v port 1812 
+
+RDS SecurID 
+
+Common issues include ﬁrewall blocking the ports required, correct network routing not in place, name resolution not working, or 
+the node secret needing to be renegotiated. 
+
+Firewall 
+
+Uniﬁed Access Gateway uses the RSA SecurID client which communicates with the RSA Authentication Manager Server, normally 
+using UDP port 5500 (with UDP replies in the opposite direction). If there is a ﬁrewall in between which blocks this UDP and/or reply 
+port the SecurID authentication will fail. 
+
+Logs on RSA Authentication Manager server will show that there has been no contact from Uniﬁed Access Gateway. 
+
+RSA Authentication Manager hostname resolution 
+
+Inside the sdconf.rec ﬁle extracted from RSA Authentication Manager, there is one or more hostname. Those hostnames must be 
+resolvable by Uniﬁed Access Gateway. 
+
+Run the following command on the Uniﬁed Access Gateway using the hostname found in the sdconf.rec ﬁle to verify name 
+resolution and connectivity. ICMP may be blocked by a ﬁrewall so ping won't always work, but name resolution must work. 
+
+nslookup rsa-auth-manager-hostname 
+
+tracepath rsa-auth-manager-hostname 
+
+This can fail if the DNS, used by Uniﬁed Access Gateway, does not have that hostname present. 
+
+If the hostname is not resolved, the solution is to either add the hostname to the DNS, used by Uniﬁed Access Gateway, or to add a 
+hosts ﬁle entry for the host (which can be done automatically during deployment using the PowerShell method). 
+
+Logs on RSA Authentication Manager server will show that there has been no contact from Uniﬁed Access Gateway. 
+
+Clear node secret 
+
+When ﬁrst deployed, node secrets are negotiated/exchanged between Uniﬁed Access Gateway and RSA Authentication Manager 
+Server. If RSA Authentication Manager Server is redeployed or if Uniﬁed Access Gateway and is redeployed, the node secret on the 
+other side needs to be cleared so that the renegotiation happens. There are good logs on RSA Authentication Manager Server 
+which show this problem. 
+
+Trace packets with tcpdump 
+
+The tcpdump is a useful tool to trace packets in and out of Uniﬁed Access Gateway. To install it, run: 
+
+advancedDebugPackages install 
+
+You can then run the tcpdump command. 
+
+tcpdump -i any -n -v port 5500 
+
+                        ©️ Omnissa LLC.                                                                                   Document | 16 
+
+----------------------- Page 17-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+This will show communication attempts with RSA Authentication Manager server using the IP address from the hostname 
+resolution described above. When correctly conﬁgured, UDP datagrams will be seen sent on destination port 5500 and reply 
+datagrams from that port will also be seen. 
+
+If outbound UDP datagrams are seen but no reply datagrams, then it could be a ﬁrewall blocking the port, the datagrams are not 
+reaching RSA Authentication Manager or reply datagrams not being routed back to Uniﬁed Access Gateway. Check the RSA Auth 
+Manager logs. 
+
+                     ©️ Omnissa LLC.                                                                          Document | 17 
+
+----------------------- Page 18-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Uniﬁed Access Gateway to Connection Server 
+
+As part of the primary authentication phase, the Uniﬁed Access Gateway will connect to one of the Connection Servers using port 
+TCP 443. 
+
+         Networking - Ensure that TCP 443 is open from the Unified Access Gateways to the Connection Servers, allowed 
+         through any firewall that may be present, and that network routing is in place between the two components. 
+
+         Connection Server URL - Check that the Connection Server URL defined on the Unified Access Gateway is correct and 
+         that the Unified Access Gateway can resolve this URL using DNS. 
+
+         Certificates – Check that the Connection Server has a TLS/SSL certificate that is trusted by the Unified Access 
+         Gateway. Alternatively make sure that the Unified Access Gateway is configured with the Connection Servers URL 
+         thumbprints. 
+
+Testing connectivity 
+
+Open a remote console or SSH onto the Uniﬁed Access Gateway appliance command line. Log on as root and run the following 
+command. 
+
+curl -v -k https://hostname-or-ip-address:443/ 
+
+If the Uniﬁed Access Gateway can successfully connect to the Connection Server, you will see similar output to the following 
+screenshot. 
+
+Figure 15: Successful curl test of Uniﬁed Access Gateway to Connection Server 
+
+From the Uniﬁed Access Gateway command line, run the following command to check whether the Uniﬁed Access Gateway can 
+resolve the name of the Connection Server. 
+
+nslookup hostname 
+
+                     ©️ Omnissa LLC.                                                                           Document | 18 
+
+----------------------- Page 19-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Figure 16: nslookup from Uniﬁed Access Gateway 
+
+On Uniﬁed Access Gateway, when there are any issues connecting to the Connection Server, this is logged in esmanager.log on 
+the Uniﬁed Access Gateway, similar to the following: 
+
+[nioEventLoopGroup-7-1]ERROR view.ViewEdgeService[onFailure: 165][]: Failed to resolve hostname address in 
+proxyDestinationUrl: s1-cs3.eucmobility.com 
+
+[nioEventLoopGroup-4-1]WARN  client.HttpClient[operationComplete: 359][]: unable to connect to s1- 
+cs3.eucmobility.com:443, reason=io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection timed out: s1- 
+cs3.eucmobility.com/192.168.2.33:443 retryCount:3 
+
+nioEventLoopGroup-4-1]ERROR client.HttpClient[lambda$send$1: 246][]: unable to connect to s1-cs3.eucmobility.com:443, 
+reason=io.netty.channel.ConnectTimeoutException: connection timed out: s1-cs3.eucmobility.com/192.168.2.33:443 
+
+[Monitoring]ERROR view.ViewEdgeService[healthCheckBroker: 407][]: Exception message: 
+io.netty.channel.ConnectTimeoutException: connection timed out: s1-cs3.eucmobility.com/192.168.2.33:443 
+
+[nioEventLoopGroup-4-1]WARN  client.HttpClient[operationComplete: 359][]: unable to connect to s1- 
+cs3.eucmobility.com:443, reason=io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection timed out: s1- 
+cs3.eucmobility.com/192.168.2.33:443 retryCount:2 
+
+DNS issues 
+
+With Uniﬁed Access Gateway 3.7 and newer, the /etc/resolv.conf ﬁle does not contain the DNS server IP addresses. This is by 
+design. Do not manually edit the /etc/resolv.conf ﬁle. DNS IP addresses should either be added via the PowerShell .ini setting ﬁle at 
+deployment or using the Uniﬁed Access Gateway Admin console. 
+
+Do not use .local for hostnames, as this is reserved for Multicast DNS (mDNS) and resolve requests for names ending in .local will 
+not be sent to normal (Unicast) DNS. Earlier versions of Uniﬁed Access Gateway, based on Photon 2, did allow .local names to be 
+resolved, but this has been rectiﬁed in Uniﬁed Access Gateway 3.7 and later. 
+
+If hosts in the environment have been named with a .local suﬃx, then there are three workarounds until you can move away from 
+the reserved suﬃx .local. 
+
+      1.  Use an IP address in place of hostname references in settings such as ntpServers, proxydestinationUrl, etc. 
+      2.  Add the host entry for the .local host in the Uniﬁed Access Gateway hosts ﬁle (via PowerShell or the Admin UI). Never edit 
+          /etc/hosts ﬁle directly. 
+      3.  Add an alias CNAME record in DNS to give an alternative name for any .local host. 
+                   For example, for the myinternalserver.local DNS entry, use myinternalserver.int as a CNAME and then use the 
+                   .int name for any hostname references on the Unified Access Gateway. 
+
+Check which DNS server IP addresses that have been conﬁgured on Uniﬁed Access Gateway using the following command. 
+
+systemd-resolve --status 
+
+Make sure that the Uniﬁed Access Gateway can ping each DNS server IP address: 
+
+ping <DNS Server IP Address> 
+
+Attempt to resolve the hostname using DNS. 
+
+nslookup <hostname> 
+
+You can also look at the DNS protocol activity (requests and responses) by using tcpdump on the Uniﬁed Access Gateway. 
+
+advancedDebugPackages install 
+
+                       ©️ Omnissa LLC.                                                                                  Document | 19 
+
+----------------------- Page 20-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+tcpdump -i any -n -v udp port 53 
+
+To run it in the background, just put “&” at the end. 
+
+tcpdump -i any -n -v udp port 53& 
+
+Note that with tcpdump output with nslookup on Uniﬁed Access Gateway 3.7 and newer, it will show DNS queries going to 
+127.0.0.53 UDP port 53. This is the local DNS listener systemd-resolv which then forwards the DNS query to the conﬁgured DNS 
+servers as shown with systemd-resolve --status 
+
+                      ©️ Omnissa LLC.                                                                             Document | 20 
+
+----------------------- Page 21-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Uniﬁed Access Gateway to Horizon Agent 
+
+As the protocol session connects as part of the secondary session, the Uniﬁed Access Gateway connects to the Horizon Agent 
+running in the virtual desktop or the Windows Server (if running RDSH for published applications). 
+
+For a Blast connection, this uses TCP 22443 (and optionally UDP 22443). Ensure that any ﬁrewall present allows this traﬃc from 
+the Uniﬁed Access Gateway to the Agent and that network routing is in place to allow and direct the traﬃc. 
+
+Connection Server misconﬁguration 
+
+If the Connection Server has been conﬁgured for Blast Secure Gateway (BSG), this causes Blast connections through Uniﬁed 
+Access Gateway to fail. 
+
+         Blast Extreme does not support multi-hop Blast Secure Gateway, for example, running the BSG at both the Unified 
+         Access Gateway and also on the Connection Server. 
+
+         Errors will be visible in the bsg.log on the Unified Access Gateway. 
+
+Figure 17: Ensure Connection Servers have tunnel and protocol gateways deactivated 
+
+Similarly, if PCoIP is used through Uniﬁed Access Gateway, the PCoIP Secure Gateway service should not be conﬁgured on the 
+Connection Server, as this would also cause a double hop of the protocol and connections to fail. 
+
+Testing connectivity 
+
+Testing connections to the Horizon Agent using Blast over 22443 or PCoIP over 4172 is not possible, as the desktops do not listen 
+on these port numbers until a session is ready. You can look at logs to see connection failures on these ports. 
+
+Test using the Horizon Framework Channel TCP connection 
+
+curl -v telnet://virtualdesktop-ip-address:32111 
+
+Test using the Horizon MMR/CDR TCP connection 
+
+curl -v telnet://virtualdesktop-ip-address:9427 
+
+                      ©️ Omnissa LLC.                                                                           Document | 21 
+
+----------------------- Page 22-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Horizon Web Client connections 
+
+When the Horizon Web client (HTML Access) is used, a web browser is used as the client to access a Horizon resource instead of an 
+installed, native Horizon Client. One consideration is that the browser should trust the SSL certiﬁcate presented to it. 
+
+In an external connection, the Uniﬁed Access Gateway runs the Blast Secure Gateway and will present the Uniﬁed Access Gateway 
+certiﬁcate to the browser to verify identity. 
+
+With an internal connection, where the protocol session is normally direct from the client to the Horizon Agent, the agent side must 
+present a trusted certiﬁcate to the browser. This presents some challenges. 
+
+         By default, Connection Server gives preference to sending the IP addresses, rather than host names, of desktop 
+         machines and RDSH servers to clients, which causes the certificate to be mismatched and not trusted. (This behavior 
+         can be changed to give preference to DNS names.) 
+
+         The desktop machines and RDSH servers must have a certificate installed that will be trusted by the browser on the 
+         client device. This behavior has traditionally led to the use of wildcard certificates. 
+
+Conﬁguration 
+
+A feature on the Horizon Connection Server helps overcome these constraints. In Horizon Administrator, you can conﬁgure the use 
+of the Blast Secure Gateway to provide secure access to remote desktops and applications only when the Horizon Web Client is 
+used locally. 
+
+The Blast Extreme protocol traﬃc session is routed through the Connection Server and is presented with its SSL certiﬁcate. This 
+removes the need to change the default way that the Connection Server sends the machine or RDSH server information to the 
+host. It also means that there is no need to manage certiﬁcates on the desktop machines and RDSH servers. 
+
+Figure 18: Connection Server Blast Secure Gateway settings 
+
+With only the Use Blast Secure Gateway for only Horizon Web Client connections to machine setting conﬁgured on the 
+Connection Server, we get the following behavior: 
+
+         Internal Horizon Web Client users that connect directly to the Connection Server have the Blast connection go through 
+         the Blast Secure Gateway on the Connection Server. 
+
+                      ©️ Omnissa LLC.                                                                               Document | 22 
+
+----------------------- Page 23-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+         Internal native Horizon Clients have the Blast connection go directly to the desktop. 
+
+         External users (Horizon Web Client or native Horizon Client) connecting through a Unified Access Gateway have the 
+         Blast connection go through the Blast Secure Gateway on the Unified Access Gateway. The connection then goes from 
+         the Unified Access Gateway appliance to the Horizon Agent and does not touch the Blast Secure Gateway on the 
+         Connection Server, and not incurring a double hop of the protocol. 
+
+Figure 19: Internal connection using the Horizon Web Client (HTML Access) 
+
+It also means a Connection Server can be shared for both internal and external connections, with the gateway services—the Blast 
+Secure Gateway, the PCoIP Secure Gateway, and the HTTPS Secure Tunnel—running on the Uniﬁed Access Gateway for most use 
+cases. 
+
+Only internal HTML Access connections go through the Blast Secure Gateway on the Connection Server. 
+
+Horizon Web Client failure 
+
+In some cases, you may ﬁnd that the native Horizon Client works with Blast Extreme but using the Web Client fails (with some 
+browsers and not others). With the Web Client and Horizon, if you connect to a Connection Server through a load balancer or a 
+gateway, such as Uniﬁed Access Gateway, you must ﬁrst conﬁgure a security setting in Horizon. 
+
+A common reason for these failures is an Origin check failure on Connection Server. Look at the debug log ﬁle on the Connection 
+Servers and search for "Origin" to look for origin checking failures. For more information, see "Origin Checking" in the Horizon 
+Security document. 
+
+To resolve this, see Allow Omnissa Horizon Web Client Through a Load Balancer. 
+
+                      ©️ Omnissa LLC.                                                                            Document | 23 
+
+----------------------- Page 24-----------------------
+
+   Understand and Troubleshoot Horizon Connections 
+
+Summary and additional resources 
+
+This guide described how an Omnissa Horizon Client connects to a Horizon resource to help you plan and troubleshoot Horizon and 
+connections with Horizon 8. This can be helpful with Omnissa Horizon Cloud Services as well. 
+
+Additional resources 
+
+For more information about Horizon Client connections, you can explore the following resources: 
+
+         Horizon 8 Tech Zone product page 
+
+         Workspace ONE and Horizon Reference Architecture 
+
+         Load Balancing Unified Access Gateway for Horizon 
+
+         Network Ports in Horizon 8 
+
+Changelog 
+
+The following updates were made to this guide: 
+
+  Date             Change 
+
+                   Updated URL Links for 2412 releases. 
+  2025-04-01 
+                   Updated screenshots for UAG and Horizon 2412. 
+
+  2024-10-17       Updated graphics and diagrams. 
+
+  2022-10-11       Added info on how to check certiﬁcates used by Uniﬁed Access Gateway. 
+
+                   Updated to reﬂect the new preferred architecture of not having a load balancer in between the Uniﬁed Access 
+                   Gateways and the Connections Servers. Note that it is still supported to have a load balancer in between 
+  2022-10-01 
+                   them but for new deployments the preference is to have a direct mapping of Uniﬁed Access Gateway to 
+                   Connections Server. 
+
+                   Updated for Horizon 8. 
+  2021-02-01       Changed the heading levels inside the Troubleshooting section to highlight the diﬀerent areas and the 
+                   information more clearly for each of them. 
+
+  2020-04-29       Initial version. 
+
+About the author and contributors 
+
+This guide was written by: 
+
+         Graeme Gordon, Senior Staff Architect, Omnissa. 
+
+Feedback 
+
+Your feedback is valuable. To comment on this paper, either use the feedback button or contact us at 
+tech_content_feedback@omnissa.com. 
+
+                     ©️ Omnissa LLC.                                                                          Document | 24 
+
+----------------------- Page 25-----------------------
+
+©️ Omnissa LLC.                ©️ 2025 Omnissa, LLC 590 E Middleﬁeld Road, Mountain View CA 94043 All Rights Reserved. 

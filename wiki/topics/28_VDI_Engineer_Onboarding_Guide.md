@@ -2,358 +2,512 @@
 
 ## 0. Document Control
 
-### 0.1 Metadata
-
 | Trường | Giá trị |
 |---|---|
 | Thứ tự | 28 |
 | Tên tài liệu | VDI Engineer Onboarding Guide |
 | Tên file | 28_VDI_Engineer_Onboarding_Guide.md |
 | Mục đích tài liệu | Cung cấp lộ trình học và thực hành cho engineer mới, từ kiến thức nền tảng đến đọc kiến trúc, thao tác quản trị, xử lý incident và tham gia vận hành khách hàng. |
-| Nguồn điều khiển | training_idea.md; list_context.txt |
-| Trạng thái | Full training document; customer-specific values remain Unknown until confirmed |
+| Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
+| Trạng thái | Tài liệu onboarding đào tạo; access thực tế, lab, mentor, SLA, tool, checklist sign-off và quyền thao tác là Need Customer Confirmation |
 
-### 0.2 Source Grounding
-
-Tài liệu này dùng `training_idea.md`, `list_context.txt`, Document Research Pack từ `/lumi-ask` riêng cho chính tài liệu này, các trang `wiki/sources` và concept liên quan trong `wiki/concepts`.
+### Source Grounding
 
 | Nội dung | Nguồn sử dụng | Mức độ tin cậy | Ghi chú |
 |---|---|---|---|
-| Bối cảnh và mục tiêu | [[sources/vdi-training-idea]] | Medium | Giữ đúng bối cảnh hai hệ thống VDI và định hướng vận hành. |
-| Tên, thứ tự, file, mục đích | [[sources/vdi-documentation-list-context]] | Medium | Source of truth cho danh mục. |
-| Document Research Pack | /lumi-ask riêng cho tài liệu này | Grounded Ask | Tổng hợp scope, model, component, task, troubleshooting, knowledge check. |
-| Bối cảnh hai hệ thống VDI, mục tiêu đào tạo, vận hành theo lớp, lỗi thường gặp và câu hỏi cần xác nhận. | [[sources/vdi-training-idea]] | High | Trang source summary trong wiki/sources. |
-| Danh mục chính thức: thứ tự, tên tài liệu, tên file, mục đích và phạm vi trọng tâm. | [[sources/vdi-documentation-list-context]] | High | Trang source summary trong wiki/sources. |
-| Connection Server, UAG, pod/block, hypervisor manager, display protocol, authentication, True SSO. | [[sources/horizon-8-architecture]] | High | Trang source summary trong wiki/sources. |
-| Primary/secondary protocol, internal/external flow, UAG, firewall, load balancing, certificate. | [[sources/understand-and-troubleshoot-horizon-connections]] | High | Trang source summary trong wiki/sources. |
-| Delivery Controller, StoreFront, Site Database, VDA, HDX, ICA channels, machine identity. | [[sources/citrix-virtual-apps-and-desktops-7-2603]] | High | Trang source summary trong wiki/sources. |
-| Profile container, ODFC, Cloud Cache, storage permission, HA và profile troubleshooting. | [[sources/fslogix-documentation]] | High | Trang source summary trong wiki/sources. |
-| ESXi, vCenter, VM operations, datastore, networking, snapshot, lifecycle, logs. | [[sources/vmware-vsphere-8-0]] | High | Trang source summary trong wiki/sources. |
-| vCenter appliance, DNS/NTP, ports, Enhanced Linked Mode và chuẩn bị tích hợp. | [[sources/vcenter-server-installation-and-setup]] | High | Trang source summary trong wiki/sources. |
-| Host/pool, storage repository, networking, HA, licensing, update, guest OS support. | [[sources/xenserver-8-4]] | High | Trang source summary trong wiki/sources. |
+| Bối cảnh khách hàng có hai hệ thống VDI, quy mô 1500-2000+ VDI, cần đào tạo engineer theo lớp vận hành | [[sources/vdi-training-idea]] | High | Nguồn điều khiển chính cho lộ trình onboarding. |
+| Tên tài liệu, tên file và mục đích tài liệu | [[sources/vdi-documentation-list-context]] | High | Source of truth cho scope file 28. |
+| Kiến thức Horizon, UAG, Connection Server, Horizon Agent, connection flow | [[sources/horizon-8-architecture]], [[sources/understand-and-troubleshoot-horizon-connections]], [[concepts/omnissa-horizon]], [[concepts/connection-server]], [[concepts/unified-access-gateway]] | High | Dùng cho track Horizon. |
+| Kiến thức Citrix CVAD, Delivery Controller, StoreFront, Gateway, VDA, Delivery Group | [[sources/citrix-virtual-apps-and-desktops-7-2603]], [[concepts/citrix-virtual-apps-and-desktops]], [[concepts/delivery-controller]], [[concepts/storefront]], [[concepts/virtual-delivery-agent]], [[concepts/delivery-group]] | High | Dùng cho track Citrix. |
+| Kiến thức hypervisor, storage, profile, monitoring, incident, change, support | [[sources/fslogix-documentation]], [[sources/vmware-vsphere-8-0]], [[sources/vcenter-server-installation-and-setup]], [[sources/xenserver-8-4]], [[concepts/vcenter-server]], [[concepts/xenserver]], [[concepts/datastore]], [[concepts/profile-container]], [[concepts/monitoring-and-logs]], [[concepts/incident-management]], [[concepts/change-management]] | High | Dùng cho track vận hành thực tế. |
 
-### Document Research Pack từ /lumi-ask
+## 1. Mục tiêu onboarding
 
-**Q1 - Scope và learning objective:** /lumi-ask riêng cho VDI Engineer Onboarding Guide đã được dùng để tổng hợp phần này.
+Tài liệu này là lộ trình học và thực hành cho system engineer mới tiếp cận hệ thống VDI của khách hàng. Mục tiêu không phải biến engineer thành chuyên gia Citrix/Horizon trong vài ngày. Mục tiêu thực tế hơn: engineer hiểu bức tranh tổng thể, đọc được sơ đồ, biết đặt câu hỏi đúng, biết kiểm tra theo lớp, biết thu thập evidence, biết giới hạn quyền của mình và biết escalation đúng đội.
 
-**Synthesis:** Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.; Xác định được thành phần, dependency và evidence cần kiểm tra.; Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.; Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
+Sau onboarding, engineer cần:
 
-**Q2 - Architecture hoặc operational model:** /lumi-ask riêng cho VDI Engineer Onboarding Guide đã được dùng để tổng hợp phần này.
+- Hiểu khách hàng có hai nền tảng VDI: Omnissa Horizon trên HCI và Citrix CVAD trên XenServer hoặc VMware ESXi.
+- Giải thích được luồng user từ endpoint tới gateway, broker, desktop/app session và backend.
+- Phân biệt được các khái niệm: broker, gateway, VDA, Horizon Agent, pool, catalog, delivery group, entitlement, profile, datastore, image, session.
+- Biết đọc dashboard cơ bản: session, failed session, registered/unregistered, broker/gateway health, host/storage/network metric.
+- Biết xử lý ticket support ở mức L1/L2 theo evidence, không thao tác cảm tính.
+- Biết khi nào một việc là service request, incident, change hoặc escalation.
+- Biết chuẩn bị tham gia vận hành khách hàng mà không bịa version, topology, SLA hoặc owner khi chưa xác nhận.
 
-**Synthesis:** Mô hình cần đặt trong bối cảnh hai nền tảng VDI và các lớp dependency.
+## 2. Đối tượng sử dụng
 
-**Q3 - Component deep dive và operational tasks:** /lumi-ask riêng cho VDI Engineer Onboarding Guide đã được dùng để tổng hợp phần này.
+Tài liệu phù hợp cho:
 
-**Synthesis:** Mỗi component/task phải có role, dependency, dấu hiệu lỗi, kiểm tra vận hành, evidence, risk và escalation.
+- Engineer mới vào đội VDI.
+- System engineer đã biết Windows/VMware nhưng chưa quen Horizon hoặc Citrix.
+- Helpdesk nâng cấp vai trò lên L2 VDI support.
+- Engineer network/storage/identity cần hiểu VDI dependency để phối hợp incident.
+- Technical lead dùng làm checklist mentor cho thành viên mới.
 
-**Q4 - Troubleshooting và scenario:** /lumi-ask riêng cho VDI Engineer Onboarding Guide đã được dùng để tổng hợp phần này.
+Kiến thức đầu vào tối thiểu:
 
-**Synthesis:** Troubleshooting đi theo symptom -> scope -> recent change -> layer check -> evidence -> mitigation/escalation.
+- Biết cơ bản về Windows user, domain account, VM, IP/DNS, ticket và monitoring.
+- Không bắt buộc đã có kinh nghiệm Citrix CVAD hoặc Omnissa Horizon.
+- Nếu chưa biết virtualization, đọc kỹ phần foundation, hypervisor và storage trước khi xử lý ticket.
 
-**Q5 - Knowledge check, misconception và confirmation:** /lumi-ask riêng cho VDI Engineer Onboarding Guide đã được dùng để tổng hợp phần này.
+## 3. Nguyên tắc học VDI cho engineer mới
 
-**Synthesis:** Knowledge check kiểm tra khả năng phân biệt layer, nhận diện misconception và nêu Need Customer Confirmation.
+1. **Học theo lớp, không học theo nút bấm.** Console thay đổi theo version, nhưng lớp user access, gateway, broker, agent, identity, hypervisor, storage và network luôn cần hiểu.
+2. **Đọc symptom như một tín hiệu, không phải root cause.** "Không vào được VDI" có thể là account, gateway, entitlement, agent, profile hoặc storage.
+3. **Luôn hỏi recent change.** Image, policy, certificate, patch, host maintenance hoặc entitlement change thường liên quan incident.
+4. **Không thao tác production khi chưa rõ quyền và SOP.** Engineer mới nên quan sát, kiểm tra read-only và validate cùng mentor trước.
+5. **Evidence là ngôn ngữ chung.** Ticket tốt có timestamp, user, resource, screenshot/log, scope, checks done và request escalation rõ.
+6. **Unknown là câu trả lời hợp lệ.** Nếu chưa có version, topology, owner, SLA, profile solution hoặc monitoring tool, ghi Need Customer Confirmation.
 
-**Nguồn wiki chính:** [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]], [[sources/horizon-8-architecture]], [[sources/understand-and-troubleshoot-horizon-connections]], [[sources/citrix-virtual-apps-and-desktops-7-2603]], [[sources/fslogix-documentation]], [[sources/vmware-vsphere-8-0]], [[sources/vcenter-server-installation-and-setup]], [[sources/xenserver-8-4]].
+## 4. Lộ trình đọc tài liệu
 
-**Concept liên quan:** [[concepts/vdi-connection-flow]], [[concepts/omnissa-horizon]], [[concepts/connection-server]], [[concepts/unified-access-gateway]], [[concepts/citrix-virtual-apps-and-desktops]], [[concepts/delivery-controller]], [[concepts/storefront]], [[concepts/virtual-delivery-agent]], [[concepts/delivery-group]], [[concepts/vmware-vsphere]], [[concepts/esxi]], [[concepts/vcenter-server]].
+### Phase 1: Foundation và landscape
 
-### 0.3 Scope
+| Thứ tự | Tài liệu | Mục tiêu học |
+|---|---|---|
+| 1 | [[topics/1_VDI_Foundation_Overview]] | Hiểu VDI là gì, desktop ảo, published app, session và các lớp hạ tầng. |
+| 2 | [[topics/2_Customer_VDI_Landscape_Overview]] | Hiểu khách hàng có hai hệ thống VDI, quy mô và phạm vi vận hành. |
+| 27 | [[topics/27_VDI_Glossary_and_Concept_Dictionary]] | Nắm thuật ngữ cốt lõi trước khi đọc sâu. |
 
-**In Scope**
+Kết quả cần đạt: engineer có thể giải thích bằng lời của mình "user mở VDI đi qua những lớp nào" và "Horizon khác Citrix ở các thành phần chính nào".
 
-- Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.
-- Xác định được thành phần, dependency và evidence cần kiểm tra.
-- Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.
-- Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
-- Scenario, troubleshooting, checklist, lab thinking và knowledge check cho system engineer.
+### Phase 2: Architecture và access flow
 
-**Out of Scope**
+| Thứ tự | Tài liệu | Mục tiêu học |
+|---|---|---|
+| 3 | [[topics/3_Omnissa_Horizon_Architecture_Overview]] | Hiểu Connection Server, UAG, Horizon Agent, desktop pool, entitlement. |
+| 4 | [[topics/4_Citrix_CVAD_Architecture_Overview]] | Hiểu Delivery Controller, StoreFront, Gateway, VDA, Catalog, Delivery Group. |
+| 5 | [[topics/5_VDI_Access_Flow_Design]] | Đọc được luồng internal và external access. |
 
-- Không thay thế SOP chi tiết theo topology thật.
-- Không đưa version, IP, hostname, SLA, owner hoặc escalation path khi chưa xác nhận.
-- Không yêu cầu secret, password, token hoặc credential.
+Kết quả cần đạt: engineer vẽ được sơ đồ đơn giản cho internal user và external user trên cả hai nền tảng.
 
-## 1. Learning Objectives
+### Phase 3: Dependency nền tảng
 
-- Giải thích được vai trò của chủ đề trong vận hành VDI quy mô lớn.
-- Xác định được thành phần, dependency và evidence cần kiểm tra.
-- Phân tích được ít nhất 3 tình huống sự cố hoặc thay đổi liên quan.
-- Biết khi nào cần escalation và phần nào cần khách hàng xác nhận.
-- Thu thập evidence và quyết định escalation phù hợp.
-- Phân biệt tri thức đã có nguồn với Need Customer Confirmation.
+| Thứ tự | Tài liệu | Mục tiêu học |
+|---|---|---|
+| 6 | [[topics/6_Identity_and_Domain_Integration_Guide]] | Hiểu AD, DC, DNS, GPO, group, computer account. |
+| 7 | [[topics/7_Hypervisor_and_HCI_Operations_Guide]] | Hiểu ESXi, vCenter, XenServer, HCI, host, VM lifecycle. |
+| 8 | [[topics/8_Storage_Operations_for_VDI]] | Hiểu datastore, profile storage, image storage, latency, IOPS. |
+| 9 | [[topics/9_Network_Operations_for_VDI]] | Hiểu VLAN, firewall, LB, DNS, certificate, latency, packet loss. |
 
-## 2. Prerequisites
+Kết quả cần đạt: engineer biết lỗi VDI không phải lúc nào cũng nằm trong VDI console; identity, storage, network và hypervisor có thể là root cause.
 
-- Biết cơ bản về Windows user, domain account, VM, network connection, ticket và alert.
-- Nên đọc trước `VDI Foundation Overview` và `Customer VDI Landscape Overview`.
-- Với tài liệu theo sản phẩm, đọc kiến trúc nền tảng trước khi thực hiện task.
+### Phase 4: Day-to-day operations
 
-## 3. Why This Topic Matters in Large Scale VDI
+| Thứ tự | Tài liệu | Mục tiêu học |
+|---|---|---|
+| 10 | [[topics/10_VDI_Security_and_Policy_Management_Guide]] | Hiểu policy và security controls ảnh hưởng user experience. |
+| 11 | [[topics/11_VDI_Provisioning_and_Allocation_Guide]] | Hiểu tạo mới, cấp quyền, mở rộng, thu hồi VDI. |
+| 12 | [[topics/12_Master_Image_Management_Guide]] | Hiểu lifecycle và rủi ro master image. |
+| 13 | [[topics/13_Citrix_Machine_Catalog_and_Delivery_Group_Guide]] | Hiểu vận hành Catalog/DG trong Citrix. |
+| 14 | [[topics/14_Omnissa_Desktop_Pool_and_Entitlement_Guide]] | Hiểu vận hành pool/entitlement trong Horizon. |
+| 15 | [[topics/15_VDI_Monitoring_and_Alerting_Guide]] | Biết đọc metric và triage alert. |
+| 16 | [[topics/16_Daily_Operations_Checklist]] | Biết checklist đầu ca/cuối ca. |
 
-Trong VDI quy mô 1500-2000+ máy, chủ đề này giúp engineer tránh xử lý theo cảm tính và biết kiểm tra theo lớp. Trong môi trường 1500 đến hơn 2000 VDI, một lỗi ở broker, gateway, image, storage, profile, identity hoặc network có thể tạo impact rộng. Engineer cần hiểu dependency, kiểm tra theo lớp và lưu evidence.
+Kết quả cần đạt: engineer có thể thực hiện health check read-only, đọc state cơ bản và ghi evidence.
 
-## 4. Core Concepts
+### Phase 5: Incident, troubleshooting và support
 
-- VDI là dịch vụ nhiều lớp: user access, gateway, broker, session, identity, hypervisor, storage, network, monitoring.
-- Một triệu chứng có thể có nhiều nguyên nhân, vì vậy phải đi từ scope và evidence.
-- Không thao tác thay đổi rủi ro cao nếu chưa có precheck, impact, rollback và postcheck.
+| Thứ tự | Tài liệu | Mục tiêu học |
+|---|---|---|
+| 17 | [[topics/17_VDI_Incident_Classification_Guide]] | Biết phân loại impact/priority theo phạm vi. |
+| 18 | [[topics/18_VDI_Troubleshooting_Playbook]] | Biết playbook xử lý symptom phổ biến. |
+| 25 | [[topics/25_VDI_Support_and_Escalation_Guide]] | Biết hỗ trợ user, thu thập evidence và escalation. |
+| 26 | [[topics/26_VDI_Operational_Knowledge_Base]] | Biết dùng KB pattern trong ca trực. |
 
-Ví dụ: khi user không mở được desktop, không nên chỉ reboot VM. Cần xác định lỗi ở login hay launch, internal hay external, broker có failed session không, agent có registered không, VM powered on không và gần đây có change gì không.
+Kết quả cần đạt: engineer xử lý được ticket giả lập từ intake tới escalation package.
 
-## 5. Architecture or Operational Model
+### Phase 6: Change, patch, recovery và governance
 
-```mermaid
-flowchart LR
-  U[User / Endpoint] --> G[Gateway or Portal]
-  G --> B[Broker / Control Plane]
-  B --> A[Agent / VDA / Desktop]
-  B --> I[Identity: AD DNS GPO]
-  A --> H[Hypervisor / HCI]
-  H --> S[Storage]
-  A --> N[Network / Backend]
-  M[Monitoring] --> G
-  M --> B
-  M --> H
-  M --> S
-```
+| Thứ tự | Tài liệu | Mục tiêu học |
+|---|---|---|
+| 19 | [[topics/19_VDI_Performance_and_Capacity_Guide]] | Hiểu capacity và bottleneck. |
+| 20 | [[topics/20_VDI_Change_Management_Guide]] | Hiểu precheck, impact, rollback, evidence. |
+| 21 | [[topics/21_VDI_Patch_and_Upgrade_Guide]] | Hiểu patch/upgrade theo compatibility, pilot, batch. |
+| 22 | [[topics/22_VDI_Backup_and_Recovery_Guide]] | Hiểu đối tượng backup và validation restore. |
+| 23 | [[topics/23_VDI_High_Availability_and_Disaster_Recovery_Guide]] | Hiểu HA/DR, failover, failback, DR drill. |
+| 24 | [[topics/24_VDI_Access_Control_and_RBAC_Guide]] | Hiểu least privilege và role vận hành. |
 
-Đây là mô hình đào tạo. Topology thật, VIP, VLAN, firewall path, số lượng node và owner từng lớp là Need Customer Confirmation.
+Kết quả cần đạt: engineer biết việc nào cần change, việc nào cần approval, việc nào không được tự làm.
 
-## 6. Component Deep Dive
+## 5. Onboarding timeline đề xuất
 
-| Thành phần | Vai trò | Phụ thuộc vào | Ảnh hưởng khi lỗi | Engineer cần kiểm tra | Evidence cần lưu |
-|---|---|---|---|---|---|
-| Endpoint/Client | Điểm user bắt đầu truy cập | Client version, DNS, network, certificate trust | Login hoặc launch fail | Client type, version, location, error | Screenshot lỗi, timestamp, endpoint |
-| Gateway/Portal | Entry point và truy cập ngoài nếu có | VIP, certificate, firewall, load balancer | External issue, timeout, TLS warning | Gateway health, cert, LB member, log | Gateway/LB status, cert info |
-| Broker/Control Plane | Authentication, entitlement, resource selection | AD, database, hypervisor manager, agent | Không thấy resource, failed session | Service health, entitlement, failed session | Broker log, user mapping |
-| Agent/VDA/Desktop | Nhận session và chạy workload | DNS, domain, broker list, image, firewall | Unregistered, unreachable, black screen | Agent service, registration, VM state | Agent log, VM state |
-| Identity/Policy | User, group, GPO, authentication | AD, DC, DNS, time sync, Entra if any | Login fail, policy sai, access denied | Account, group, GPO, DC health | AD/GPO evidence |
-| Hypervisor/Storage/Network | Chạy VM, lưu dữ liệu, nối các lớp | vCenter/ESXi/XenServer/HCI/datastore/VLAN | Latency, datastore full, packet loss | Host, datastore, path, latency | Dashboard, metrics, task log |
+Timeline dưới đây là khung đào tạo. Thời lượng thật phụ thuộc kinh nghiệm engineer và mức độ access/lab khách hàng cung cấp.
 
-## 7. End to End Flow or Operational Workflow
+| Giai đoạn | Thời lượng gợi ý | Mục tiêu | Output |
+|---|---:|---|---|
+| Day 1-2 | 2 ngày | Foundation, landscape, glossary | Engineer giải thích được bức tranh tổng thể |
+| Day 3-5 | 3 ngày | Horizon/Citrix architecture và access flow | Engineer vẽ được 2 luồng internal/external |
+| Week 2 | 5 ngày | Identity, hypervisor, storage, network, monitoring | Engineer đọc được dashboard và dependency |
+| Week 3 | 5 ngày | Provisioning, image, pool/catalog, daily operation | Engineer làm được checklist read-only và ticket giả lập |
+| Week 4 | 5 ngày | Incident, troubleshooting, support/escalation | Engineer xử lý scenario dưới giám sát mentor |
+| Week 5-6 | 1-2 tuần | Change, patch, backup, HA/DR, RBAC | Engineer tham gia shadow change/incident thực tế |
+| Sign-off | Sau đánh giá | Sẵn sàng trực có giám sát hoặc nhận task L2 | Mentor sign-off theo checklist |
 
-1. Detect hoặc nhận request/ticket.
-2. Xác định scope: một user, nhiều user, pool/catalog, gateway, cluster hay toàn nền tảng.
-3. Kiểm tra recent change.
-4. Kiểm tra theo lớp liên quan tới chủ đề.
-5. Thu thập evidence trước khi thay đổi hoặc escalation.
-6. Thực hiện action trong phạm vi quyền hoặc chuyển đúng owner.
-7. Validate bằng login/launch/session test và monitoring.
-8. Close ticket, handover hoặc cập nhật KB.
+Nếu engineer đã có kinh nghiệm VDI, có thể rút ngắn Phase 1-3 nhưng không nên bỏ qua phần customer landscape và Need Customer Confirmation.
 
-## 8. Operational Tasks
+## 6. Kỹ năng cần đạt theo cấp độ
 
-| Task | Mục đích | Khi nào thực hiện | Precheck | Các bước kiểm tra high level | Expected evidence | Rủi ro | Escalation condition |
-|---|---|---|---|---|---|---|---|
-| Health check | Xác nhận trạng thái nền | Đầu ca/sau alert/trước change | Có dashboard và baseline | Xem broker, gateway, session, agent, host, storage, network | Screenshot dashboard | Bỏ sót nếu chỉ xem một lớp | Nhiều alert hoặc impact rộng |
-| Ticket triage | Khoanh vùng symptom | Khi có ticket user | Có user, resource, timestamp | Xác định scope, access path, recent change | Ticket + error + log | Kết luận vội thiếu evidence | Không xác định được scope |
-| Dependency check | Tìm lớp gây lỗi | Khi root cause chưa rõ | Biết dependency chính | Kiểm tra identity, broker, agent, storage, network | Kết quả từng lớp | Mất thời gian nếu không theo thứ tự | Cần quyền/owner nhóm khác |
-| Handover/KB update | Giữ tri thức vận hành | Sau incident/change | Không chứa secret | Ghi symptom, evidence, resolution, caveat | KB/ticket entry | KB lỗi thời | Cần review bởi owner |
+### Level 0: Quan sát có định hướng
 
-## 9. Common Issues and Troubleshooting
+Engineer có thể:
 
-| Triệu chứng | Nguyên nhân có thể | Lớp cần kiểm tra | Evidence cần thu thập | Cách kiểm tra | Hướng xử lý | Khi nào cần escalation |
-|---|---|---|---|---|---|---|
-| Login fail | Account, MFA, DC/DNS, certificate, broker auth | Identity/Gateway/Broker | Timestamp, user, auth log, broker/gateway log | Kiểm tra account, group, DC/DNS, cert, broker service | Xử lý theo evidence hoặc chuyển owner | Nhiều user hoặc broker/DC/gateway lỗi |
-| Không thấy resource | Thiếu entitlement, pool/catalog disabled, thiếu machine, license | Broker/Entitlement/Capacity | User group, entitlement, resource state, license alert | Kiểm tra mapping, pool/catalog, machine availability | Cập nhật qua quy trình phê duyệt | Ảnh hưởng nhóm user hoặc nghi license/broker |
-| Launch fail | Agent/VDA unregistered, VM off, protocol path lỗi | Broker/Agent/Hypervisor/Network | Failed session, registration, VM state, protocol log | Kiểm tra agent, VM power, firewall/protocol path | Mitigate theo lớp, rollback nếu sau change | Nhiều machine hoặc sau image/network change |
-| Login chậm | GPO, profile, storage latency, DC latency, AV/logon script | Identity/Profile/Storage/Performance | Login duration, GPO time, profile log, storage/DC metrics | Correlate metric theo timestamp | Escalate owner của bottleneck | Vượt SLA hoặc nhiều user |
-| Black screen/disconnect | Packet loss, gateway, display protocol, driver/tools/agent, resource contention | Network/Gateway/Protocol/Hypervisor | Latency, packet loss, protocol log, VM metrics | Khoanh vùng internal/external và lớp protocol | Sửa theo evidence hoặc rollback change | External-only hoặc diện rộng |
+- Đọc tài liệu foundation và glossary.
+- Nêu được các thành phần Horizon/Citrix chính.
+- Theo dõi mentor xử lý ticket và ghi lại flow.
+- Không thao tác production ngoài quyền read-only.
 
-## 10. Scenario Based Learning
+Chưa nên:
 
-### Scenario 1. User bên ngoài launch bị timeout
+- Reset session, reboot VDI, thay entitlement hoặc chỉnh policy.
+- Escalate ticket khi chưa được review.
 
-**Bối cảnh:** Một nhóm user external login portal được nhưng không vào desktop.
+### Level 1: Read-only triage
 
-**Câu hỏi cho học viên:** Kiểm tra đoạn nào trước?
+Engineer có thể:
 
-**Gợi ý phân tích:** So sánh internal/external; ưu tiên gateway, LB, certificate, firewall, secondary protocol.
+- Nhận ticket và hỏi thông tin tối thiểu.
+- Xác định lỗi ở bước login, enumeration, launch, session, profile hay app.
+- Xem dashboard/session/machine state theo quyền.
+- Thu thập evidence và đề xuất lớp escalation.
+- Chạy checklist daily operation read-only.
 
-**Hướng xử lý đề xuất:** Kiểm tra gateway health, certificate, firewall, failed session; escalation network/platform nếu nhiều user.
+Chưa nên:
 
-**Evidence cần lưu:** Timestamp, user, external path, gateway log, broker failed session.
+- Thực hiện thay đổi cấu hình.
+- Xử lý incident diện rộng một mình.
 
-### Scenario 2. Sau image update nhiều VDI unregistered
+### Level 2: Guided operation
 
-**Bối cảnh:** Sau maintenance window, nhiều desktop trong cùng pool/catalog không nhận session.
+Engineer có thể:
 
-**Câu hỏi cho học viên:** Làm sao phân biệt image, broker hay network?
+- Reset/logoff session hoặc restart VDI theo SOP và có user confirmation.
+- Kiểm tra entitlement/group mapping và đề xuất action.
+- Tham gia xử lý incident dưới giám sát.
+- Viết escalation package tốt.
+- Cập nhật KB sau khi mentor review.
 
-**Gợi ý phân tích:** Kiểm tra recent change, agent service/version, DNS/time sync, VM power, registration trend.
+Chưa nên:
 
-**Hướng xử lý đề xuất:** Dừng rollout và rollback nếu liên quan image mới; giữ evidence cho RCA.
+- Publish image, patch broker/gateway, thay policy diện rộng, restore profile hoặc thao tác destructive.
 
-**Evidence cần lưu:** Change ID, image version, registration dashboard, agent log.
+### Level 3: Supervised change participation
 
-### Scenario 3. Login chậm đầu giờ sáng
+Engineer có thể:
 
-**Bối cảnh:** User mất nhiều phút ở loading profile/preparing desktop.
+- Chuẩn bị precheck cho image/policy/entitlement/patch change.
+- Ghi evidence trong maintenance window.
+- Thực hiện postcheck login/launch/registration/monitoring.
+- Phân tích rollback condition.
+- Tham gia DR drill hoặc restore validation.
 
-**Câu hỏi cho học viên:** Metric nào cần thu thập?
+Chưa nên:
 
-**Gợi ý phân tích:** Correlate login duration, GPO, profile storage, storage latency, DC latency, host contention, logon storm.
+- Tự lead change rủi ro cao nếu chưa được sign-off.
 
-**Hướng xử lý đề xuất:** Khoanh vùng bottleneck và escalation đúng owner.
+### Level 4: Independent operations with escalation discipline
 
-**Evidence cần lưu:** Login sample, GPO report, profile log, storage/DC metrics.
+Engineer có thể:
 
-## 11. Hands On or Lab Thinking Exercises
+- Trực vận hành theo ca.
+- Lead triage incident mức vừa.
+- Phối hợp network/storage/IAM/hypervisor/security owner.
+- Thực hiện change đã được phê duyệt trong phạm vi role.
+- Hướng dẫn engineer mới hơn theo checklist.
 
-1. Vẽ lại luồng liên quan tới tài liệu này và đánh dấu ít nhất 5 điểm có thể gây lỗi.
-2. Chọn một symptom trong bảng troubleshooting và lập evidence package trước escalation.
-3. Thiết kế checklist 10 dòng cho ca trực đầu ngày liên quan tới chủ đề này.
-4. Đọc một change giả định và chỉ ra precheck, rollback point, postcheck còn thiếu.
+Điều kiện: hiểu rõ customer-specific SOP, topology, owner, SLA, escalation path và quyền RBAC.
+
+## 7. Bài tập tư duy bắt buộc
+
+### Exercise 1: Vẽ luồng truy cập
+
+Vẽ hai luồng:
+
+- User nội bộ vào Horizon hoặc Citrix.
+- User bên ngoài vào Horizon hoặc Citrix.
+
+Phải đánh dấu các lớp: endpoint, gateway, broker/portal, agent/VDA, identity, hypervisor, storage, network, monitoring.
+
+### Exercise 2: Phân loại 10 ticket mẫu
+
+Phân loại các ticket sau theo lớp lỗi và evidence cần lấy:
+
+| Ticket mẫu | Lớp nghi ngờ | Evidence cần lấy |
+|---|---|---|
+| User login fail | Identity/Gateway/Broker | Account, timestamp, error, auth log |
+| User không thấy desktop | Entitlement/Broker | Group, resource mapping, pool/DG state |
+| Launch timeout external-only | Gateway/Network/Protocol | Internal/external comparison, gateway/LB |
+| VDA unregistered | Agent/Identity/Network/Image | Machine list, event log, DNS, recent image |
+| Black screen sau image update | Image/Agent/Profile/Display | Image version, session log, affected scope |
+| Login chậm đầu giờ | Profile/Storage/DC/GPO | Login phase, storage/DC metrics |
+| Printer không map | Policy/Endpoint/Driver | Policy result, client, printer info |
+| Nhiều VDI powered off | Hypervisor/Power policy | VM/host state, recent change |
+| Datastore latency alert | Storage/Capacity | Latency trend, affected VDI |
+| User mất profile | Profile/Storage/Restore | Profile log, path, backup point |
+
+### Exercise 3: Viết escalation package
+
+Chọn một ticket launch fail và viết handoff gồm:
+
+- Ticket ID giả định.
+- User/resource/timestamp.
+- Access path.
+- Symptom.
+- Checks done.
+- Evidence.
+- Suspected layer.
+- Request to receiving team.
+
+### Exercise 4: Đọc change plan
+
+Cho một change "publish image mới cho 300 VDI", hãy chỉ ra:
+
+- Precheck còn thiếu.
+- Impact assessment.
+- Pilot plan.
+- Stop condition.
+- Rollback point.
+- Postcheck.
+- Evidence cần lưu.
+
+### Exercise 5: Đánh giá readiness của bản thân
+
+Engineer tự trả lời:
+
+- Tôi có thể giải thích broker/gateway/agent khác nhau chưa?
+- Tôi có biết ticket nào phải escalation network/storage/IAM chưa?
+- Tôi có biết evidence cần lấy trước khi reset/reboot chưa?
+- Tôi có biết khi nào không được thao tác production chưa?
+
+## 8. Checklist sẵn sàng trước khi tham gia vận hành
+
+### 8.1 Kiến thức nền
+
+- [ ] Hiểu VDI là gì và khác published app thế nào.
+- [ ] Hiểu hai hệ thống khách hàng: Horizon on HCI và Citrix CVAD on XenServer/ESXi.
+- [ ] Biết thuật ngữ broker, gateway, VDA, Horizon Agent, pool, catalog, DG, entitlement, profile, datastore, image.
+- [ ] Biết luồng internal và external user.
+
+### 8.2 Kỹ năng kiểm tra
+
+- [ ] Biết đọc session state và failed session.
+- [ ] Biết kiểm tra registered/unregistered.
+- [ ] Biết kiểm tra user/resource entitlement ở mức read-only.
+- [ ] Biết xem host/datastore/network/profile metric cơ bản.
+- [ ] Biết thu thập screenshot/log/metric an toàn.
+
+### 8.3 Quy trình
+
+- [ ] Biết phân biệt service request, incident, change, problem/KB.
+- [ ] Biết priority/impact theo phạm vi affected user/resource.
+- [ ] Biết escalation path hoặc biết ghi Unknown để hỏi.
+- [ ] Biết change nào cần approval.
+- [ ] Biết không ghi secret/password/token vào ticket.
+
+### 8.4 Thực hành
+
+- [ ] Đã shadow ít nhất một ca daily health check.
+- [ ] Đã shadow ít nhất một ticket user issue.
+- [ ] Đã viết ít nhất một escalation package giả lập.
+- [ ] Đã đọc một change plan và chỉ ra rollback/postcheck.
+- [ ] Đã giải thích lại một KB entry cho mentor.
+
+## 9. Mentor sign-off checklist
+
+Mentor có thể dùng bảng này để đánh giá readiness.
+
+| Năng lực | Tiêu chí đạt | Kết quả |
+|---|---|---|
+| Foundation | Giải thích được VDI service theo lớp | Pending/Pass |
+| Horizon basics | Nêu được vai trò Client, UAG, Connection Server, Agent, Pool, Entitlement | Pending/Pass |
+| Citrix basics | Nêu được vai trò Workspace/StoreFront/Gateway/Controller/VDA/Catalog/DG | Pending/Pass |
+| Access flow | Vẽ được internal/external flow và điểm lỗi | Pending/Pass |
+| Identity | Biết kiểm tra account/group/DNS/GPO ở mức phù hợp | Pending/Pass |
+| Infra dependency | Biết host/datastore/network/profile ảnh hưởng VDI thế nào | Pending/Pass |
+| Monitoring | Đọc được các metric session/registration/failed/session/storage cơ bản | Pending/Pass |
+| Support | Viết được ticket intake và escalation package | Pending/Pass |
+| Incident | Phân loại được impact và urgency | Pending/Pass |
+| Change | Nhận diện được precheck/rollback/postcheck | Pending/Pass |
+| Security | Biết RBAC, least privilege và không yêu cầu secret | Pending/Pass |
+| Judgment | Biết khi nào dừng và escalation | Pending/Pass |
+
+## 10. Common mistakes của engineer mới
+
+| Sai lầm | Vì sao nguy hiểm | Cách sửa |
+|---|---|---|
+| Thấy user lỗi là reboot VDI | Mất evidence và có thể làm mất work chưa lưu | Khoanh vùng login/enumeration/launch/session trước |
+| Nhầm gateway với broker | Escalate sai đội, kiểm tra sai lớp | Vẽ lại access flow |
+| Chỉ xem VM powered on | VM bật nhưng Agent/VDA có thể unregistered | Kiểm tra registration và launch |
+| Quên hỏi internal/external | Bỏ qua gateway/network path | Luôn hỏi access path |
+| Không hỏi recent change | Bỏ qua nguyên nhân sau image/policy/patch | Check change calendar/ticket |
+| Lưu log có dữ liệu nhạy cảm | Rủi ro security/audit | Chỉ lưu excerpt an toàn |
+| Đóng ticket khi task completed | User chưa validate, lỗi quay lại | Cần user/monitoring confirmation |
+| Escalate bằng câu "nhờ kiểm tra" | Đội nhận thiếu dữ liệu | Gửi evidence package |
+| Học từng console riêng lẻ | Không hiểu dependency | Học theo lớp kiến trúc |
+
+## 11. Scenario Based Learning
+
+### Scenario 1: Engineer mới nhận ticket "không vào được VDI"
+
+**Bối cảnh:** User báo "em không vào được VDI" qua ticket, không có screenshot.
+
+**Yêu cầu:** Viết 8 câu hỏi hoặc thông tin cần bổ sung.
+
+**Gợi ý đáp án:** Username, timestamp, internal/external, client/browser, lỗi ở login hay launch, resource name, screenshot/error text, user khác có bị không, recent password/group change.
+
+**Điểm học:** Không xử lý khi symptom còn mơ hồ.
+
+### Scenario 2: Mentor hỏi "Citrix launch fail thì kiểm tra gì?"
+
+**Yêu cầu:** Trả lời theo lớp.
+
+**Gợi ý đáp án:** StoreFront/resource visible, Delivery Controller failed session, Delivery Group/machine availability, VDA registration, VM power, Gateway/ICA path nếu external, profile/app nếu session mở rồi lỗi.
+
+**Điểm học:** Không nhảy thẳng vào VDA hoặc reboot VM.
+
+### Scenario 3: Sau image update nhiều Horizon desktop Agent unreachable
+
+**Yêu cầu:** Xác định đây là incident hay change rollback candidate.
+
+**Gợi ý đáp án:** Nếu nhiều desktop cùng pool sau image update bị Agent unreachable, dừng rollout, thu thập image version/registration/event log, cân nhắc rollback theo change plan và escalation image/platform owner.
+
+**Điểm học:** Recent change rất quan trọng.
+
+### Scenario 4: Daily health check thấy datastore latency tăng
+
+**Yêu cầu:** Engineer mới nên làm gì?
+
+**Gợi ý đáp án:** Kiểm tra affected datastore/pool, session/login impact, alert trend, recent provisioning/reboot storm, lưu screenshot metric và escalation storage/hypervisor nếu vượt baseline hoặc có user impact.
+
+**Điểm học:** Alert hạ tầng có thể là sự cố VDI sớm.
 
 ## 12. Knowledge Check
 
-**Câu 1. Vì sao không nên chỉ reboot VM khi user báo lỗi VDI?**
+**Câu 1. Vì sao onboarding VDI phải học theo lớp?**  
+Vì user symptom có thể đến từ nhiều lớp phụ thuộc: gateway, broker, agent, identity, hypervisor, storage, network, profile.
 
-Đáp án: Vì lỗi có thể nằm ở identity, broker, gateway, storage, network, profile hoặc recent change.
+**Câu 2. Engineer mới nên thao tác production ở mức nào trước khi sign-off?**  
+Chủ yếu read-only, health check, evidence collection và ticket triage dưới giám sát.
 
-**Câu 2. User login portal được nhưng launch fail, cần nghĩ tới lớp nào?**
+**Câu 3. Ba tài liệu đầu tiên nên đọc là gì?**  
+Foundation, Customer Landscape và Glossary để có bức tranh tổng thể và thuật ngữ.
 
-Đáp án: Broker/resource selection, Agent/VDA, VM state và session protocol path.
+**Câu 4. Khi user login được nhưng không thấy desktop, nên đọc tài liệu nào?**  
+Provisioning/Allocation, Citrix Catalog/DG hoặc Horizon Pool/Entitlement tùy nền tảng.
 
-**Câu 3. Evidence tối thiểu khi escalation login fail là gì?**
+**Câu 5. Khi nào cần escalation thay vì tự xử lý?**  
+Khi vượt quyền/SOP, impact rộng, có rủi ro dữ liệu/security, cần change, hoặc lỗi thuộc owner khác.
 
-Đáp án: Timestamp, user, endpoint/location, resource, error, auth/broker/gateway log và recent change.
+**Câu 6. Evidence tối thiểu của một ticket VDI là gì?**  
+User, timestamp, access path, resource, symptom, screenshot/error, scope, checks done và recent change.
 
-**Câu 4. HA khác backup thế nào?**
+**Câu 7. Vì sao không nên học bằng cách nhớ nút trong console?**  
+Console thay đổi theo version; hiểu lớp và dependency giúp xử lý đúng dù UI khác.
 
-Đáp án: HA giữ dịch vụ khi lỗi cục bộ; backup phục hồi dữ liệu/cấu hình khi mất hoặc sai change.
+**Câu 8. Engineer sẵn sàng trực độc lập khi nào?**  
+Khi hiểu customer topology/SOP/owner/SLA, có RBAC phù hợp, xử lý được triage và biết escalation đúng.
 
-**Câu 5. Vì sao image update cần pilot?**
+## 13. Need Customer Confirmation
 
-Đáp án: Vì lỗi image có thể lan tới hàng trăm hoặc hàng nghìn VDI.
+Các thông tin cần khách hàng hoặc service owner xác nhận để onboarding thành chương trình thật:
 
-**Câu 6. External lỗi nhưng internal bình thường gợi ý gì?**
+- Version cụ thể của Horizon, CVAD, vCenter/ESXi, XenServer, Gateway/UAG, VDA/Horizon Agent.
+- Topology thật: site, pod, broker, gateway, StoreFront, load balancer, pool/catalog/DG.
+- Access flow thật cho internal và external user.
+- Console/dashboard nào engineer mới được xem.
+- RBAC cho trainee, helpdesk, system engineer, platform admin.
+- Lab hoặc sandbox có không, hay chỉ shadow production.
+- Ticket tool, queue, SLA, priority matrix.
+- Escalation path và owner từng lớp.
+- Change calendar và maintenance window.
+- Profile solution, storage design, monitoring tool.
+- Checklist mentor sign-off chính thức.
+- Danh sách known issues và KB nội bộ hiện tại.
+- Quy trình cấp quyền tạm và thu hồi quyền khi onboarding kết thúc.
 
-Đáp án: Gateway, load balancer, certificate, firewall/NAT hoặc external protocol path.
+## 14. Related Wiki Links
 
-**Câu 7. Profile storage có thể gây login chậm vì sao?**
+### Source summaries
 
-Đáp án: Vì profile/container cần attach và đọc/ghi qua storage; latency, permission hoặc lock làm chậm.
+- [[sources/vdi-training-idea]]
+- [[sources/vdi-documentation-list-context]]
+- [[sources/horizon-8-architecture]]
+- [[sources/understand-and-troubleshoot-horizon-connections]]
+- [[sources/citrix-virtual-apps-and-desktops-7-2603]]
+- [[sources/fslogix-documentation]]
+- [[sources/vmware-vsphere-8-0]]
+- [[sources/vcenter-server-installation-and-setup]]
+- [[sources/xenserver-8-4]]
 
-**Câu 8. Khi nào cần escalation?**
+### Core concept links
 
-Đáp án: Khi ảnh hưởng nhiều user, vượt quyền, cần change, rủi ro dữ liệu/downtime hoặc thuộc owner khác.
-
-## 13. Common Misconceptions
-
-- “VDI lỗi nghĩa là VM lỗi” - sai, vì broker, gateway, identity, storage, network hoặc policy đều có thể gây triệu chứng giống VM lỗi.
-- “Login portal được nghĩa là session path ổn” - sai, session/display protocol có thể lỗi sau authentication.
-- “Snapshot là backup dài hạn” - sai, snapshot là mốc ngắn hạn và có thể ảnh hưởng datastore.
-- “Mở policy rộng sẽ giải quyết nhanh” - rủi ro bảo mật; policy change cần approval và rollback.
-
-## 14. Field Checklist
-
-- [ ] Xác định user, resource, time, endpoint, internal/external path.
-- [ ] Xác định impact và urgency.
-- [ ] Kiểm tra recent change.
-- [ ] Kiểm tra entitlement/resource availability.
-- [ ] Kiểm tra broker/gateway/agent state theo scope.
-- [ ] Kiểm tra identity, DNS, time sync nếu liên quan login/registration.
-- [ ] Kiểm tra hypervisor, storage, network metrics nếu có dấu hiệu performance hoặc diện rộng.
-- [ ] Lưu evidence trước khi escalation hoặc thay đổi.
-
-## 15. Monitoring and Evidence
-
-- Session count, failed session, active/disconnected session.
-- VDI registered/unregistered, Agent/VDA status, VM power state.
-- Broker service health, gateway health, load balancer member state.
-- Host CPU/memory, datastore capacity, storage latency, IOPS nếu liên quan hạ tầng.
-- Network latency, packet loss, DNS lookup, certificate status nếu liên quan access.
-- Login duration, profile loading time, GPO processing time nếu liên quan user experience.
-- Ticket ID, timestamp, user/resource, screenshot, log excerpt, alert ID, change ID.
-
-## 16. Change, Risk and Rollback Considerations
-
-Nếu chủ đề liên quan đến thay đổi, cần có change record, approval, precheck, impact assessment, rollback point, maintenance window, postcheck và evidence. Dừng change nếu precheck fail, rollback không rõ, impact vượt phạm vi phê duyệt hoặc phát sinh lỗi diện rộng. Nếu chủ đề không trực tiếp là change, rủi ro chính là hiểu sai lớp lỗi, escalation sai owner hoặc thiếu evidence.
-
-## 17. Security and Access Control Considerations
-
-- Áp dụng least privilege.
-- Helpdesk chỉ thực hiện thao tác hỗ trợ được phê duyệt.
-- System engineer không tự thay đổi image, policy, gateway, firewall, certificate hoặc entitlement diện rộng nếu chưa có change approval.
-- Platform admin thao tác thay đổi phải có audit log và evidence.
-- Không ghi secret, password, token hoặc credential vào tài liệu/ticket/KB.
-
-## 18. Need Customer Confirmation
-
-- Version cụ thể của Horizon, CVAD, vCenter/ESXi, XenServer, gateway, Agent/VDA.
-- Topology thật: site, pod, Connection Server, Delivery Controller, StoreFront, UAG/Gateway, load balancer, pool, catalog, delivery group.
-- Access flow thật cho user nội bộ và bên ngoài.
-- HA/DR design, failover/failback, RPO/RTO, DR drill evidence.
-- Monitoring tool, dashboard chính thức, alert threshold, ticket integration.
-- Storage design: datastore, profile share, image repository, latency/capacity threshold, backup/replication.
-- Network path: VLAN, routing, firewall, DNS, NAT/proxy, certificate, load balancer owner.
-- Profile solution: FSLogix, Citrix Profile Management, roaming profile hoặc giải pháp khác.
-- Change process, SLA, escalation path và ownership giữa VDI, identity, network, storage, hypervisor, security, application.
-
-## 19. Related Wiki Links
-
-### Concepts
-
+- [[concepts/vdi-training-program]]
+- [[concepts/vdi-operational-readiness]]
+- [[concepts/vdi-documentation-architecture]]
 - [[concepts/vdi-connection-flow]]
 - [[concepts/omnissa-horizon]]
-- [[concepts/connection-server]]
-- [[concepts/unified-access-gateway]]
 - [[concepts/citrix-virtual-apps-and-desktops]]
-- [[concepts/delivery-controller]]
-- [[concepts/storefront]]
-- [[concepts/virtual-delivery-agent]]
-- [[concepts/delivery-group]]
-- [[concepts/vmware-vsphere]]
-- [[concepts/esxi]]
-- [[concepts/vcenter-server]]
-- [[concepts/xenserver]]
-- [[concepts/datastore]]
-- [[concepts/storage-repository]]
-- [[concepts/profile-container]]
-- [[concepts/cloud-cache]]
 - [[concepts/identity-and-access-management]]
+- [[concepts/monitoring-and-logs]]
+- [[concepts/incident-management]]
+- [[concepts/change-management]]
 
-### Topic Documents
+### Full topic path
 
-- [[topics/1_VDI_Foundation_Overview]] - VDI Foundation Overview
-- [[topics/2_Customer_VDI_Landscape_Overview]] - Customer VDI Landscape Overview
-- [[topics/3_Omnissa_Horizon_Architecture_Overview]] - Omnissa Horizon Architecture Overview
-- [[topics/4_Citrix_CVAD_Architecture_Overview]] - Citrix CVAD Architecture Overview
-- [[topics/5_VDI_Access_Flow_Design]] - VDI Access Flow Design
-- [[topics/6_Identity_and_Domain_Integration_Guide]] - Identity and Domain Integration Guide
+- [[topics/1_VDI_Foundation_Overview]]
+- [[topics/2_Customer_VDI_Landscape_Overview]]
+- [[topics/3_Omnissa_Horizon_Architecture_Overview]]
+- [[topics/4_Citrix_CVAD_Architecture_Overview]]
+- [[topics/5_VDI_Access_Flow_Design]]
+- [[topics/6_Identity_and_Domain_Integration_Guide]]
+- [[topics/7_Hypervisor_and_HCI_Operations_Guide]]
+- [[topics/8_Storage_Operations_for_VDI]]
+- [[topics/9_Network_Operations_for_VDI]]
+- [[topics/10_VDI_Security_and_Policy_Management_Guide]]
+- [[topics/11_VDI_Provisioning_and_Allocation_Guide]]
+- [[topics/12_Master_Image_Management_Guide]]
+- [[topics/13_Citrix_Machine_Catalog_and_Delivery_Group_Guide]]
+- [[topics/14_Omnissa_Desktop_Pool_and_Entitlement_Guide]]
+- [[topics/15_VDI_Monitoring_and_Alerting_Guide]]
+- [[topics/16_Daily_Operations_Checklist]]
+- [[topics/17_VDI_Incident_Classification_Guide]]
+- [[topics/18_VDI_Troubleshooting_Playbook]]
+- [[topics/19_VDI_Performance_and_Capacity_Guide]]
+- [[topics/20_VDI_Change_Management_Guide]]
+- [[topics/21_VDI_Patch_and_Upgrade_Guide]]
+- [[topics/22_VDI_Backup_and_Recovery_Guide]]
+- [[topics/23_VDI_High_Availability_and_Disaster_Recovery_Guide]]
+- [[topics/24_VDI_Access_Control_and_RBAC_Guide]]
+- [[topics/25_VDI_Support_and_Escalation_Guide]]
+- [[topics/26_VDI_Operational_Knowledge_Base]]
+- [[topics/27_VDI_Glossary_and_Concept_Dictionary]]
 
-### Source Summaries
+## 15. Summary for Learners
 
-- [[sources/vdi-training-idea]] - training_idea.md
-- [[sources/vdi-documentation-list-context]] - list_context.txt
-- [[sources/horizon-8-architecture]] - Horizon 8 architecture
-- [[sources/understand-and-troubleshoot-horizon-connections]] - Understand and Troubleshoot Horizon Connections
-- [[sources/citrix-virtual-apps-and-desktops-7-2603]] - Citrix Virtual Apps and Desktops 7 2603
-- [[sources/fslogix-documentation]] - FSLogix documentation
-- [[sources/vmware-vsphere-8-0]] - VMware vSphere 8.0
-- [[sources/vcenter-server-installation-and-setup]] - vCenter Server Installation and Setup
-- [[sources/xenserver-8-4]] - XenServer 8.4
+Onboarding VDI không kết thúc khi đọc xong tài liệu. Nó kết thúc khi engineer có thể nhìn một symptom, đặt câu hỏi đúng, kiểm tra theo lớp, lưu evidence, biết giới hạn quyền của mình và escalation đúng owner.
 
-## 20. Summary for Learners
+Thứ tự học khuyến nghị:
 
-Điều cần nhớ: Trong VDI quy mô 1500-2000+ máy, chủ đề này giúp engineer tránh xử lý theo cảm tính và biết kiểm tra theo lớp. Khi có sự cố, hãy kiểm tra theo thứ tự: scope -> recent change -> access flow -> entitlement/resource -> broker/gateway -> agent/desktop -> identity -> hypervisor/storage/network -> monitoring trend -> escalation với evidence.
+1. Foundation, landscape, glossary.
+2. Horizon, Citrix, access flow.
+3. Identity, hypervisor, storage, network.
+4. Provisioning, image, pool/catalog, monitoring, daily operation.
+5. Incident, troubleshooting, support, KB.
+6. Performance, change, patch, backup, HA/DR, RBAC.
+7. Shadow thực tế, scenario, mentor sign-off.
 
-## 21. Self Review
+Điều cần nhớ nhất: engineer VDI giỏi không phải người nhớ mọi nút bấm. Đó là người hiểu hệ thống theo lớp, không bịa điều chưa biết, không thao tác vượt quyền, và luôn để lại evidence đủ rõ cho người tiếp theo.
 
-- [x] Đã đúng tên tài liệu trong list_context.txt.
-- [x] Đã đúng tên file trong cột Name File.
-- [x] Đã lưu đúng wiki/topics.
-- [x] Đã đúng mục đích tài liệu.
-- [x] Đã dùng training_idea.md.
-- [x] Đã dùng tri thức từ raw/sources hoặc wiki/sources.
-- [x] Đã dùng Document Research Pack từ /lumi-ask riêng cho tài liệu này.
-- [x] Không bịa thông tin khách hàng.
-- [x] Có phân biệt Unknown.
-- [x] Có đủ nội dung đào tạo.
-- [x] Có Scenario Based Learning.
-- [x] Có Knowledge Check.
-- [x] Có Field Checklist.
-- [x] Có Source Grounding.
-- [x] Có phù hợp cho system engineer.
+## 16. Self Review
+
+- [x] Đúng tên tài liệu trong list_context.txt.
+- [x] Đúng tên file trong cột Name File.
+- [x] Đúng mục đích: lộ trình học và thực hành cho engineer mới từ nền tảng đến vận hành khách hàng.
+- [x] Bám bối cảnh training_idea.md: Horizon on HCI, Citrix CVAD trên XenServer/ESXi, quy mô 1500-2000+ VDI.
+- [x] Không bịa version, topology, access, SLA, owner hoặc lab của khách hàng.
+- [x] Có phân biệt Need Customer Confirmation.
+- [x] Có reading path, timeline, skill levels, exercises, readiness checklist và mentor sign-off.
+- [x] Có scenario, knowledge check và common mistakes.
+- [x] Có liên kết tới toàn bộ topic trong bộ tài liệu.
+- [x] Phù hợp cho system engineer mới chuẩn bị tham gia vận hành thực tế.

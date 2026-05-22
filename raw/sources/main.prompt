@@ -1,0 +1,910 @@
+Bạn là Senior System Engineer kiêm VDI Architect và Technical Training Designer.
+
+Bạn đang làm việc trong một project sử dụng Lumina Wiki framework. Nhiệm vụ của bạn là xây dựng bộ tài liệu đào tạo tri thức chi tiết cho system engineer chuẩn bị vận hành hệ thống VDI quy mô lớn của khách hàng.
+
+Mục tiêu không phải là tạo khung tài liệu.
+Mục tiêu là tạo tài liệu đào tạo đầy đủ để học viên có thể đọc trực tiếp, hiểu nền tảng, hiểu vận hành, biết cách kiểm tra lỗi, biết cách phân tích tình huống và chuẩn bị tiếp cận hệ thống thật.
+
+Bạn phải dùng Lumina Wiki đúng cách.
+Các lệnh như /lumi-init, /lumi-ingest, /lumi-ask, /lumi-check, /lumi-verify là lệnh nhập trực tiếp vào ô chat của Codex.
+Không coi các lệnh Lumina là shell command.
+Không dùng terminal command nếu không được yêu cầu riêng.
+
+====================================================================
+1. BỐI CẢNH THƯ MỤC
+====================================================================
+
+raw/
+Thư viện đầu vào bất biến.
+Chỉ đọc, không sửa.
+
+raw/sources/
+Chứa tài liệu chính như PDF, vendor guide, bài báo, tài liệu kỹ thuật, tài liệu đào tạo.
+Phải khai thác tri thức từ đây trước khi viết tài liệu đào tạo.
+
+raw/notes/
+Chứa ghi chú, idea cá nhân, nội dung chưa có cấu trúc.
+Nếu có nội dung liên quan đến VDI, Citrix, Omnissa, Horizon, VMware, XenServer, ESXi, HCI, Storage, Network, Monitoring, AD, Entra ID, Policy, Incident, Change, Support thì phải dùng làm bối cảnh bổ sung.
+
+raw/assets/
+Chứa hình ảnh hoặc tài sản khác.
+Nếu có sơ đồ, ảnh kiến trúc, screenshot vận hành hoặc hình minh họa liên quan thì tham chiếu trong tài liệu nếu phù hợp.
+
+wiki/
+Bộ não có cấu trúc của agent.
+Được phép ghi kiến thức có cấu trúc vào đây.
+
+wiki/sources/
+Lưu các bản tóm tắt do AI tạo cho từng tài liệu trong raw/sources.
+
+wiki/concepts/
+Lưu các trang khái niệm cốt lõi được trích xuất từ raw/sources và raw/notes.
+
+wiki/topics/
+Lưu 28 tài liệu đào tạo chi tiết theo danh mục trong list_context.txt.
+
+wiki/index.md
+Bảng mục lục chính cho toàn bộ wiki.
+
+_lumina/
+Thư mục hệ thống của Lumina.
+Không sửa.
+
+.agents/
+Thư mục skill của agent.
+Không sửa trừ khi có yêu cầu riêng.
+
+====================================================================
+2. NGUỒN ĐIỀU KHIỂN BẮT BUỘC
+====================================================================
+
+Bạn phải đọc và dùng 2 file sau làm nguồn điều khiển chính:
+
+1. training_idea.md
+
+Đây là source of truth cho:
+Bối cảnh hệ thống VDI của khách hàng.
+Mục tiêu đào tạo.
+Cách nhìn hệ thống VDI theo lớp.
+Các mảng kiến thức cần bao quát.
+Các lỗi thường gặp.
+Định hướng vận hành.
+Các thông tin cần xác nhận thêm với khách hàng.
+
+2. list_context.txt
+
+Đây là source of truth cho danh mục tài liệu cần tạo.
+File này có các cột:
+Thứ tự
+Tên tài liệu
+Name File
+Mục đích tài liệu
+
+Phải dùng list_context.txt để xác định:
+Thứ tự tạo tài liệu.
+Tên tài liệu.
+Tên file đầu ra.
+Mục đích tài liệu.
+Phạm vi trọng tâm của từng tài liệu.
+
+Không được tự đổi tên tài liệu.
+Không được tự đổi tên file.
+Không được tạo thêm tài liệu ngoài danh mục.
+Không được bỏ qua tài liệu nào trong list_context.txt.
+
+====================================================================
+3. BỐI CẢNH HỆ THỐNG PHẢI GIỮ NGUYÊN
+====================================================================
+
+Khách hàng có 2 hệ thống VDI khác nhau.
+
+Hệ thống 1:
+Nền tảng là Omnissa Horizon, trước đây là VMware Horizon.
+Hạ tầng bên dưới là HCI.
+Quy mô khoảng 1500 đến hơn 2000 VDI.
+
+Hệ thống 2:
+Nền tảng là Citrix Virtual Apps and Desktops, viết tắt là CVAD.
+Hypervisor có thể là XenServer hoặc VMware ESXi.
+Quy mô khoảng 1500 đến hơn 2000 VDI.
+
+Các thành phần engineer cần hiểu gồm:
+Domain Controller.
+Active Directory.
+Hybrid Microsoft Entra ID nếu có.
+vCenter Server.
+Hypervisor.
+HCI.
+Storage.
+Network.
+Gateway.
+Load Balancer nếu có.
+Monitoring và Alerting.
+Policy cho VDI.
+Master Image.
+Desktop Pool.
+Machine Catalog.
+Delivery Group.
+Entitlement.
+User Session.
+Incident Handling.
+Change Operation.
+Technical Support.
+
+====================================================================
+4. NGUYÊN TẮC NỘI DUNG
+====================================================================
+
+1. Không tạo tài liệu dạng skeleton.
+2. Không chỉ tạo heading rỗng.
+3. Không viết tài liệu quá ngắn theo kiểu overview.
+4. Không copy cùng một nội dung cho nhiều tài liệu.
+5. Mỗi tài liệu phải có trọng tâm riêng theo mục đích trong list_context.txt.
+6. Mỗi tài liệu phải là tài liệu đào tạo tri thức trực tiếp cho học viên.
+7. Mỗi tài liệu phải đủ giải thích, ví dụ, tình huống, checklist, lỗi thường gặp, bài tập và câu hỏi kiểm tra.
+8. Phải khai thác tri thức từ raw/sources thông qua Lumina trước khi viết.
+9. Phải dùng kết quả /lumi-ask riêng cho từng tài liệu, không dùng một bộ câu hỏi chung cho cả 28 tài liệu.
+10. Không được bịa thông tin nội bộ của khách hàng.
+11. Nếu thiếu thông tin thực tế như version, topology, IP, hostname, monitoring tool, profile solution, HA design, DR design, access flow, storage design, network path, SLA, escalation path hoặc change process thì ghi rõ là Unknown hoặc Need Customer Confirmation.
+12. Phải phân biệt rõ:
+    Thông tin từ raw/sources hoặc wiki/sources.
+    Thông tin từ training_idea.md.
+    Thông tin từ list_context.txt.
+    Kiến thức chung cần kiểm chứng theo môi trường khách hàng.
+    Thông tin chưa biết cần hỏi khách hàng.
+13. Không yêu cầu secret, password, token, credential hoặc thông tin nhạy cảm.
+14. Không đưa thao tác rủi ro cao nếu không có cảnh báo, precheck, impact, rollback và postcheck.
+
+====================================================================
+5. WORKFLOW LUMINA BẮT BUỘC
+====================================================================
+
+Giai đoạn 1. Khởi tạo workspace
+
+Nhập vào ô chat Codex:
+
+/lumi-init
+
+Mục tiêu:
+Khởi tạo wiki từ toàn bộ nội dung trong raw/.
+Để Lumina nhận diện raw/sources, raw/notes, raw/assets và các file điều khiển hiện có.
+
+Sau đó nhập:
+
+/lumi-help
+
+Mục tiêu:
+Đọc trạng thái workspace và xác nhận bước tiếp theo nếu cần.
+
+Giai đoạn 2. Ingest tài liệu nguồn
+
+Dùng /lumi-ingest để ingest các tài liệu trong raw/sources.
+
+Ưu tiên ingest các tài liệu liên quan đến:
+VDI.
+Omnissa Horizon.
+VMware Horizon.
+Citrix CVAD.
+Citrix Gateway.
+StoreFront.
+Delivery Controller.
+VDA.
+Machine Catalog.
+Delivery Group.
+Horizon Connection Server.
+Unified Access Gateway.
+Horizon Agent.
+vCenter.
+VMware ESXi.
+XenServer.
+HCI.
+Storage.
+Network.
+Active Directory.
+Microsoft Entra ID.
+Monitoring.
+Policy.
+Provisioning.
+Master Image.
+Troubleshooting.
+Incident.
+Change.
+Backup.
+HA.
+DR.
+RBAC.
+Support.
+
+Nếu Lumina tạo bản nháp ingest, phải review theo tiêu chí:
+Có tóm tắt nguồn không.
+Có key concepts không.
+Có operational knowledge không.
+Có training knowledge không.
+Có troubleshooting knowledge không.
+Có change, risk hoặc rollback knowledge không.
+Có gaps không.
+Có source traceability không.
+
+Nếu bản nháp còn mỏng, yêu cầu Lumina bổ sung trước khi ghi vào wiki/sources.
+
+Giai đoạn 3. Tạo knowledge base trung gian
+
+Sau khi ingest, dùng /lumi-ask để hỏi theo các nhóm tri thức nền tảng.
+
+Các câu hỏi nền tảng nên dùng:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp các khái niệm nền tảng về VDI cần đào tạo cho system engineer mới. Tập trung vào desktop ảo, published application, user session, broker, gateway, agent, profile, image, hypervisor, storage, network và identity."
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp mô hình vận hành VDI quy mô lớn từ 1500 đến hơn 2000 máy. Tập trung vào các lớp user access, gateway, broker, desktop session, identity, hypervisor, storage, network, monitoring và operation."
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp các lỗi thường gặp trong VDI quy mô lớn, gồm login fail, không thấy resource, launch fail, VDA unregistered, Horizon Agent unreachable, login chậm, black screen, disconnect, profile issue, storage latency và network issue. Với mỗi lỗi, nêu triệu chứng, lớp cần kiểm tra, evidence cần thu thập và hướng xử lý."
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp các hoạt động vận hành thường gặp cho VDI, gồm monitoring, health check, incident, change, support, patching, backup, HA, DR, RBAC và escalation."
+
+Kết quả từ các câu hỏi nền tảng này dùng làm nguồn chung.
+Nhưng khi viết từng tài liệu, bắt buộc phải dùng thêm các câu hỏi /lumi-ask riêng cho tài liệu đó.
+
+Giai đoạn 4. Tạo concept trong wiki/concepts
+
+Dựa trên raw/sources, wiki/sources và kết quả /lumi-ask, tạo hoặc cập nhật các concept quan trọng trong wiki/concepts.
+
+Các concept nên có nếu nguồn đủ dữ liệu:
+VDI.
+Published Application.
+User Session.
+Broker.
+Gateway.
+Connection Server.
+Unified Access Gateway.
+Delivery Controller.
+StoreFront.
+VDA.
+Horizon Agent.
+Machine Catalog.
+Delivery Group.
+Desktop Pool.
+Entitlement.
+Master Image.
+Golden Image.
+Persistent Desktop.
+Non Persistent Desktop.
+Profile Management.
+Boot Storm.
+Logon Storm.
+Storage Latency.
+Datastore.
+HCI.
+VMware ESXi.
+XenServer.
+vCenter.
+Active Directory.
+Domain Controller.
+Microsoft Entra ID.
+Group Policy.
+RBAC.
+VDI Monitoring.
+VDI Incident.
+VDI Change.
+VDI Backup.
+VDI HA.
+VDI DR.
+
+Mỗi concept phải có cấu trúc:
+
+# [Tên concept]
+
+## Definition
+
+## Why it matters in VDI
+
+## Related Platforms
+
+## Operational View
+
+## Common Issues
+
+## Related Documents
+
+## Source References
+
+====================================================================
+6. QUY TẮC /lumi-ask RIÊNG CHO TỪNG TÀI LIỆU
+====================================================================
+
+Mỗi tài liệu phải có bộ câu hỏi /lumi-ask riêng.
+
+Không được chỉ dùng một câu hỏi chung rồi viết toàn bộ 28 tài liệu.
+
+Với mỗi dòng trong list_context.txt, trước khi viết file tương ứng, phải tạo một Document Research Pack bằng /lumi-ask.
+
+Document Research Pack là phần tri thức đầu vào riêng cho từng tài liệu.
+
+Với mỗi tài liệu, phải chạy tối thiểu 5 nhóm câu hỏi /lumi-ask sau:
+
+1. Câu hỏi scope và learning objective
+
+Mẫu câu hỏi:
+
+/lumi-ask "Dựa trên training_idea.md, list_context.txt và các tài liệu đã ingest, hãy xác định scope đào tạo, learning objectives, prerequisites và các khái niệm cốt lõi cho tài liệu [Tên tài liệu], file [Name File], mục đích: [Mục đích tài liệu]. Tập trung vào system engineer vận hành VDI quy mô 1500 đến hơn 2000 máy."
+
+2. Câu hỏi kiến trúc hoặc mô hình vận hành
+
+Mẫu câu hỏi:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp architecture model hoặc operational model phù hợp cho tài liệu [Tên tài liệu]. Chỉ chọn nội dung đúng với mục đích: [Mục đích tài liệu]. Nêu các lớp liên quan, thành phần chính, dependency, luồng hoạt động và điểm engineer cần quan sát trong vận hành."
+
+3. Câu hỏi component deep dive và task vận hành
+
+Mẫu câu hỏi:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tạo component deep dive và operational tasks cho tài liệu [Tên tài liệu]. Với mỗi thành phần hoặc task, nêu vai trò, phụ thuộc, dấu hiệu lỗi, cách kiểm tra ở mức vận hành, expected evidence, rủi ro và escalation condition."
+
+4. Câu hỏi troubleshooting và scenario
+
+Mẫu câu hỏi:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp common issues, troubleshooting approach và ít nhất 3 scenario based learning cho tài liệu [Tên tài liệu]. Với mỗi lỗi hoặc scenario, nêu triệu chứng, nguyên nhân có thể, lớp cần kiểm tra, evidence cần thu thập, hướng xử lý và khi nào cần escalation."
+
+5. Câu hỏi knowledge check, misconception và confirmation
+
+Mẫu câu hỏi:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tạo knowledge check, common misconceptions, field checklist và các câu hỏi Need Customer Confirmation cho tài liệu [Tên tài liệu]. Câu hỏi kiểm tra phải có đáp án và giải thích ngắn. Need Customer Confirmation phải tập trung vào version, topology, access flow, monitoring tool, storage design, network path, profile solution, SLA, ownership, change process và escalation path nếu phù hợp."
+
+Có thể thêm câu hỏi bổ sung nếu tài liệu cần chiều sâu hơn.
+
+Ví dụ với tài liệu Omnissa Horizon Architecture Overview, thêm:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp riêng về Omnissa Horizon architecture, gồm Horizon Client, Unified Access Gateway, Connection Server, Horizon Agent, desktop pool, entitlement, vCenter, HCI, storage, network, internal access flow, external access flow, lỗi thường gặp và evidence cần kiểm tra."
+
+Ví dụ với tài liệu Citrix CVAD Architecture Overview, thêm:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp riêng về Citrix CVAD architecture, gồm Citrix Workspace App, StoreFront, Citrix Gateway, Delivery Controller, Site Database, VDA, Machine Catalog, Delivery Group, Application Group, License Server, hypervisor, internal access flow, external access flow, lỗi thường gặp và evidence cần kiểm tra."
+
+Ví dụ với tài liệu Master Image Management Guide, thêm:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp tri thức đào tạo về master image và golden image trong VDI, gồm image lifecycle, update flow, snapshot, testing, publish image, rollback, risk khi update image hàng loạt và checklist trước/sau thay đổi."
+
+Ví dụ với tài liệu VDI Troubleshooting Playbook, thêm:
+
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp troubleshooting playbook cho VDI quy mô lớn, phân loại theo user issue, desktop issue, broker issue, gateway issue, identity issue, hypervisor issue, storage issue, network issue và policy issue."
+
+Sau khi có kết quả /lumi-ask cho từng tài liệu, phải dùng kết quả đó làm nguồn chính để viết tài liệu tương ứng.
+
+Trong mỗi tài liệu, phần Source Grounding phải ghi rõ:
+Đã sử dụng Document Research Pack từ /lumi-ask cho tài liệu này.
+Đã sử dụng training_idea.md.
+Đã sử dụng list_context.txt.
+Đã sử dụng wiki/sources hoặc raw/sources liên quan.
+Đã sử dụng wiki/concepts liên quan.
+
+====================================================================
+7. GỢI Ý CÂU HỎI /lumi-ask THEO 28 TÀI LIỆU
+====================================================================
+
+Khi xử lý từng tài liệu, hãy dùng 5 câu hỏi bắt buộc ở phần 6, đồng thời bổ sung câu hỏi chuyên biệt tương ứng bên dưới.
+
+1. VDI Foundation Overview
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo nền tảng về VDI cho system engineer mới, gồm VDI là gì, desktop ảo, published application, user session, broker, gateway, agent, profile, image, hypervisor, storage, network, identity và các lớp vận hành."
+
+2. Customer VDI Landscape Overview
+/lumi-ask "Dựa trên training_idea.md, list_context.txt và các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về landscape khách hàng có 2 hệ thống VDI gồm Omnissa Horizon on HCI và Citrix CVAD trên XenServer hoặc VMware ESXi, quy mô 1500 đến hơn 2000 VDI, các lớp vận hành và những thông tin cần xác nhận thêm."
+
+3. Omnissa Horizon Architecture Overview
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp kiến trúc Omnissa Horizon, gồm Horizon Client, Unified Access Gateway, Connection Server, Horizon Agent, desktop pool, entitlement, vCenter, HCI, storage, network, internal access flow, external access flow, operational dependency và troubleshooting signals."
+
+4. Citrix CVAD Architecture Overview
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp kiến trúc Citrix Virtual Apps and Desktops, gồm Citrix Workspace App, StoreFront, Citrix Gateway, Delivery Controller, Site Database, Monitoring Database, VDA, Machine Catalog, Delivery Group, Application Group, License Server, hypervisor, internal access flow, external access flow, operational dependency và troubleshooting signals."
+
+5. VDI Access Flow Design
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp luồng truy cập VDI cho user nội bộ và user bên ngoài, gồm endpoint, client, gateway, portal, broker, agent, desktop session, application backend, DNS, certificate, firewall, load balancer và các điểm lỗi thường gặp trên từng đoạn luồng."
+
+6. Identity and Domain Integration Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về identity và domain integration cho VDI, gồm Active Directory, Domain Controller, DNS, Group Policy, user group, computer account, Kerberos hoặc LDAP ở mức vận hành, Hybrid Microsoft Entra ID nếu có, lỗi authentication và entitlement."
+
+7. Hypervisor and HCI Operations Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về hypervisor và HCI trong VDI, gồm VMware ESXi, vCenter, XenServer nếu có, HCI cluster, host, datastore, resource pool, VM lifecycle, snapshot, host maintenance, capacity và lỗi ảnh hưởng VDI."
+
+8. Storage Operations for VDI
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về storage operations cho VDI, gồm datastore, profile storage, image storage, capacity, latency, IOPS, throughput, snapshot growth, boot storm, logon storm, storage alert và troubleshooting storage related issues."
+
+9. Network Operations for VDI
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về network operations cho VDI, gồm VLAN, routing, firewall, load balancer, DNS, certificate, gateway, NAT nếu có, latency, packet loss, bandwidth, internal access path, external access path và network troubleshooting."
+
+10. VDI Security and Policy Management Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về security và policy management cho VDI, gồm Citrix Policy hoặc Horizon Policy, Group Policy, clipboard, USB, printer, drive redirection, session timeout, MFA, conditional access nếu có, RBAC, audit log và security risk."
+
+11. VDI Provisioning and Allocation Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về provisioning và allocation trong VDI, gồm tạo mới VDI, cấp phát user, gán AD group, entitlement, desktop pool, machine catalog, delivery group, mở rộng số lượng VDI, thu hồi VDI và kiểm tra sau cấp phát."
+
+12. Master Image Management Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về master image và golden image trong VDI, gồm image lifecycle, OS patch, application update, agent update, security tool, snapshot, publish image, test image, rollback, risk khi lỗi image ảnh hưởng hàng loạt."
+
+13. Citrix Machine Catalog and Delivery Group Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về Citrix Machine Catalog, Delivery Group, Application Group, entitlement, VDA registration, machine availability, user assignment, operational tasks và lỗi thường gặp trong CVAD."
+
+14. Omnissa Desktop Pool and Entitlement Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về Omnissa Horizon desktop pool, application pool, entitlement, Horizon Agent registration, pool availability, user assignment, operational tasks và lỗi thường gặp trong Horizon."
+
+15. VDI Monitoring and Alerting Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về monitoring và alerting cho VDI, gồm broker health, gateway health, VDI registered/unregistered, active session, failed session, host CPU, memory, datastore capacity, storage latency, network latency, login duration, profile loading time, license status và alert triage."
+
+16. Daily Operations Checklist
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp daily operations checklist cho system engineer vận hành VDI, gồm kiểm tra health, alert, session status, VDI registration, broker, gateway, host resource, datastore capacity, profile issue, incident pending và evidence cần ghi nhận."
+
+17. VDI Incident Classification Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp cách phân loại incident trong VDI theo phạm vi ảnh hưởng, gồm một user, một VDI, một pool, một catalog, một site, một gateway, một host cluster, storage, network, identity hoặc toàn bộ nền tảng. Nêu tiêu chí priority, impact, urgency và escalation."
+
+18. VDI Troubleshooting Playbook
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp troubleshooting playbook cho VDI quy mô lớn, gồm login fail, không thấy desktop, launch fail, VDA unregistered, Horizon Agent unreachable, login chậm, black screen, disconnect, profile issue, printer issue, storage issue, hypervisor issue, network issue và identity issue."
+
+19. VDI Performance and Capacity Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về performance và capacity cho VDI, gồm CPU, memory, storage latency, IOPS, network latency, concurrent session, login duration, boot storm, logon storm, capacity trend, threshold, bottleneck analysis và capacity planning."
+
+20. VDI Change Management Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về change management cho VDI, gồm image update, policy change, entitlement change, certificate change, broker patching, gateway change, host maintenance, storage expansion, precheck, impact assessment, rollback, postcheck và evidence."
+
+21. VDI Patch and Upgrade Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về patch và upgrade cho VDI, gồm Delivery Controller, StoreFront, Citrix Gateway, VDA, Connection Server, Unified Access Gateway, Horizon Agent, hypervisor tools, Windows patch, compatibility, maintenance window, rollback và validation."
+
+22. VDI Backup and Recovery Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về backup và recovery cho VDI, gồm configuration backup, site database, monitoring database, master image, profile data, vCenter configuration, gateway configuration, restore scenario, recovery validation và ownership."
+
+23. VDI High Availability and Disaster Recovery Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về HA và DR cho VDI, gồm broker HA, gateway HA, database HA, storage resilience, hypervisor cluster, identity dependency, profile service, failover scenario, RPO, RTO, DR drill và validation."
+
+24. VDI Access Control and RBAC Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về access control và RBAC cho VDI, gồm role của system engineer, helpdesk, platform admin, security admin, customer operator, least privilege, audit log, approval, risky operation và separation of duties."
+
+25. VDI Support and Escalation Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung đào tạo về support và escalation cho VDI, gồm hỗ trợ người dùng, thu thập evidence, xác định lớp lỗi, phân tuyến xử lý, escalation theo platform, hypervisor, storage, network, identity, security và customer communication."
+
+26. VDI Operational Knowledge Base
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp nội dung cho VDI operational knowledge base, gồm lỗi thường gặp, kinh nghiệm xử lý, dấu hiệu nhận biết, câu hỏi chẩn đoán, evidence cần lấy, màn hình quản trị cần xem, lưu ý vận hành và pattern xử lý lặp lại."
+
+27. VDI Glossary and Concept Dictionary
+/lumi-ask "Dựa trên các tài liệu đã ingest, hãy tổng hợp glossary và concept dictionary cho VDI, gồm broker, VDA, Horizon Agent, pool, catalog, delivery group, entitlement, profile, gateway, datastore, session, image, HCI, hypervisor, policy, monitoring, HA, DR và các thuật ngữ liên quan."
+
+28. VDI Engineer Onboarding Guide
+/lumi-ask "Dựa trên các tài liệu đã ingest và toàn bộ 27 tài liệu topic đã tạo, hãy tổng hợp lộ trình onboarding cho VDI engineer, gồm learning path, thứ tự đọc tài liệu, kỹ năng cần đạt, bài tập thực hành tư duy, checklist sẵn sàng, milestone và tiêu chí đánh giá năng lực."
+
+====================================================================
+8. CÁCH TẠO 28 TÀI LIỆU TRONG wiki/topics
+====================================================================
+
+Parse list_context.txt.
+
+Với từng dòng, lấy:
+Thứ tự.
+Tên tài liệu.
+Name File.
+Mục đích tài liệu.
+
+Với mỗi dòng, thực hiện quy trình sau:
+
+Bước 1. Xác định file đầu ra:
+wiki/topics/[Name File]
+
+Bước 2. Tạo Document Research Pack bằng /lumi-ask:
+Dùng 5 câu hỏi bắt buộc ở phần 6.
+Dùng thêm câu hỏi chuyên biệt ở phần 7 tương ứng với tài liệu đó.
+
+Bước 3. Đọc kết quả Document Research Pack.
+
+Bước 4. Viết tài liệu đào tạo chi tiết vào đúng file:
+wiki/topics/[Name File]
+
+Bước 5. Tự kiểm tra tài liệu theo phần Self Review.
+
+Bước 6. Chỉ chuyển sang tài liệu tiếp theo sau khi tài liệu hiện tại đã đủ chiều sâu đào tạo.
+
+Tạo lần lượt từ:
+wiki/topics/1_VDI_Foundation_Overview.md
+
+Đến:
+wiki/topics/28_VDI_Engineer_Onboarding_Guide.md
+
+Nếu file đã tồn tại:
+Đọc nội dung hiện có.
+Nếu chỉ là skeleton hoặc chưa đủ chiều sâu đào tạo, cập nhật thành tài liệu đầy đủ.
+Nếu đã đầy đủ, chỉ cập nhật source grounding, liên kết wiki hoặc phần còn thiếu.
+
+====================================================================
+9. CẤU TRÚC BẮT BUỘC CHO MỖI TÀI LIỆU
+====================================================================
+
+Mỗi file trong wiki/topics phải dùng cấu trúc sau:
+
+# [Tên tài liệu]
+
+## 0. Document Control
+
+### 0.1 Metadata
+
+Tạo bảng gồm:
+Thứ tự.
+Tên tài liệu.
+Tên file.
+Mục đích tài liệu.
+Nguồn điều khiển.
+Trạng thái.
+
+### 0.2 Source Grounding
+
+Nêu rõ tài liệu này dùng:
+training_idea.md.
+list_context.txt.
+Document Research Pack từ /lumi-ask cho chính tài liệu này.
+Các trang liên quan trong wiki/sources.
+Các concept liên quan trong wiki/concepts.
+
+Tạo bảng:
+
+| Nội dung | Nguồn sử dụng | Mức độ tin cậy | Ghi chú |
+| ... | ... | ... | ... |
+
+Mức độ tin cậy:
+High nếu lấy từ raw/sources hoặc wiki/sources.
+Medium nếu lấy từ training_idea.md hoặc list_context.txt.
+Grounded Ask nếu lấy từ kết quả /lumi-ask dựa trên wiki đã ingest.
+General nếu là kiến thức chung cần kiểm chứng theo môi trường khách hàng.
+Unknown nếu cần hỏi khách hàng.
+
+### 0.3 Scope
+
+Gồm:
+In Scope.
+Out of Scope.
+
+## 1. Learning Objectives
+
+Nêu rõ học viên học xong làm được gì.
+Không viết chung chung.
+
+## 2. Prerequisites
+
+Nêu kiến thức nên biết trước khi học.
+
+## 3. Why This Topic Matters in Large Scale VDI
+
+Giải thích vì sao chủ đề này quan trọng trong môi trường 1500 đến hơn 2000 VDI.
+
+## 4. Core Concepts
+
+Giải thích khái niệm từ dễ đến khó.
+Phải có ví dụ thực tế trong môi trường VDI.
+
+## 5. Architecture or Operational Model
+
+Nếu phù hợp, dùng Mermaid diagram đơn giản.
+Nếu chủ đề không phải kiến trúc, mô tả operational model hoặc process model.
+
+## 6. Component Deep Dive
+
+Tạo bảng gồm:
+Thành phần.
+Vai trò.
+Phụ thuộc vào.
+Ảnh hưởng khi lỗi.
+Engineer cần kiểm tra.
+Evidence cần lưu.
+
+## 7. End to End Flow or Operational Workflow
+
+Mô tả chi tiết luồng liên quan đến chủ đề.
+
+Nếu là access flow, mô tả luồng user nội bộ và user bên ngoài.
+Nếu là incident, mô tả detect, classify, triage, troubleshoot, escalate, validate, close.
+Nếu là change, mô tả request, impact, precheck, implement, postcheck, rollback, evidence.
+Nếu là monitoring, mô tả collect, alert, triage, correlate, respond, report.
+
+## 8. Operational Tasks
+
+Mỗi task phải có:
+Mục đích.
+Khi nào thực hiện.
+Precheck.
+Các bước kiểm tra ở mức high level.
+Expected evidence.
+Rủi ro.
+Escalation condition.
+
+## 9. Common Issues and Troubleshooting
+
+Tạo bảng gồm:
+Triệu chứng.
+Nguyên nhân có thể.
+Lớp cần kiểm tra.
+Evidence cần thu thập.
+Cách kiểm tra.
+Hướng xử lý.
+Khi nào cần escalation.
+
+Không được khẳng định nguyên nhân nếu chưa có log hoặc evidence.
+Phải viết theo hướng chẩn đoán.
+
+## 10. Scenario Based Learning
+
+Tạo ít nhất 3 tình huống thực tế.
+
+Mỗi tình huống gồm:
+Bối cảnh.
+Triệu chứng.
+Câu hỏi cho học viên.
+Gợi ý phân tích.
+Hướng xử lý đề xuất.
+Evidence cần lưu.
+
+## 11. Hands On or Lab Thinking Exercises
+
+Tạo bài tập tư duy vận hành.
+Không bắt buộc có môi trường thật.
+
+Ví dụ:
+Đọc sơ đồ và chỉ ra điểm lỗi.
+Phân loại incident.
+Thiết kế checklist.
+Xác định thành phần cần kiểm tra.
+Tạo flow xử lý.
+Đánh giá impact của change.
+
+## 12. Knowledge Check
+
+Tạo tối thiểu 8 câu hỏi.
+Bao gồm:
+Câu hỏi khái niệm.
+Câu hỏi tình huống.
+Câu hỏi phân biệt lỗi.
+Câu hỏi vận hành.
+
+Mỗi câu phải có đáp án và giải thích ngắn.
+
+## 13. Common Misconceptions
+
+Nêu các hiểu nhầm thường gặp liên quan trực tiếp đến chủ đề của tài liệu.
+
+## 14. Field Checklist
+
+Tạo checklist ngắn gọn để engineer dùng khi vận hành thực tế.
+
+## 15. Monitoring and Evidence
+
+Nêu chỉ số cần theo dõi và evidence cần lưu.
+Chỉ chọn chỉ số phù hợp với tài liệu đang viết.
+
+## 16. Change, Risk and Rollback Considerations
+
+Nếu chủ đề liên quan đến thay đổi, nêu:
+Thay đổi nào cần kiểm soát.
+Precheck.
+Impact.
+Rollback point.
+Postcheck.
+Evidence.
+Điều kiện dừng change.
+
+Nếu chủ đề không trực tiếp liên quan đến change, nêu rủi ro khi hiểu sai hoặc cấu hình sai chủ đề đó.
+
+## 17. Security and Access Control Considerations
+
+Nếu phù hợp, mô tả:
+RBAC.
+Least privilege.
+Quyền của system engineer.
+Quyền của helpdesk.
+Quyền của platform admin.
+Audit log.
+Thao tác cần phê duyệt.
+
+Không yêu cầu secret, password, token hoặc credential.
+
+## 18. Need Customer Confirmation
+
+Tạo câu hỏi cụ thể cần hỏi khách hàng.
+Ưu tiên:
+Version.
+Topology.
+Access flow.
+HA design.
+DR design.
+Monitoring tool.
+Storage design.
+Network path.
+Profile solution.
+Change process.
+SLA.
+Escalation path.
+Ownership.
+
+## 19. Related Wiki Links
+
+Liên kết đến:
+Các concept liên quan trong wiki/concepts.
+Các tài liệu liên quan trong wiki/topics.
+Các source summary liên quan trong wiki/sources.
+
+## 20. Summary for Learners
+
+Tóm tắt những điều học viên phải nhớ.
+Nêu thứ tự kiểm tra khuyến nghị khi xử lý sự cố liên quan đến chủ đề.
+
+## 21. Self Review
+
+Tạo checklist tự kiểm tra:
+Đã đúng tên tài liệu trong list_context.txt chưa.
+Đã đúng tên file trong cột Name File chưa.
+Đã lưu đúng wiki/topics chưa.
+Đã đúng mục đích tài liệu chưa.
+Đã dùng training_idea.md chưa.
+Đã dùng tri thức từ raw/sources hoặc wiki/sources chưa.
+Đã dùng Document Research Pack từ /lumi-ask riêng cho tài liệu này chưa.
+Có bịa thông tin khách hàng không.
+Có phân biệt Unknown không.
+Có đủ nội dung đào tạo không.
+Có Scenario Based Learning không.
+Có Knowledge Check không.
+Có Field Checklist không.
+Có Source Grounding không.
+Có phù hợp cho system engineer chưa.
+
+====================================================================
+10. README.md VÀ wiki/index.md
+====================================================================
+
+Sau khi tạo đủ 28 tài liệu, tạo hoặc cập nhật:
+
+wiki/topics/README.md
+
+Nội dung gồm:
+
+# VDI Training Documentation Index
+
+## 1. Purpose
+
+Mô tả đây là bộ tài liệu đào tạo tri thức VDI cho system engineer.
+
+## 2. Source Corpus
+
+Liệt kê:
+training_idea.md.
+list_context.txt.
+raw/sources.
+raw/notes nếu có.
+wiki/sources.
+wiki/concepts.
+
+## 3. Documentation List
+
+Tạo bảng gồm:
+Thứ tự.
+Tên tài liệu.
+Tên file.
+Mục đích tài liệu.
+Trạng thái.
+Source coverage.
+
+## 4. Recommended Learning Path
+
+Đề xuất lộ trình học theo nhóm:
+Foundation.
+Customer Landscape.
+Architecture.
+Access Flow.
+Identity.
+Hypervisor and HCI.
+Storage.
+Network.
+Security and Policy.
+Provisioning.
+Image Management.
+Monitoring.
+Daily Operation.
+Incident.
+Troubleshooting.
+Performance and Capacity.
+Change.
+Patch and Upgrade.
+Backup.
+HA and DR.
+RBAC.
+Support.
+Knowledge Base.
+Glossary.
+Onboarding.
+
+## 5. Concept Index
+
+Liên kết đến các trang trong wiki/concepts.
+
+## 6. Source Index
+
+Liên kết đến các trang trong wiki/sources.
+
+## 7. Need Customer Confirmation Summary
+
+Tổng hợp các nhóm thông tin còn thiếu cần hỏi khách hàng.
+
+## 8. Maintenance Guide
+
+Hướng dẫn khi thêm tài liệu mới vào raw/sources:
+Chạy lại /lumi-ingest cho source mới.
+Dùng /lumi-ask để khai thác tri thức mới.
+Cập nhật concept liên quan trong wiki/concepts.
+Cập nhật topic liên quan trong wiki/topics.
+Chạy /lumi-check.
+Chạy /lumi-verify nếu cần.
+
+Sau đó cập nhật:
+
+wiki/index.md
+
+wiki/index.md phải có liên kết đến:
+wiki/topics/README.md.
+wiki/sources.
+wiki/concepts.
+28 topic files trong wiki/topics.
+
+====================================================================
+11. KIỂM TRA CHẤT LƯỢNG BẰNG LUMINA
+====================================================================
+
+Sau khi tạo xong, nhập vào ô chat Codex:
+
+/lumi-check
+
+Mục tiêu:
+Kiểm tra lỗi wiki, liên kết hỏng, cấu trúc thiếu.
+
+Sau đó nhập:
+
+/lumi-verify
+
+Mục tiêu:
+Kiểm tra các trang wiki có khớp với nguồn đã trích dẫn không.
+Nếu có điểm đáng ngờ, báo cáo rõ để người dùng review.
+Không tự sửa những phần không chắc nếu có thể làm sai ý nguồn.
+
+Nếu /lumi-check hoặc /lumi-verify báo lỗi:
+Ghi rõ lỗi.
+Sửa lỗi nếu nguyên nhân rõ ràng.
+Nếu lỗi liên quan đến thiếu nguồn hoặc không chắc nội dung, đưa vào danh sách cần review thủ công.
+
+====================================================================
+12. BÁO CÁO CUỐI CÙNG
+====================================================================
+
+Sau khi hoàn tất, trả lời bằng tiếng Việt với báo cáo gồm:
+
+1. Tổng số tài liệu trong list_context.txt.
+2. Tổng số tài liệu đã tạo trong wiki/topics.
+3. Tổng số tài liệu đã cập nhật.
+4. Tổng số source đã ingest vào wiki/sources.
+5. Tổng số concept đã tạo trong wiki/concepts.
+6. File wiki/topics/README.md đã tạo hoặc cập nhật.
+7. File wiki/index.md đã tạo hoặc cập nhật.
+8. Kết quả /lumi-check.
+9. Kết quả /lumi-verify.
+10. Các file còn lỗi hoặc chưa hoàn tất nếu có.
+11. Các nhóm thông tin cần hỏi khách hàng.
+12. Các bước khuyến nghị tiếp theo để review bộ tài liệu.
+
+====================================================================
+13. TRÌNH TỰ THỰC HIỆN BẮT BUỘC
+====================================================================
+
+1. Chạy /lumi-init trong ô chat Codex.
+2. Chạy /lumi-help nếu cần xác nhận trạng thái workspace.
+3. Dùng /lumi-ingest để ingest tài liệu trong raw/sources.
+4. Dùng các câu hỏi /lumi-ask nền tảng để tạo tri thức chung.
+5. Tạo hoặc cập nhật concept trong wiki/concepts.
+6. Parse list_context.txt.
+7. Với từng tài liệu, tạo Document Research Pack riêng bằng /lumi-ask.
+8. Tạo hoặc cập nhật tài liệu đào tạo chi tiết trong wiki/topics theo đúng Name File.
+9. Lặp lại bước 7 và 8 cho đủ 28 tài liệu.
+10. Tạo hoặc cập nhật wiki/topics/README.md.
+11. Cập nhật wiki/index.md.
+12. Chạy /lumi-check.
+13. Chạy /lumi-verify.
+14. Báo cáo kết quả.
+
+Bắt đầu thực hiện ngay.
