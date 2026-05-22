@@ -1,0 +1,62 @@
+# lumina.config.yaml — workspace config managed by lumina-wiki installer.
+# Lives at _lumina/config/lumina.config.yaml. Editable by hand.
+
+project_name: vdi-training
+locale: vi
+communication_language: Vietnamese
+document_output_language: Vietnamese
+created_at: '2026-05-22'
+ide_targets:
+  claude_code: false
+  codex: true
+  cursor: false
+  gemini_cli: true
+  qwen: false
+  iflow: false
+  generic: false
+packs:
+  core: true
+  research: true
+  reading: false
+  learning: true
+paths:
+  raw: raw
+  wiki: wiki
+  agents: .agents
+  _lumina: _lumina
+  index: wiki/index.md
+  log: wiki/log.md
+wiki:
+  link_syntax: obsidian
+  slug_style: kebab-case
+  log_prefix: '## [{{date}}] {{skill}} | {{details}}'
+  bidirectional_links:
+    mode: exempt-only
+    exemptions:
+      - foundations/**
+      - outputs/**
+      - '*://*'
+      - reflections/**
+  graph:
+    enabled: true
+    edge_types_core:
+      - related_to
+      - builds_on
+      - contradicts
+      - cites
+      - mentions
+      - part_of
+lint:
+  default_mode: report
+  checks:
+    broken_links: true
+    orphan_pages: true
+    missing_reverse_links: true
+    log_format: true
+    index_freshness: true
+    stale_claims: false
+integrations:
+  qmd_search: false
+  obsidian_vault: false
+  marp_slides: false
+telemetry: false
