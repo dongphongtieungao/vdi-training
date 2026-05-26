@@ -42,3 +42,7 @@ Chưa có trang tổng hợp.
 
 HA không thay thế monitoring; cần kiểm tra cả trạng thái failover và năng lực khi mất một node.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-08-security-resource-availability]] - vSphere HA, admission control, DRS và failover capacity.
+- [[sources/vmware-vsphere-8-0-part-02-esxi-install-upgrade]] - host maintenance and HA validation.

@@ -39,3 +39,7 @@ Chưa có trang tổng hợp.
 
 Snapshot tồn tại lâu có thể làm datastore phình và ảnh hưởng hiệu năng.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-05-vcenter-host-vm-admin]] - VM snapshot, template và image operation.
+- [[sources/vmware-vsphere-8-0-part-07-storage]] - snapshot growth, consolidation và datastore impact.

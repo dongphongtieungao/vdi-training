@@ -14,4 +14,8 @@ lumi-research-watch-run,RWR,research,anytime,lumi-research-watchlist,,false,,raw
 lumi-research-survey,RV,research,3-query,lumi-ingest,,false,,wiki/summary/**,narrative synthesis across a topic's sources
 lumi-research-topic,RT,research,3-query,lumi-ingest,,false,,wiki/topics/**,cluster concepts and sources into a thematic topic page
 lumi-research-setup,RSS,research,anytime,,,false,,.env,interactive API key configuration
+lumi-reading-chapter-ingest,RCI,reading,2-ingest,lumi-init,,false,[chapter],wiki/chapters/**;wiki/characters/**;wiki/themes/**;wiki/plot/**,file a chapter; update characters/themes/plot pages
+lumi-reading-character-track,RCT,reading,3-query,lumi-reading-chapter-ingest,,false,,wiki/characters/**,build or refresh a character profile across chapters
+lumi-reading-theme-map,RTM,reading,3-query,lumi-reading-chapter-ingest,,false,,wiki/themes/**,trace a theme across chapters with citations
+lumi-reading-plot-recap,RPR,reading,3-query,lumi-reading-chapter-ingest,,false,,wiki/plot/**,spoiler-bounded plot summary up to a chapter
 lumi-learning-reflect,LR,learning,anytime,,,false,[concept-id],wiki/reflections/**,guide a self-reflection session; create or update a personal reflection page

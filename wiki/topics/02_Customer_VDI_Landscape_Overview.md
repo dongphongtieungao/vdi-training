@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 2 |
 | Tên tài liệu | Customer VDI Landscape Overview |
-| Tên file | 2_Customer_VDI_Landscape_Overview.md |
+| Tên file | 02_Customer_VDI_Landscape_Overview.md |
 | Mục đích tài liệu | Mô tả tổng quan hai hệ thống VDI của khách hàng, quy mô 1500 đến hơn 2000 VDI, nền tảng sử dụng và phạm vi vận hành cần nắm. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có bối cảnh cấp cao; topology, version, IP, owner, SLA, monitoring và flow thật vẫn là Need Customer Confirmation. |

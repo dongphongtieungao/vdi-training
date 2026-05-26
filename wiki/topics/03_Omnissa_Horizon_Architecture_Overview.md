@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 3 |
 | Tên tài liệu | Omnissa Horizon Architecture Overview |
-| Tên file | 3_Omnissa_Horizon_Architecture_Overview.md |
+| Tên file | 03_Omnissa_Horizon_Architecture_Overview.md |
 | Mục đích tài liệu | Giải thích kiến trúc Omnissa Horizon trên HCI, vai trò của Connection Server, Unified Access Gateway, Horizon Agent, desktop pool, entitlement, vCenter, storage và network. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có tri thức kiến trúc nền tảng; topology, version, số lượng node, VIP, firewall path và thiết kế HA thật vẫn là Need Customer Confirmation. |

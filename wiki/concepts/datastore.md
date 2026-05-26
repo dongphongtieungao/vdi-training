@@ -39,3 +39,7 @@ Chưa có trang tổng hợp.
 
 Datastore đầy hoặc latency cao là nguyên nhân phổ biến của lỗi và chậm trong VDI.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-07-storage]] - datastore capacity, latency, storage policy, multipathing và snapshot growth.
+- [[sources/vmware-vsphere-8-0-part-05-vcenter-host-vm-admin]] - VM placement, task failure và datastore dependency.

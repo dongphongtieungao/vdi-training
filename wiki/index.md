@@ -57,28 +57,46 @@ _This catalog is updated by /lumi-ingest and /lumi-init._
 - [[concepts/vmware-vsphere]]
 - [[concepts/xenserver]]
 - [[sources/citrix-virtual-apps-and-desktops-7-2603]]
+- [[sources/citrix-virtual-apps-and-desktops-7-2603-chapter-runbook-ingest]]
+- [[sources/citrix-virtual-apps-and-desktops-7-2603-technical-deep-ingest-report]]
 - [[sources/fslogix-documentation]]
+- [[sources/fslogix-documentation-chapter-runbook-ingest]]
 - [[sources/horizon-8-architecture]]
+- [[sources/horizon-8-architecture-chapter-runbook-ingest]]
+- [[sources/main-prompt]]
 - [[sources/understand-and-troubleshoot-horizon-connections]]
+- [[sources/understand-and-troubleshoot-horizon-connections-chapter-runbook-ingest]]
 - [[sources/vcenter-server-installation-and-setup]]
+- [[sources/vcenter-server-installation-and-setup-chapter-runbook-ingest]]
 - [[sources/vdi-documentation-list-context]]
 - [[sources/vdi-training-idea]]
 - [[sources/vmware-vsphere-8-0]]
+- [[sources/vmware-vsphere-8-0-technical-deep-ingest-report]]
+- [[sources/vmware-vsphere-8-0-part-01-release-and-lifecycle]]
+- [[sources/vmware-vsphere-8-0-part-02-esxi-install-upgrade]]
+- [[sources/vmware-vsphere-8-0-part-03-vcenter-install-upgrade]]
+- [[sources/vmware-vsphere-8-0-part-04-authentication-lifecycle]]
+- [[sources/vmware-vsphere-8-0-part-05-vcenter-host-vm-admin]]
+- [[sources/vmware-vsphere-8-0-part-06-host-profiles-networking]]
+- [[sources/vmware-vsphere-8-0-part-07-storage]]
+- [[sources/vmware-vsphere-8-0-part-08-security-resource-availability]]
+- [[sources/vmware-vsphere-8-0-part-09-monitoring-host-client-aria]]
 - [[sources/xenserver-8-4]]
+- [[sources/xenserver-8-4-chapter-runbook-ingest]]
 <!-- /lumina:index -->
 
 ## VDI Training Topics
 
 - [[topics/README]]
-- [[topics/1_VDI_Foundation_Overview]] - VDI Foundation Overview
-- [[topics/2_Customer_VDI_Landscape_Overview]] - Customer VDI Landscape Overview
-- [[topics/3_Omnissa_Horizon_Architecture_Overview]] - Omnissa Horizon Architecture Overview
-- [[topics/4_Citrix_CVAD_Architecture_Overview]] - Citrix CVAD Architecture Overview
-- [[topics/5_VDI_Access_Flow_Design]] - VDI Access Flow Design
-- [[topics/6_Identity_and_Domain_Integration_Guide]] - Identity and Domain Integration Guide
-- [[topics/7_Hypervisor_and_HCI_Operations_Guide]] - Hypervisor and HCI Operations Guide
-- [[topics/8_Storage_Operations_for_VDI]] - Storage Operations for VDI
-- [[topics/9_Network_Operations_for_VDI]] - Network Operations for VDI
+- [[topics/01_VDI_Foundation_Overview]] - VDI Foundation Overview
+- [[topics/02_Customer_VDI_Landscape_Overview]] - Customer VDI Landscape Overview
+- [[topics/03_Omnissa_Horizon_Architecture_Overview]] - Omnissa Horizon Architecture Overview
+- [[topics/04_Citrix_CVAD_Architecture_Overview]] - Citrix CVAD Architecture Overview
+- [[topics/05_VDI_Access_Flow_Design]] - VDI Access Flow Design
+- [[topics/06_Identity_and_Domain_Integration_Guide]] - Identity and Domain Integration Guide
+- [[topics/07_Hypervisor_and_HCI_Operations_Guide]] - Hypervisor and HCI Operations Guide
+- [[topics/08_Storage_Operations_for_VDI]] - Storage Operations for VDI
+- [[topics/09_Network_Operations_for_VDI]] - Network Operations for VDI
 - [[topics/10_VDI_Security_and_Policy_Management_Guide]] - VDI Security and Policy Management Guide
 - [[topics/11_VDI_Provisioning_and_Allocation_Guide]] - VDI Provisioning and Allocation Guide
 - [[topics/12_Master_Image_Management_Guide]] - Master Image Management Guide

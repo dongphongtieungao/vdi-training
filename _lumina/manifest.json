@@ -2,14 +2,18 @@
   "schemaVersion": 4,
   "packageVersion": "1.6.1",
   "locale": "vi",
-  "installedAt": "2026-05-22T05:56:37.504Z",
-  "updatedAt": "2026-05-22T05:56:37.504Z",
+  "installedAt": "2026-05-26T02:58:59.135Z",
+  "updatedAt": "2026-05-26T02:58:59.135Z",
   "packs": {
     "core": {
       "version": "1.6.1",
       "source": "built-in"
     },
     "research": {
+      "version": "1.6.1",
+      "source": "built-in"
+    },
+    "reading": {
       "version": "1.6.1",
       "source": "built-in"
     },
@@ -24,10 +28,10 @@
   ],
   "symlinkStrategies": {},
   "resolvedPaths": {
-    "projectRoot": "C:\\Sk\\Dba\\lumina-wiki-main\\vdi-training",
-    "wiki": "C:\\Sk\\Dba\\lumina-wiki-main\\vdi-training\\wiki",
-    "raw": "C:\\Sk\\Dba\\lumina-wiki-main\\vdi-training\\raw",
-    "agents": "C:\\Sk\\Dba\\lumina-wiki-main\\vdi-training\\.agents",
-    "lumina": "C:\\Sk\\Dba\\lumina-wiki-main\\vdi-training\\_lumina"
+    "projectRoot": "C:\\Sk\\Dba\\lumina-wiki-main\\test",
+    "wiki": "C:\\Sk\\Dba\\lumina-wiki-main\\test\\wiki",
+    "raw": "C:\\Sk\\Dba\\lumina-wiki-main\\test\\raw",
+    "agents": "C:\\Sk\\Dba\\lumina-wiki-main\\test\\.agents",
+    "lumina": "C:\\Sk\\Dba\\lumina-wiki-main\\test\\_lumina"
   }
 }

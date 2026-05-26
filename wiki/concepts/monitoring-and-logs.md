@@ -41,3 +41,7 @@ Chưa có trang tổng hợp.
 
 Runbook xử lý sự cố nên luôn ghi rõ log nào cần lấy, ở đâu và tại thời điểm nào.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-02-esxi-install-upgrade]] - ESXi syslog, log space and support bundle.
+- [[sources/vmware-vsphere-8-0-part-09-monitoring-host-client-aria]] - vSphere alarms, events, tasks, performance charts, Host Client and Aria.

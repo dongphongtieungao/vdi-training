@@ -39,3 +39,8 @@ Chưa có trang tổng hợp.
 
 Khi VDI chậm hoặc VM lỗi, cần kiểm tra cả host ESXi, datastore và network.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-02-esxi-install-upgrade]] - host requirements, firewall, syslog, upgrade, maintenance mode và support bundle.
+- [[sources/vmware-vsphere-8-0-part-01-release-and-lifecycle]] - ESXi build, known issues và patch release notes.
+- [[sources/vmware-vsphere-8-0-part-09-monitoring-host-client-aria]] - host monitoring, Host Client, alarms và logs.

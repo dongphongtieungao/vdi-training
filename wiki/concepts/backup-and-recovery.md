@@ -40,3 +40,7 @@ Chưa có trang tổng hợp.
 
 HA giúp dịch vụ tiếp tục chạy khi lỗi cục bộ; backup và recovery xử lý mất dữ liệu, lỗi cấu hình hoặc thảm họa.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-03-vcenter-install-upgrade]] - vCenter backup/restore and integration validation.
+- [[sources/vmware-vsphere-8-0-part-07-storage]] - snapshot/storage recovery considerations.

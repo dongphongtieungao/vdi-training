@@ -41,3 +41,6 @@ Chưa có trang tổng hợp.
 
 Lỗi mạng ảo có thể biểu hiện giống lỗi VDI, nên cần tách kiểm tra từ VM ra gateway và broker.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-06-host-profiles-networking]] - vSwitch, vDS, port group, uplink, VMkernel và network rollback.

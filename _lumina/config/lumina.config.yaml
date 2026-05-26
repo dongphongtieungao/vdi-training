@@ -1,11 +1,11 @@
 # lumina.config.yaml — workspace config managed by lumina-wiki installer.
 # Lives at _lumina/config/lumina.config.yaml. Editable by hand.
 
-project_name: vdi-training
+project_name: test
 locale: vi
 communication_language: Vietnamese
 document_output_language: Vietnamese
-created_at: '2026-05-22'
+created_at: '2026-05-26'
 ide_targets:
   claude_code: false
   codex: true
@@ -17,7 +17,7 @@ ide_targets:
 packs:
   core: true
   research: true
-  reading: false
+  reading: true
   learning: true
 paths:
   raw: raw

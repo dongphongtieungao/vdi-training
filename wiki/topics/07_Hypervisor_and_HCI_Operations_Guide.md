@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 7 |
 | Tên tài liệu | Hypervisor and HCI Operations Guide |
-| Tên file | 7_Hypervisor_and_HCI_Operations_Guide.md |
+| Tên file | 07_Hypervisor_and_HCI_Operations_Guide.md |
 | Mục đích tài liệu | Giúp engineer hiểu lớp hạ tầng chạy VDI, gồm VMware ESXi, vCenter, XenServer nếu có, HCI cluster, host, datastore, resource pool, snapshot và VM lifecycle. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có tri thức vận hành nền; cluster mapping, version, HA/DR, datastore/storage design, owner và maintenance process thật vẫn là Need Customer Confirmation. |

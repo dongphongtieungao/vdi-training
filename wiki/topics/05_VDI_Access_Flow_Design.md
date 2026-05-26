@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 5 |
 | Tên tài liệu | VDI Access Flow Design |
-| Tên file | 5_VDI_Access_Flow_Design.md |
+| Tên file | 05_VDI_Access_Flow_Design.md |
 | Mục đích tài liệu | Mô tả luồng kết nối của người dùng nội bộ và người dùng bên ngoài vào hệ thống VDI, từ client đến gateway, broker, agent, desktop và application backend. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có mô hình access flow đào tạo; URL, VIP, firewall rule, NAT, certificate, load balancer, protocol port và network path thật vẫn là Need Customer Confirmation. |

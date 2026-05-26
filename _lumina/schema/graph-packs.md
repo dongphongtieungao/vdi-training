@@ -38,3 +38,16 @@ The graph builder reads this file when determining valid edge types per pack.
 | `similar_method_to`| Yes       | sources   | sources     | `similar_method_to`|
 | `surveys`          | No        | sources   | sources     | `surveyed_by`     |
 | `surveyed_by`      | No        | sources   | sources     | `surveys`         |
+
+---
+
+## Reading pack edge types
+
+| Edge type          | Symmetric | From       | To         | Reverse           |
+|--------------------|-----------|-----------|------------|-------------------|
+| `features`         | No        | chapters   | characters| `appears_in`      |
+| `appears_in`       | No        | *          | chapters  | (terminal)        |
+| `tagged_with`      | No        | chapters   | themes    | `appears_in`      |
+| `associated_with`  | No        | themes     | characters| `expresses_theme` |
+| `expresses_theme`  | No        | characters | themes    | `associated_with` |
+| `appears_with`     | Yes       | characters | characters| `appears_with`    |

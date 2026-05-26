@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 6 |
 | Tên tài liệu | Identity and Domain Integration Guide |
-| Tên file | 6_Identity_and_Domain_Integration_Guide.md |
+| Tên file | 06_Identity_and_Domain_Integration_Guide.md |
 | Mục đích tài liệu | Cung cấp kiến thức về Domain Controller, Active Directory, DNS, Group Policy, user group, computer account và khả năng tích hợp Hybrid Microsoft Entra ID. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có khung đào tạo identity/domain cho VDI; domain topology, OU, GPO, Entra ID, MFA, service account, trust và owner thật vẫn là Need Customer Confirmation. |

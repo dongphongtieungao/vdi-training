@@ -30,6 +30,16 @@ These apply in all workspaces regardless of installed packs.
 
 ---
 
+## Reading pack cross-reference rules
+
+| Forward link                        | Required reverse link                     | Exemption? |
+|-------------------------------------|-------------------------------------------|------------|
+| `chapters/C` -> `characters/P`      | `characters/P` -> `chapters/C`          | No         |
+| `chapters/C` -> `themes/T`          | `themes/T` -> `chapters/C`              | No         |
+| `characters/P` -> `characters/Q`    | `characters/Q` -> `characters/P`        | No         |
+
+---
+
 ## Learning pack cross-reference rules
 
 **No bidirectional-link rules.** `reflections/**` is listed in `EXEMPTION_GLOBS` — the entire directory is a personal overlay and is exempt from reverse-link requirements.

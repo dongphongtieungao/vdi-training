@@ -40,3 +40,8 @@ Chưa có trang tổng hợp.
 
 Capacity nên gắn với trend, không chỉ kiểm tra ngưỡng tại một thời điểm.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-07-storage]] - datastore capacity, latency, IOPS and throughput.
+- [[sources/vmware-vsphere-8-0-part-08-security-resource-availability]] - CPU, memory, resource pools, DRS and HA capacity.
+- [[sources/vmware-vsphere-8-0-part-09-monitoring-host-client-aria]] - performance charts and monitoring evidence.

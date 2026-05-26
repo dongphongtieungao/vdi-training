@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 4 |
 | Tên tài liệu | Citrix CVAD Architecture Overview |
-| Tên file | 4_Citrix_CVAD_Architecture_Overview.md |
+| Tên file | 04_Citrix_CVAD_Architecture_Overview.md |
 | Mục đích tài liệu | Giải thích kiến trúc Citrix Virtual Apps and Desktops, vai trò của Delivery Controller, StoreFront, Citrix Gateway, VDA, Site Database, License Server, Machine Catalog và Delivery Group. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có tri thức kiến trúc nền tảng; topology, version, Site design, database HA, gateway path, hypervisor mapping và owner thật vẫn là Need Customer Confirmation. |

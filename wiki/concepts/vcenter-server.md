@@ -41,3 +41,8 @@ Chưa có trang tổng hợp.
 
 Tài khoản tích hợp Horizon/Citrix vào vCenter cần được cấp quyền đủ nhưng hạn chế theo phạm vi.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-03-vcenter-install-upgrade]] - vCenter install, upgrade, service health, backup/restore và integration postcheck.
+- [[sources/vmware-vsphere-8-0-part-05-vcenter-host-vm-admin]] - vCenter tasks, events, inventory, VM operations.
+- [[sources/vmware-vsphere-8-0-part-04-authentication-lifecycle]] - vCenter authentication, roles, permissions và lifecycle manager.

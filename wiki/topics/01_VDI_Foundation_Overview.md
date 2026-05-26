@@ -1,3 +1,21 @@
+---
+id: topic-01-vdi-foundation-overview
+title: VDI Foundation Overview
+type: topic
+created: 2026-05-26
+updated: 2026-05-26
+key_sources:
+  - sources/vdi-training-idea
+  - sources/vdi-documentation-list-context
+  - sources/horizon-8-architecture
+  - sources/understand-and-troubleshoot-horizon-connections
+  - sources/citrix-virtual-apps-and-desktops-7-2603
+  - sources/fslogix-documentation
+  - sources/vmware-vsphere-8-0
+  - sources/vcenter-server-installation-and-setup
+  - sources/xenserver-8-4
+---
+
 # VDI Foundation Overview
 
 ## 0. Document Control
@@ -6,7 +24,7 @@
 |---|---|
 | Thứ tự | 1 |
 | Tên tài liệu | VDI Foundation Overview |
-| Tên file | 1_VDI_Foundation_Overview.md |
+| Tên file | 01_VDI_Foundation_Overview.md |
 | Mục đích tài liệu | Cung cấp kiến thức nền tảng về VDI, khái niệm desktop ảo, published application, session, user access và các lớp hạ tầng liên quan. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Phạm vi | Kiến thức nền tảng để system engineer hiểu cách một dịch vụ VDI hoạt động trước khi học sâu Horizon, Citrix, storage, network, monitoring và troubleshooting. |
@@ -24,7 +42,20 @@
 | ESXi, vCenter, VM, datastore, virtual networking, snapshot | [[sources/vmware-vsphere-8-0]], [[sources/vcenter-server-installation-and-setup]] | High | Dùng để giải thích lớp hypervisor cho Horizon hoặc CVAD trên VMware. |
 | XenServer host, pool, VM, storage repository, network, HA | [[sources/xenserver-8-4]] | High | Dùng để giải thích lớp hypervisor cho Citrix CVAD khi chạy trên XenServer. |
 
-### 0.2 In Scope
+### 0.2 Document Research Pack
+
+| Hạng mục | Kết quả kiểm tra |
+|---|---|
+| Scope từ `list_context.txt` | Tài liệu số 1, `VDI Foundation Overview`, file `01_VDI_Foundation_Overview.md`, mục tiêu là nền tảng VDI: desktop ảo, published application, session, user access và các lớp hạ tầng liên quan. |
+| Bối cảnh từ `training_idea.md` | Khách hàng có hai nền tảng lớn: Horizon on HCI và Citrix CVAD trên XenServer hoặc VMware ESXi, quy mô khoảng 1500 đến hơn 2000 VDI; engineer cần học theo lớp vận hành, không theo manual sản phẩm. |
+| Nguồn wiki đã dùng | Horizon architecture, Horizon connections, Citrix CVAD, FSLogix, vSphere/vCenter, XenServer và các concept liên quan tới broker, gateway, agent, profile, storage, network, identity, monitoring. |
+| Knowledge extracted | VDI là chuỗi dịch vụ nhiều lớp; user session có nhiều phase; desktop/app/published application khác nhau; lỗi phải được phân lớp trước khi xử lý. |
+| Operational patterns | Xác định bước lỗi, phạm vi ảnh hưởng, recent change, lớp ưu tiên, evidence tối thiểu, owner cần escalation. |
+| Troubleshooting patterns | Login fail khác với launch fail; external-only ưu tiên gateway/LB/certificate/firewall; logon chậm ưu tiên profile/GPO/storage/DC; unregistered ưu tiên agent/VDA/VM/image/network. |
+| Evidence patterns | User, timestamp, internal/external path, resource name, screenshot, broker/gateway/agent log, registration state, VM state, storage/network/profile metric, recent change. |
+| Gaps | Topology, version, gateway/LB design, monitoring tool, profile solution, SLA, owner và escalation path thật vẫn là `Need Customer Confirmation`. |
+
+### 0.3 In Scope
 
 - Giải thích VDI là gì theo góc nhìn vận hành, không theo marketing sản phẩm.
 - Làm rõ desktop ảo, published application, session, broker, gateway, agent, profile, image, hypervisor, storage, network và identity.
@@ -32,7 +63,7 @@
 - Giải thích vì sao một lỗi VDI thường phải kiểm tra theo lớp thay vì xử lý ngay trên VM.
 - Cung cấp checklist, lỗi thường gặp, tình huống học tập và câu hỏi kiểm tra cho engineer mới.
 
-### 0.3 Out of Scope
+### 0.4 Out of Scope
 
 - Không thay thế tài liệu kiến trúc riêng của Horizon hoặc Citrix CVAD.
 - Không mô tả topology thật của khách hàng khi chưa có sơ đồ, VIP, subnet, firewall rule, version và owner.
@@ -799,10 +830,10 @@ Các câu hỏi cần hỏi khách hàng trước khi biến tài liệu này th
 
 ### Topic pages nên đọc tiếp
 
-- [[topics/2_Customer_VDI_Landscape_Overview]]: hiểu bức tranh hai hệ thống VDI của khách hàng.
-- [[topics/3_Omnissa_Horizon_Architecture_Overview]]: học sâu kiến trúc Horizon.
-- [[topics/4_Citrix_CVAD_Architecture_Overview]]: học sâu kiến trúc Citrix CVAD.
-- [[topics/5_VDI_Access_Flow_Design]]: học chi tiết luồng internal/external.
+- [[topics/02_Customer_VDI_Landscape_Overview]]: hiểu bức tranh hai hệ thống VDI của khách hàng.
+- [[topics/03_Omnissa_Horizon_Architecture_Overview]]: học sâu kiến trúc Horizon.
+- [[topics/04_Citrix_CVAD_Architecture_Overview]]: học sâu kiến trúc Citrix CVAD.
+- [[topics/05_VDI_Access_Flow_Design]]: học chi tiết luồng internal/external.
 - [[topics/18_VDI_Troubleshooting_Playbook]]: chuyển kiến thức nền thành playbook xử lý lỗi.
 
 ## 19. Summary for Learners
@@ -819,4 +850,3 @@ VDI là một dịch vụ nhiều lớp để cung cấp desktop ảo hoặc pub
 - Trong môi trường 1500 đến hơn 2000 VDI, phải kiểm tra theo scope và evidence, không xử lý theo cảm tính.
 
 Thứ tự nhớ nhanh khi có sự cố: xác định bước lỗi, xác định phạm vi, kiểm tra recent change, đi theo lớp, lưu evidence, rồi mới xử lý hoặc escalation.
-

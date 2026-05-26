@@ -44,3 +44,7 @@ Chưa có trang tổng hợp.
 
 VDI thường có nhiều điểm xác thực nối tiếp; cần biết người dùng đang lỗi ở điểm nào.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-04-authentication-lifecycle]] - vSphere authentication, roles, permissions and service account scope.
+- [[sources/vmware-vsphere-8-0-part-08-security-resource-availability]] - security, RBAC, certificate and privileged operation controls.

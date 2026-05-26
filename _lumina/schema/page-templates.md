@@ -145,6 +145,73 @@ aliases: []
 
 ---
 
+## Chapter page — `wiki/chapters/<book-slug>/<chapter-slug>.md` (reading pack)
+
+```yaml
+---
+id: chapters/<book-slug>/<chapter-slug>
+title: "Chapter N: Title"
+type: chapter
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+book: book-slug
+number: N
+---
+```
+
+**Sections:**
+- `## Summary`
+- `## Key events`
+- `## Characters introduced`
+- `## Themes`
+- `## Notes`
+
+---
+
+## Character page — `wiki/characters/<book-slug>/<character-slug>.md` (reading pack)
+
+```yaml
+---
+id: characters/<book-slug>/<character-slug>
+title: "Character Name"
+type: character
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+book: book-slug
+first_seen: chapters/<book-slug>/<chapter-slug>
+---
+```
+
+**Sections:**
+- `## Description`
+- `## Role`
+- `## Key relationships`
+- `## Appearances` — wikilinks to chapters
+- `## Notes`
+
+---
+
+## Theme page — `wiki/themes/<book-slug>/<theme-slug>.md` (reading pack)
+
+```yaml
+---
+id: themes/<book-slug>/<theme-slug>
+title: "Theme name"
+type: theme
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+book: book-slug
+---
+```
+
+**Sections:**
+- `## Description`
+- `## Evidence` — chapters and scenes where this theme appears
+- `## Related themes`
+- `## Notes`
+
+---
+
 ## Reflection page — `wiki/reflections/<slug>.md` (learning pack)
 
 Created and updated via `/lumi-learning-reflect`. AI never writes reflection content.

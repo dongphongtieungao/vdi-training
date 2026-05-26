@@ -42,3 +42,8 @@ Chưa có trang tổng hợp.
 
 Trong VDI, lifecycle cần lịch bảo trì rõ vì thay đổi hạ tầng có thể ảnh hưởng nhiều người dùng cùng lúc.
 
+## Source References
+
+- [[sources/vmware-vsphere-8-0-part-01-release-and-lifecycle]] - release notes, compatibility and patch known issues.
+- [[sources/vmware-vsphere-8-0-part-02-esxi-install-upgrade]] - ESXi upgrade workflow.
+- [[sources/vmware-vsphere-8-0-part-04-authentication-lifecycle]] - host and cluster lifecycle, remediation and desired state.

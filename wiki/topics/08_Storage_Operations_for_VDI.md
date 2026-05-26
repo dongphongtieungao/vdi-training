@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 8 |
 | Tên tài liệu | Storage Operations for VDI |
-| Tên file | 8_Storage_Operations_for_VDI.md |
+| Tên file | 08_Storage_Operations_for_VDI.md |
 | Mục đích tài liệu | Giải thích vai trò của storage trong VDI, gồm datastore, profile storage, image storage, capacity, latency, IOPS, snapshot growth, boot storm và logon storm. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có tri thức vận hành storage nền; storage vendor, datastore/SR mapping, latency baseline, profile solution, HA/replication và owner thật vẫn là Need Customer Confirmation. |

@@ -6,7 +6,7 @@
 |---|---|
 | Thứ tự | 9 |
 | Tên tài liệu | Network Operations for VDI |
-| Tên file | 9_Network_Operations_for_VDI.md |
+| Tên file | 09_Network_Operations_for_VDI.md |
 | Mục đích tài liệu | Mô tả các thành phần mạng cần vận hành như VLAN, routing, firewall, load balancer, DNS, certificate, gateway, latency, packet loss và bandwidth. |
 | Nguồn điều khiển | [[sources/vdi-training-idea]], [[sources/vdi-documentation-list-context]] |
 | Trạng thái thông tin | Có mô hình network operations đào tạo; VLAN, subnet, firewall rule, VIP, certificate, NAT, DNS zone, latency baseline và owner thật vẫn là Need Customer Confirmation. |
